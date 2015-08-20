@@ -5,17 +5,28 @@
     <link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
 </head>
 <body>
-    Code Reaction
+    <div class="header">
+        Code Reaction
+    </div>
+    <div id="container">
+        <div class="toolbar">
+            <a href="../Commits/commits.html">Commits</a>
+            <a href="../Followups/followups.html">My follow-ups</a>
+        </div>
+        <div id="detailPanel">
+            <div id="insertPoint">
+
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
     <script src="Users/users.js"></script>
     <script src="Tools/Tools.js"></script>
-    <script src="Commits/commits.js"></script>
     <script src="RevisionDetail/RevisionDetail.js"></script>
-    
     <script>
-        $(document).ready(authenticate);
+        $(document).ready(loadReview);
     </script>
 </body>
 </html>

@@ -2,33 +2,68 @@
 html {
 margin:0;
 padding:0;
-background-color: #ffffff;
+
 font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+height:100%;
+overflow:hidden;
 }
+
+thead, tbody, tfoot { 
+    vertical-align: top
+} 
+td, th, tr { 
+    vertical-align: inherit 
+} 
 
 .header {
     font-size: 2em;
-
-    background-color:#000000;
+    height:6%;
+    background-color:#313131;
     color:#ffffff;  
 }
 
 #container {
-    width:100%;
-    margin: 0 auto;
+    position:relative;
+    min-width:92%;
+    height:100%;
     
 }
 #commitPanel {
     float:left;
     width:300px;
     background-color:#eeeeee;
-    overflow-y:scroll;
+    overflow-y:auto;
+    overflow-x:hidden;
+    position:absolute;
+    bottom:0;
+    top:0;
+    height:92%
 
 }
 #detailPanel {
     background-color:#ffffff;
-    margin-left:300px;
-    padding: 1%;
+    padding: 2%;
+    /*position:absolute;*/
+    bottom:0;
+    overflow-y:auto;
+    overflow-x:auto;
+    position:relative;
+    bottom:0;
+    height:88%
+
+}
+
+#detailPanel2 {
+    background-color:#ffffff;
+    margin-left:2em;
+    margin-right:2em;
+    padding: 2%;
+    bottom:0;
+    overflow-y:auto;
+    overflow-x:auto;
+    position:relative;
+    bottom:0;
+    height:80%
 
 }
 
@@ -41,14 +76,71 @@ font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     
 }
 
+
+#criteriaPanel {
+    margin-top:2em;
+    margin-left: 2em;
+    margin-right: 2em;
+    border : 1px solid #888888;
+    padding: 1em;
+}
+
+.commit-list2 {
+    margin: 2em;
+    padding: 1em;
+    overflow-y:scroll !important;
+}
+
+.commit-title2 {
+    font-size: 0.95em;
+    font-weight:bold;
+    white-space:pre-wrap;
+    width:100%;
+    
+}
+
+.commit-item2 {
+    border-top: 1px solid #CCC8C7;
+    padding-bottom:1.5em;
+    padding-top:0.5em;
+    clear:both;
+}
+.commit-item2:hover
+{
+    cursor: pointer;
+}
+
+.commit-annotation-summary
+{
+    padding-bottom:1em;
+    float:left;
+    width:30%;
+    text-align:right;
+}
+
+.commit-actions2 {
+    float:left;
+    width:30%;
+    text-align:right;
+}
+
+.commit-list {
+    list-style-type: none;
+}
 .commit {
     border-bottom: 1px solid #888888;
-    padding: 0.5%;
-    
+    padding: 0.5em;
 }
 
 .commit-message {
     font-size: 0.8em;
+}
+
+.commit-item {
+    padding: 0.25em;
+    /*box-shadow: 3px 3px 1px #888888;*/
+    height: 4em;
+    overflow:hidden;
 }
 
 .commit-title {
@@ -59,38 +151,71 @@ font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 .commit-subtitle {
     font-size:0.9em;
     color:#808080;
+    padding-bottom:1em;
+    float:left;
+    width:40%;
 }
 
+.revision-table-wrapper {
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:0;
+    clear:both;
+}
 .revision-file-table {
     display:table;
     border-collapse:collapse;
     border-spacing:0;
+    vertical-align:top;
     width:100%;
     border: 1px solid #cac4c4;
-    margin-bottom:2%;
+    margin-top:0;
+    padding:0;
+}
+
+.file-header, .modal-header {
+    padding:0.3em;
+    background-color:#dfeef3;
+    
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.file-header {
+    margin-top:2em;border: 1px solid #cac4c4;
 }
 
 .revision-file-header {
-    font-weight:bolder:;
-    background-color:#eeeeee;
+    background-color:#CCC8C7;
     border-bottom: 1px solid #cac4c4;
+}
+.revision-line:hover, .comments-line:hover {
+    cursor: pointer;
+    background-color:#efefef;
 }
 
 .revision-line-text, .revision-line-number, .revision-line-state {
-    font-family:Courier New, Courier, monospace;
-    font-size: 0.9em;
+    font-family: DroidSansMono, Monospace, Consolas, Courier;
+    font-size: 0.75em;
+    padding: 0.2em;
 }
 
 .revision-line-text {
-    white-space:nowrap;
+    white-space:pre-wrap;
 }
 
 .revision-line-number {
+    display:table-cell;
     text-align: center;
     color:#808080;
-    width:4%;
+    width:48px;
     border-left: 1px solid #cac4c4;
     border-right: 1px solid #cac4c4;
+}
+
+.likeable:hover {
+    background-color: red;
+    cursor:pointer;
 }
 
 .revision-line-state {
@@ -100,9 +225,101 @@ font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .state-added {
-    background-color: rgba(79, 248, 30, 0.63);
+    background-color: rgba(163, 255, 133, 0.33);
 }
 
 .state-removed {
-    background-color: rgba(239, 89, 13, 0.48);
+    background-color: rgba(255, 194, 178, 0.33);
+}
+
+.state-break {
+    text-align:center;
+    background-color:#fefefe;
+    border-top: 1px solid #cac4c4;
+    border-bottom: 1px solid #cac4c4;
+    color:#cac4c4;
+    font-style: italic;
+}
+
+.state-break:hover { 
+    cursor:default; 
+    background-color: inherit;
+}
+
+.revision-line-liked{
+
+    color: #808080;
+}
+
+.comments-line, .review-line {
+    font-size:0.7em;
+    background-color:#fcfcfc;
+    /**border-bottom: 1px solid #cac4c4;*/
+}
+
+.review-line {
+    clear:both;
+}
+
+.comments-box
+{
+    resize:vertical;
+    width:100%;
+    min-height:3em;
+    display:block;
+}
+
+.comments-block
+{
+    margin-top:1em;
+    margin-left:2em;
+    margin-right:1em;
+    background-color: #efefef;
+}
+
+.comments-author {
+    
+    border-bottom: 1px solid #eeeeee;
+    /*margin-left:2em;*/
+    margin-right:4em;
+    font-size : 0.95em;
+}
+
+.comments-text {
+    white-space:pre-wrap;
+    font-size:1.2em;
+    padding-bottom:1em;
+    /*margin-left:3em;*/
+    margin-right:4em;
+    
+}
+
+
+.button-bar {
+   padding-top: 0.5em;
+   padding-bottom: 0.5em;
+}
+
+.button-ok, .button-cancel, .button-reply {
+    padding:0.3em;
+    margin-top:0.5em;
+    margin-bottom:0.5em;
+    margin-left: 1em;
+    float:right;
+
+}
+
+.dialog{
+
+    position:absolute;
+    width: 50%;
+    height:50%;
+    z-index:1;
+    border:2px solid #888888;
+    background-color: #DDDDDD;
+    top:0;
+}
+
+.modal-header {
+    background-color:#dfeef3;
 }

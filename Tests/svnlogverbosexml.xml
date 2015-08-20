@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<log>
+<logentry
+   revision="30003">
+<author>yjosselin</author>
+<date>2014-10-16T15:20:35.838169Z</date>
+<paths>
+<path
+   action="M"
+   kind="">/directory/trunk/Dev/WebSite/Catalog/Trainees/PresenceBySession.aspx</path>
+<path
+   action="M"
+   kind="">/directory/trunk/Dev/WebSite/Catalog/Trainees/PresenceBySession.aspx.cs</path>
+<path
+   action="M"
+   kind="">/directory/trunk/Dev/WebSite/Catalog/Trainees/App_LocalResources/PresenceBySession.aspx.resx</path>
+<path
+   action="M"
+   kind="">/directory/trunk/Dev/WebSite/Catalog/Trainees/App_LocalResources/PresenceBySession.aspx.en-GB.resx</path>
+</paths>
+<msg>fixes #13340 Fiche prÃ©sence, rajout du temps de la temps de la sÃ©ance</msg>
+</logentry>
+</log>

@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Code Reviewer</title>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" meidia="screen" />
+    <link rel="stylesheet" type="text/css" href="../styles.css" media="screen" />
+    
+</head>
+<body>
+    <div class="header">
+        Code Reaction   
+    </div>
+
+    <div id="container" >
+        <div class="toolbar">
+            <a href="../Commits/commits.html">Commits</a>
+            <a href="../Followups/followups.html">My follow-ups</a>
+        </div>
+
+        <div id="detailPanel2">
+            <div id="insertPoint">
+            </div>
+        </div>
+    </div>
+
+           
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <script src="../Users/users.js"></script>
+    <script src="../Tools/Tools.js"></script>
+    <script src="followups.js"></script>
+    
+    <script>
+        $(document).ready(loadFollowUps);
+    </script>
+</body>
+</html>
+
