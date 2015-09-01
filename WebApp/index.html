@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Code Reviewer</title>
+    <link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
+</head>
+<body>
+    <div class="header">
+        Code Review
+    </div>
+    <div id="container">
+
+        <aside id="commitPanel">
+            <div>For review</div>
+            <ul id="commits" class="commit-list" />
+        </aside>
+        <section id="detailPanel">
+            <article id="insertPoint">
+
+            </article>
+        </section>
+
+
+    <!--<div id="commitPanel">
+        <h2>For review</h2>
+        <ul id="commits" class="commit-list" />
+    </div>
+
+    <div id="detailPanel">
+        <h2>Commit Details</h2>
+        <div id="insertPoint"></div>
+    </div>-->
+
+    <div id="footer"></div>
+    </div>
+
+    <!--<div>
+        <h2>Search by ID</h2>
+        <input type="text" id="prodId" size="5" />
+        <input type="button" value="Search" onclick="find();" />
+        <p id="product" />
+    </div>-->
+    <!--<script type="text/jsx" src="page.jsx">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>-->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <script src="commit.js"></script>
+    <script>
+        $(document).ready(loadCommits);
+    </script>
+</body>
+</html>
+

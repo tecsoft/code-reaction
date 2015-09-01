@@ -1,0 +1,181 @@
+﻿Index: Dev/WebApplication/Directory/Materials/GotoSelector.aspx.cs
+===================================================================
+--- Dev/WebApplication/Directory/Materials/GotoSelector.aspx.cs (revision 34744
++++ Dev/WebApplication/Directory/Materials/GotoSelector.aspx.cs (revision 34745
+@@ -3,6 +3,7 @@
+ using Syfadis.Framework.Configurations;
+ using Syfadis.Framework.Web;
+ using Syfadis.Framework.Core;
++using Syfadis.WebViews.Controls;
+
+ namespace Syfadis.WebSite
+ {
+@@ -11,21 +12,12 @@
+
+     protected void Page_Load(object sender, EventArgs e)
+     {
+-        var dto = new Dto();
+-
+-        dto["AutoPostBack"] = Request["AutoPostBack"];
+-        dto["AllowMultiple"] = Request["AllowMultiple"];
+-        dto["ObjectSelectorId"] = Request["ObjectSelectorId"];
+-        dto["ObjectSelectorButtonId"] = Request["ObjectSelectorButtonId"];
+-        dto["Privilege"] = Request["Privilege"];
+-        dto["Option"] = Request["Option"];
+-
+         string url = "";
+
+         if (Container.Get<IConfigurationFactory>().GetBool("Catalog.University
+-            url = NavigationContext.GetUrl("Syfadis.Directory.Materials.Materi
++            url = NavigationContext.GetUrl("Syfadis.Directory.Materials.Materi
+         else
+-            url = NavigationContext.GetUrl("Syfadis.Directory.Materials.Materi
++            url = NavigationContext.GetUrl("Syfadis.Directory.Materials.Materi
+
+         Response.Redirect(url);
+     }
+Index: Dev/WebApplication/Directory/Rooms/GotoSelector.aspx.cs
+===================================================================
+--- Dev/WebApplication/Directory/Rooms/GotoSelector.aspx.cs     (revision 34744
++++ Dev/WebApplication/Directory/Rooms/GotoSelector.aspx.cs     (revision 34745
+@@ -3,6 +3,7 @@
+ using Syfadis.Framework.Configurations;
+ using Syfadis.Framework.Web;
+ using Syfadis.Framework.Core;
++using Syfadis.WebViews.Controls;
+
+ namespace Syfadis.WebSite
+ {
+@@ -11,21 +12,12 @@
+
+     protected void Page_Load(object sender, EventArgs e)
+     {
+-        var dto = new Dto();
+-
+-        dto["AutoPostBack"] = Request["AutoPostBack"];
+-        dto["AllowMultiple"] = Request["AllowMultiple"];
+-        dto["ObjectSelectorId"] = Request["ObjectSelectorId"];
+-        dto["ObjectSelectorButtonId"] = Request["ObjectSelectorButtonId"];
+-        dto["Privilege"] = Request["Privilege"];
+-        dto["Option"] = Request["Option"];
+-
+         string url = "";
+
+         if (Container.Get<IConfigurationFactory>().GetBool("Catalog.University
+-            url = NavigationContext.GetUrl("Syfadis.Directory.Rooms.Room.Plann
++            url = NavigationContext.GetUrl("Syfadis.Directory.Rooms.Room.Plann
+         else
+-            url = NavigationContext.GetUrl("Syfadis.Directory.Rooms.Room.List"
++            url = NavigationContext.GetUrl("Syfadis.Directory.Rooms.Room.List"
+
+         Response.Redirect(url);
+     }
+Index: Dev/WebApplication/Directory/Users/GotoSelector.aspx.cs
+===================================================================
+--- Dev/WebApplication/Directory/Users/GotoSelector.aspx.cs     (revision 34744
++++ Dev/WebApplication/Directory/Users/GotoSelector.aspx.cs     (revision 34745
+@@ -3,6 +3,7 @@
+ using Syfadis.Framework.Configurations;
+ using Syfadis.Framework.Web;
+ using Syfadis.Framework.Core;
++using Syfadis.WebViews.Controls;
+
+ namespace Syfadis.WebSite
+ {
+@@ -11,21 +12,12 @@
+
+         protected void Page_Load(object sender, EventArgs e)
+         {
+-            var dto = new Dto();
+-
+-            dto["AutoPostBack"] = Request["AutoPostBack"];
+-            dto["AllowMultiple"] = Request["AllowMultiple"];
+-            dto["ObjectSelectorId"] = Request["ObjectSelectorId"];
+-            dto["ObjectSelectorButtonId"] = Request["ObjectSelectorButtonId"];
+-            dto["Privilege"] = Request["Privilege"];
+-            dto["Option"] = Request["Option"];
+-
+             string url = "";
+
+             if (Container.Get<IConfigurationFactory>().GetBool("Catalog.Univer
+-                url =  NavigationContext.GetUrl("Syfadis.Directory.Users.UserP
++                url = NavigationContext.GetUrl("Syfadis.Directory.Users.UserPl
+             else
+-                url = NavigationContext.GetUrl("Syfadis.Directory.Users.User",
++                url = NavigationContext.GetUrl("Syfadis.Directory.Users.User",
+
+             Response.Redirect(url);
+         }
+Index: Dev/WebApplication/Directory/VirtualRooms/GotoSelector.aspx.cs
+===================================================================
+--- Dev/WebApplication/Directory/VirtualRooms/GotoSelector.aspx.cs      (revisi
++++ Dev/WebApplication/Directory/VirtualRooms/GotoSelector.aspx.cs      (revisi
+@@ -3,32 +3,23 @@
+ using Syfadis.Framework.Configurations;
+ using Syfadis.Framework.Web;
+ using Syfadis.Framework.Core;
++using Syfadis.WebViews.Controls;
+
+ namespace Syfadis.WebSite
+ {
+-public partial class Directory_VirtualRooms_Selector : System.Web.UI.Page
+-{
+-
+-    protected void Page_Load(object sender, EventArgs e)
++    public partial class Directory_VirtualRooms_Selector : System.Web.UI.Page
+     {
+-        var dto = new Dto();
+
+-        dto["AutoPostBack"] = Request["AutoPostBack"];
+-        dto["AllowMultiple"] = Request["AllowMultiple"];
+-        dto["ObjectSelectorId"] = Request["ObjectSelectorId"];
+-        dto["ObjectSelectorButtonId"] = Request["ObjectSelectorButtonId"];
+-        dto["Privilege"] = Request["Privilege"];
+-        dto["Option"] = Request["Option"];
++        protected void Page_Load(object sender, EventArgs e)
++        {
++            string url = "";
+
+-        string url = "";
++            if (Container.Get<IConfigurationFactory>().GetBool("Catalog.Univer
++                url = NavigationContext.GetUrl("Syfadis.Directory.VirtualRooms
++            else
++                url = NavigationContext.GetUrl("Syfadis.Directory.VirtualRooms
+
+-        if (Container.Get<IConfigurationFactory>().GetBool("Catalog.University
+-            url = NavigationContext.GetUrl("Syfadis.Directory.VirtualRooms.Vir
+-        else
+-            url = NavigationContext.GetUrl("Syfadis.Directory.VirtualRooms.Vir
+-
+-        Response.Redirect(url);
++            Response.Redirect(url);
++        }
+     }
+ }
+-
+-}
+Index: Dev/WebControls/Selectors/AutoComplete.cs
+===================================================================
+--- Dev/WebControls/Selectors/AutoComplete.cs   (revision 34744)
++++ Dev/WebControls/Selectors/AutoComplete.cs   (revision 34745)
+@@ -899,11 +899,16 @@
+
+             if (Class == null) return "";
+
+-            var url = NavigationContext.GetUrl(Class);
+-            url += (url.IndexOf('?') == -1) ? "?" : "&";
+-            url += "AutoPostBack=" + this.AutoPostBack.ToString() + "&AllowMul
+-                + "&ObjectSelectorButtonId=" + btn.ClientID + "&Privilege=" +
++            var dto = new Dto();
++            dto["ObjectSelectorId"] = this.ClientID;
++            dto["AutoPostBack"] = this.AllowMultiple.ToString();
++            dto["AllowMultiple"] = this.AutoPostBack.ToString();
++            dto["Option"] = Option;
++            dto["Privilege"] = Privilege;
++            dto["ObjectSelectorButtonId"] = btn.ClientID;
+
++            var url = NavigationContext.GetUrl(Class, dto);
++
+             var paramSizeWindow = (FullScreen) ? "" : ", 700,450"; // 700 x 45
+             return string.Format("openRadWindowAutoComplete('{0}','{1}'{2});",
+         }

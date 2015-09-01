@@ -1,0 +1,96 @@
+﻿body {
+    font-family: Verdana;
+    font-size: 10pt;
+    padding: 0px;
+    margin:1px;
+    background-color:#e6e6ed;
+}
+
+#titleBar {
+    font-size: 1.2em;
+    background-color:black;
+    color:white;
+    padding: 8px;
+
+}
+#commits {
+    width: 300px;
+    float: left;
+    min-height:800px;
+    background-color:#e6e6ed;
+    border-right: 1px solid #808080;
+    
+}
+#review {
+    margin-left:300px;
+    background-color:#ffffff;
+    min-height:800px;
+}
+
+.commit-detail, .commit-detail-selected {
+    height:48px;
+    background-color:#e6e6ed;
+    border-right: 1px solid #808080;
+    
+    width:300px;
+}
+
+.commit-detail-selected {
+    background-color: white;
+    border-right: 2px solid white;
+    width:300px;
+    border-top: 1px solid #808080;
+    border-bottom: 1px solid #808080;
+}
+
+#commitBar, #reviewBar {
+    height:36px;
+    background-color: #808080;
+    color:white;
+}
+
+
+.file-content  {
+    display:table;
+    border-collapse:collapse;
+    border-spacing:0;
+    margin:12px;
+    width:98%;
+    border: none;
+    
+}
+#container {
+    min-width: 100%;
+}
+.added {
+    background-color: #d8f1d1;
+}
+
+.removed {
+    background-color: #f8bece;
+}
+
+.file-line {
+    display: table-row;
+     
+    font-family: Consolas, Courier New, Courier, monospace;
+}
+
+.file-line-orig, .file-line-new {
+    display: table-cell;
+    width:48px;
+    text-align:center;
+    border-right:1px solid #e6e6ed;
+     border-left:1px solid #e6e6ed;
+}
+
+.file-line-code {
+    display: table-cell;
+    border:none;
+     white-space: nowrap;
+     padding:4px;
+}
+.file-line-whitespace {
+    color: #d7c4c4;
+}
+

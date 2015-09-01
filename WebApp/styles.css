@@ -1,0 +1,108 @@
+﻿body,
+html {
+margin:0;
+padding:0;
+background-color: #ffffff;
+font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.header {
+    font-size: 2em;
+
+    background-color:#000000;
+    color:#ffffff;  
+}
+
+#container {
+    width:100%;
+    margin: 0 auto;
+    
+}
+#commitPanel {
+    float:left;
+    width:300px;
+    background-color:#eeeeee;
+    overflow-y:scroll;
+
+}
+#detailPanel {
+    background-color:#ffffff;
+    margin-left:300px;
+    padding: 1%;
+
+}
+
+#footer {
+
+    clear:both;
+}
+
+#headerPanel {
+    
+}
+
+.commit {
+    border-bottom: 1px solid #888888;
+    padding: 0.5%;
+    
+}
+
+.commit-message {
+    font-size: 0.8em;
+}
+
+.commit-title {
+    font-size:1.2em;
+    font-weight:bold;
+}
+
+.commit-subtitle {
+    font-size:0.9em;
+    color:#808080;
+}
+
+.revision-file-table {
+    display:table;
+    border-collapse:collapse;
+    border-spacing:0;
+    width:100%;
+    border: 1px solid #cac4c4;
+    margin-bottom:2%;
+}
+
+.revision-file-header {
+    font-weight:bolder:;
+    background-color:#eeeeee;
+    border-bottom: 1px solid #cac4c4;
+}
+
+.revision-line-text, .revision-line-number, .revision-line-state {
+    font-family:Courier New, Courier, monospace;
+    font-size: 0.9em;
+}
+
+.revision-line-text {
+    white-space:nowrap;
+}
+
+.revision-line-number {
+    text-align: center;
+    color:#808080;
+    width:4%;
+    border-left: 1px solid #cac4c4;
+    border-right: 1px solid #cac4c4;
+}
+
+.revision-line-state {
+    width:4%;
+    /*padding-left:1%;*/
+    border-right: 1px solid transparent;
+}
+
+.state-added {
+    background-color: rgba(79, 248, 30, 0.63);
+}
+
+.state-removed {
+    background-color: rgba(239, 89, 13, 0.48);
+}

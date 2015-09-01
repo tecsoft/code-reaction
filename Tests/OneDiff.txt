@@ -1,0 +1,36 @@
+﻿Index: Dev/WebApplication/Directory/Materials/GotoSelector.aspx.cs
+===================================================================
+--- Dev/WebApplication/Directory/Materials/GotoSelector.aspx.cs (revision 34744
++++ Dev/WebApplication/Directory/Materials/GotoSelector.aspx.cs (revision 34745
+@@ -3,6 +3,7 @@
+ using Syfadis.Framework.Configurations;
+ using Syfadis.Framework.Web;
+ using Syfadis.Framework.Core;
++using Syfadis.WebViews.Controls;
+
+ namespace Syfadis.WebSite
+ {
+@@ -11,21 +12,12 @@
+
+     protected void Page_Load(object sender, EventArgs e)
+     {
+-        var dto = new Dto();
+-
+-        dto["AutoPostBack"] = Request["AutoPostBack"];
+-        dto["AllowMultiple"] = Request["AllowMultiple"];
+-        dto["ObjectSelectorId"] = Request["ObjectSelectorId"];
+-        dto["ObjectSelectorButtonId"] = Request["ObjectSelectorButtonId"];
+-        dto["Privilege"] = Request["Privilege"];
+-        dto["Option"] = Request["Option"];
+-
+         string url = "";
+
+         if (Container.Get<IConfigurationFactory>().GetBool("Catalog.University
+-            url = NavigationContext.GetUrl("Syfadis.Directory.Materials.Materi
++            url = NavigationContext.GetUrl("Syfadis.Directory.Materials.Materi
+         else
+-            url = NavigationContext.GetUrl("Syfadis.Directory.Materials.Materi
++            url = NavigationContext.GetUrl("Syfadis.Directory.Materials.Materi
+
+         Response.Redirect(url);
+     }
