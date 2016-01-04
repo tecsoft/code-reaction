@@ -12,11 +12,20 @@ namespace CodeReaction.Domain.Entities
     {
         [Key]
         public long Id { get; set; }
+
+        [Required]
         public string User { get; set; }
+
+        [Required]
         public long Revision { get; set; }
+
         public int? FileId { get; set; }
+
         public string LineId { get; set; }
+
+        [Required]
         public string Text { get; set; }
+
         public long? ReplyToId { get; set; }
     }
 }

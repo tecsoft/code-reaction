@@ -1,5 +1,6 @@
 ﻿using CodeReaction.Domain.Entities;
 using CodeReaction.Domain.Repositories;
+using CodeReaction.Tests.Services.Helpers;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,11 @@ namespace CodeReaction.Tests
     [TestFixture]
     public class DatabaseFixture
     {
+        [SetUp]
+        public void Setup()
+        {
+            DbTestHelper.ResetDatabase();
+        }
         [Test]
         public void EF()
         {

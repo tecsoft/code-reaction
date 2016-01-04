@@ -65,13 +65,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Services\CommentQueryFixture.cs" />
+    <Compile Include="Services\CommitQueryFixture.cs" />
     <Compile Include="Services\CommitServiceFixture.cs" />
     <Compile Include="Services\DatabaseFixture.cs" />
     <Compile Include="Services\CommentServiceFixture.cs" />
     <Compile Include="Services\Helpers\DbTestHelper.cs" />
+    <Compile Include="Services\HouseKeepingServiceFixture.cs" />
     <Compile Include="Services\LikeServiceFixture.cs" />
+    <Compile Include="Services\SourceControlDummy.cs" />
     <Compile Include="Services\UserServiceFixture.cs" />
-    <Compile Include="SvnLogReader.cs" />
     <Compile Include="SvnLogReaderFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebApp\RevisionDetail\RevisionDetailViewModelFixture.cs" />

@@ -16,13 +16,9 @@ namespace CodeReaction.Domain.Repositories
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Commit> Commits { get; set; }
 
-
-        public DbCodeReview()
-            : base("CodeReviewLiteTest")
+        public DbCodeReview() : base("CodeReaction")
         {
             this.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
-        }
-
-        
+        } 
     }
 }

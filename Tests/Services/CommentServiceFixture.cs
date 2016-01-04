@@ -1,15 +1,9 @@
 ﻿using CodeReaction.Domain;
 using CodeReaction.Domain.Entities;
-using CodeReaction.Domain.Repositories;
 using CodeReaction.Domain.Services;
 using CodeReaction.Tests.Services.Helpers;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeReaction.Tests.Likes
 {
@@ -21,41 +15,133 @@ namespace CodeReaction.Tests.Likes
         {
             DbTestHelper.ResetDatabase();
         }
-        
 
         [Test]
-        public void GetComments_Given_Revision_Get_All_Comments()
+        public void CommentLine_Valid_Comment_Saves_And_Assigns_Id()
         {
-            try
+            using (UnitOfWork uow = new UnitOfWork())
             {
-                using (UnitOfWork unitOfWork = new UnitOfWork() )
-                {
-                    unitOfWork.Context.Comments.Add(new Comment() { Revision = 1234, User = "tcarter", FileId = 0, LineId = "1:1", Text = "comment" });
-                    unitOfWork.Context.Comments.Add(new Comment() { Revision = 9122, User = "cdog", FileId = 1, LineId = "2:2", Text = "comment" });
-                    unitOfWork.Context.Comments.Add(new Comment() { Revision = 9122, User = "frefr", FileId = 2, LineId = "-1:-1", Text = "comment" });
-
-                    unitOfWork.Context.SaveChanges();
-                }
-
-                using (UnitOfWork unitOfWork = new UnitOfWork())
-                {
-                    var commentsRevision1234 = new CommentService(unitOfWork).GetComments(1234);
-                    Assert.AreEqual(1, commentsRevision1234.Count());
-                    Assert.AreEqual(1, commentsRevision1234.Count(l => l.User == "tcarter" && l.FileId == 0 && l.LineId == "1:1"));
-
-                    var commentsRevision9122 = new CommentService(unitOfWork).GetComments(9122);
-                    Assert.AreEqual(2, commentsRevision9122.Count());
-                    Assert.AreEqual(1, commentsRevision9122.Count(l => l.User == "cdog" && l.FileId == 1 && l.LineId == "2:2"));
-                    Assert.AreEqual(1, commentsRevision9122.Count(l => l.User == "frefr" && l.FileId == 2));
-
-                    var commentsRevision444 = new CommentService(unitOfWork).GetComments(444);
-                    Assert.AreEqual(0, commentsRevision444.Count());
-                }
+                var sut = new CommentService(uow);
+                sut.CommentLine("daffy", 1212, 1, "line_id", "a nice comment");
+                uow.Save();
             }
-            catch (System.Data.Entity.Validation.DbEntityValidationException ex)
+
+            using (UnitOfWork uow = new UnitOfWork())
             {
-                DbTestHelper.DebugValidationErrors(ex);
-                throw;
+                var results = uow.Context.Comments.ToList();
+
+                Assert.AreEqual(1, results.Count);
+                Assert.AreEqual("daffy", results[0].User);
+                Assert.AreEqual(1212, results[0].Revision);
+                Assert.AreEqual(1, results[0].FileId);
+                Assert.AreEqual("line_id", results[0].LineId);
+                Assert.AreEqual("a nice comment", results[0].Text);
+                Assert.AreEqual(null, results[0].ReplyToId);
+                Assert.AreNotEqual(0, results[0].Id);
+            }
+        }
+
+        [Test]
+        [ExpectedException( ExpectedException = typeof(System.Data.Entity.Validation.DbEntityValidationException))]
+        public void CommentLine_Throws_When_Missing_Mandatory_User()
+        {
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                var sut = new CommentService(uow);
+                sut.CommentLine(null, 1212, 1, "line_id", "a nice comment");
+                uow.Save();
+            }
+        }
+
+        [Test]
+        [ExpectedException(ExpectedException = typeof(System.Data.Entity.Validation.DbEntityValidationException))]
+        public void CommentLine_Throws_When_Missing_Mandatory_Comment()
+        {
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                var sut = new CommentService(uow);
+                sut.CommentLine("fred", 1212, 1, "line_id", null);
+                uow.Save();
+            }
+        }
+
+        [Test]
+        public void Reply_Valid_Reply_Saves_And_Assigns_Id()
+        {
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                var sut = new CommentService(uow);
+                sut.CommentLine("daffy", 1212, 1, "line_id", "a nice comment1");
+                sut.CommentLine("daffy", 1212, 1, "line_id1", "a nice comment2");
+                sut.CommentLine("daffy", 1212, 1, "line_id2", "a nice comment3");
+                uow.Save();
+            }
+
+            Comment originalComment;
+
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                var sut = new CommentService(uow);
+                originalComment = uow.Context.Comments.ToList()[1];
+
+                sut.Reply(originalComment.Id, "pluto", "thank you");
+                uow.Save();
+            }
+
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                var results = uow.Context.Comments.ToList();
+
+                var replies = results.Where(r => r.ReplyToId != null).ToList();
+                Assert.AreEqual(1, replies.Count);
+
+                Assert.AreEqual(originalComment.Id, replies[0].ReplyToId);
+                Assert.AreEqual("pluto", replies[0].User);
+                Assert.AreEqual("thank you", replies[0].Text);
+                Assert.AreEqual(originalComment.FileId, replies[0].FileId);
+                Assert.AreEqual(originalComment.LineId, replies[0].LineId);
+                Assert.AreEqual(originalComment.Revision, replies[0].Revision);
+                Assert.AreNotEqual(originalComment.Id, replies[0].Id);
+            }
+        }
+
+        [Test]
+        [ExpectedException(ExpectedException = typeof(System.Data.Entity.Validation.DbEntityValidationException))]
+        public void Reply_Throws_When_Missing_Mandatory_User()
+        {
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                var sut = new CommentService(uow);
+                sut.CommentLine("daffy", 1212, 1, "line_id", "a nice comment1");
+                uow.Save();
+            }
+
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                var originalComment = uow.Context.Comments.First();
+                var sut = new CommentService(uow);
+                sut.Reply(originalComment.Id, null, "thanks");
+                uow.Save();
+            }
+        }
+
+        [Test]
+        [ExpectedException(ExpectedException = typeof(System.Data.Entity.Validation.DbEntityValidationException))]
+        public void Reply_Throws_When_Missing_Mandatory_Comment()
+        {
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                var sut = new CommentService(uow);
+                sut.CommentLine("daffy", 1212, 1, "line_id", "a nice comment1");
+                uow.Save();
+            }
+
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                var originalComment = uow.Context.Comments.First();
+                var sut = new CommentService(uow);
+                sut.Reply(originalComment.Id, "minnie", null);
+                uow.Save();
             }
         }
     }

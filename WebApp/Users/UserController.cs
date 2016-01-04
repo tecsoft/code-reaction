@@ -26,6 +26,7 @@ namespace CodeReaction.Web.Users
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Trace.TraceError("CreateUser: " + ex);
                 return InternalServerError(ex);
             }
             finally

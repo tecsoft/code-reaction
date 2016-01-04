@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeReaction.Tests.Services.Helpers
 {
@@ -16,7 +12,7 @@ namespace CodeReaction.Tests.Services.Helpers
             if (dbFile.Exists == false)
                 throw new FileNotFoundException();
 
-            dbFile.CopyTo("CodeReviewTest.sqlite", true);
+            dbFile.CopyTo("CodeReaction.sqlite", true);
         }
 
         public static void DebugValidationErrors(DbEntityValidationException ex)
@@ -27,6 +23,19 @@ namespace CodeReaction.Tests.Services.Helpers
                 {
                     Console.WriteLine(message.PropertyName + ": " + message.ErrorMessage);
                 }
+            }
+        }
+
+        public static void Try( Action dbAction )
+        {
+            try
+            {
+                dbAction();
+            }
+            catch (System.Data.Entity.Validation.DbEntityValidationException ex)
+            {
+                DebugValidationErrors(ex);
+                throw;
             }
         }
     }

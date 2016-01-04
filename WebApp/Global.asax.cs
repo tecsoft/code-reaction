@@ -1,4 +1,6 @@
-﻿using CodeReaction.Domain.HouseKeeping;
+﻿using CodeReaction.Domain;
+using CodeReaction.Domain.Commits;
+using CodeReaction.Domain.HouseKeeping;
 using CodeReaction.Domain.Repositories;
 using System;
 using System.Collections.Generic;
@@ -21,7 +23,27 @@ namespace CodeReaction.Web
 
         void ImportLatestLogs(object o)
         {
-            HouseKeepingService.ImportLatestLogs();
+            UnitOfWork unitOfWork = null; ; 
+            try
+            {
+                unitOfWork = new UnitOfWork();
+
+                var sourceControl = new SourceControl();
+                var houseKeeper = new HouseKeepingService(unitOfWork, sourceControl);
+
+                int logsImported = houseKeeper.ImportLatestLogs();
+
+                System.Diagnostics.Trace.TraceInformation(logsImported + " revisions imported");
+            }
+            catch(Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError("ImportLatestLogs: " + ex);
+            }
+            finally
+            {
+                if (unitOfWork != null)
+                    unitOfWork.Dispose();
+            }
         }
     }
 }

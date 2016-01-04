@@ -7,18 +7,18 @@ using System.Xml;
 
 namespace CodeReaction.Domain.Commits
 {
-    public class CommitRepository
+    public class SourceControl : ISourceControl
     {
         public IEnumerable<Commit> GetSince(long revision, int maxNumber)
         {
-            CommitReader reader = new CommitReader(@"d:\travail\trunk");
+            SvnLogReader reader = new SvnLogReader();
 
             return reader.GetLatestLogs(revision, maxNumber);
         }
 
         public CommitDiff GetRevision( long revision)
         {
-            CommitReader reader = new CommitReader(@"d:\travail\trunk");
+            SvnLogReader reader = new SvnLogReader();
 
             var diffs = reader.GetRevisionDiffs(revision);
 

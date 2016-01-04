@@ -21,11 +21,6 @@ namespace CodeReaction.Domain.Services
                     new Comment() { User = user, Revision = revision, FileId = fileId, LineId = lineId, Text = text });
         }
 
-        public IEnumerable<Comment> GetComments(long revision)
-        {
-            return unitOfWork.Context.Comments.Where( c => c.Revision == revision);
-        }
-
         public void Reply(long idComment, string author, string text)
         {
             Comment originalComment = unitOfWork.Context.Comments.First(c => c.Id == idComment);

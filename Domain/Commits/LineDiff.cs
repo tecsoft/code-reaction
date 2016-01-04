@@ -16,8 +16,6 @@ namespace CodeReaction.Domain.Commits
 
         public string Id { get; private set; }
 
-        //public LineDiff() {}
-
         public LineDiff(ChangeState state, string text, int removedLineNumber, int addedLineNumber )
         {
             Changed = state; 

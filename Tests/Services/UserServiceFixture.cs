@@ -87,8 +87,42 @@ namespace CodeReaction.Tests.Services
                 uow.Save();
 
                 Assert.AreEqual(1, uow.Context.Users.Count(u => u.Name == "bob"));
+            }
 
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                var service = new UserService(uow);
                 service.CreateUser("bob", "jim");
+
+            }
+        }
+
+        [Test]
+        public void ValidateUserAndPassword_True_If_Password_Matches_User_Else_False()
+        {
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                var service = new UserService(uow);
+                service.CreateUser("mickey", "somepassword");
+                service.CreateUser("minnie", "somepassword");
+                service.CreateUser("daffy", "anotherpassword");
+                uow.Save();
+            }
+
+            using (UnitOfWork uow = new UnitOfWork())
+            {
+                var service = new UserService(uow);
+
+                Assert.IsTrue(service.ValidateUserAndPassword("mickey", "somepassword"));
+                Assert.IsTrue(service.ValidateUserAndPassword("minnie", "somepassword"));
+                Assert.IsFalse(service.ValidateUserAndPassword("daffy", "somepassword"));
+
+                Assert.IsFalse(service.ValidateUserAndPassword("mickey", "anotherpassword"));
+                Assert.IsFalse(service.ValidateUserAndPassword("minnie", "anotherpassword"));
+                Assert.IsTrue(service.ValidateUserAndPassword("daffy", "anotherpassword"));
+
+                Assert.IsFalse(service.ValidateUserAndPassword("unknownuser", "somepassword"));
+                Assert.IsFalse(service.ValidateUserAndPassword("unknownuser", "anotherpassword"));
             }
         }
     }

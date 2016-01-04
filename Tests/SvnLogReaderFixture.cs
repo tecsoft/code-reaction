@@ -19,7 +19,7 @@ namespace CodeReaction.Tests
         [Test]
         public void GetLogs()
         {
-            var sut = new CommitReader(@"D:\travail\trunk");
+            var sut = new Domain.Commits.SvnLogReader();
 
             var logs = sut.GetLatestLogs(34699, 2);
 
@@ -39,7 +39,7 @@ namespace CodeReaction.Tests
         {
             using (StreamReader fs = new StreamReader( new FileStream("svnlogverbosexml.xml", FileMode.Open, FileAccess.Read) ) )
             {
-                var sut = new CommitReader("asd");
+                var sut = new Domain.Commits.SvnLogReader();
                 var fileInfo = sut.GetCommitedFileInfo(30003, fs);
                 Assert.AreEqual(4, fileInfo.Count);
             }
@@ -48,7 +48,7 @@ namespace CodeReaction.Tests
         //[Test]
         //public void GetRevisionDiff()
         //{
-        //    var sut = new CommitReader(@"D:\travail\trunk");
+        //    var sut = new SvnLogReader(@"D:\travail\trunk");
 
         //    CommitDiff commitDiff = sut.GetRevisionDiffs(34699);
         //    FileDiff diff = commitDiff.FileDiffs[0];
@@ -69,7 +69,7 @@ namespace CodeReaction.Tests
         //[Test]
         //public void Read_Of_MultiFile_Revision_Diff_Creates_One_FileDiff_Per_File()
         //{
-        //    var sut = new CommitReader(@"d:\travail\trunk\dev");
+        //    var sut = new SvnLogReader(@"d:\travail\trunk\dev");
 
         //    CommitDiff results;
         //    using (StreamReader reader = new StreamReader("DiffExample.txt"))
@@ -83,7 +83,7 @@ namespace CodeReaction.Tests
         //[Test]
         //public void Read_Of_Single_File_Revision_Diff_Creates_One_FileDiff()
         //{
-        //    var sut = new CommitReader(@"d:\travail\trunk\dev");
+        //    var sut = new SvnLogReader(@"d:\travail\trunk\dev");
 
         //    CommitDiff results;
         //    using (StreamReader reader = new StreamReader("OneDiff.txt"))

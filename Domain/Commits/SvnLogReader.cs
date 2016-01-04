@@ -1,6 +1,7 @@
 ﻿using CodeReaction.Domain;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -10,21 +11,29 @@ using System.Xml;
 
 namespace CodeReaction.Domain.Commits
 {
-    public class CommitReader
+    public class SvnLogReader
     {
-        public string LocalRepro { get; protected set; }
+        string RemoteRepro { get; set; }
 
-        public string RemoteRepro { get; protected set; }
+        string CommandLine { get; set; }
 
-        public CommitReader(string localRepro)
+        string ConnectionArguments { get; set; }
+
+        public SvnLogReader()
         {
-            LocalRepro = localRepro;
-            RemoteRepro = "svn://technix01/directory/trunk/Dev";
+            var svnConfig = (ConfigurationManager.GetSection("codeReaction") as CodeReactionConfigurationSection).Svn;
+
+            RemoteRepro = svnConfig.Server;
+
+            ConnectionArguments = string.Format(" --username={0} --password={1}", svnConfig.Username, svnConfig.Password);
+
+            CommandLine = string.Format(@"{0}/svn.exe", svnConfig.Path);
         }
 
         public IEnumerable<Commit> GetLatestLogs(long lastRevision, int limit)
         {
-            var reg = RunSvnCommand( string.Format( "log -r {0}:HEAD --limit {1} --xml {2}", lastRevision + 1, limit, RemoteRepro) );
+            var reg = RunSvnCommand( 
+                string.Format( "log -r {0}:HEAD --limit {1} --xml {2}", lastRevision + 1, limit, RemoteRepro) );
 
             XmlDocument doc = new XmlDocument();
             doc.Load(reg.StandardOutput);
@@ -174,20 +183,14 @@ namespace CodeReaction.Domain.Commits
         /// <param name="reader"></param>
         public IDictionary<string, FileDiff> GetCommitedFileInfo(long revision, StreamReader reader)
         {
-            //IList<CommitedFileInfo> infos = new List<CommitedFileInfo>();
             IDictionary<string, FileDiff> fileInfo = new Dictionary<string, FileDiff>();
 
             XmlDocument doc = new XmlDocument();
             doc.Load(reader);
 
-            //var directoryName = Path.GetDirectoryName(LocalRepro);
-
             // filename starts with /directory
             // need repos url ex svn://technixO1
             // path: ex /directory/trunk/Dev
-
-            
-
 
             var nodes = doc.SelectNodes("//paths//path");
             foreach ( XmlNode node in nodes)
@@ -221,10 +224,6 @@ namespace CodeReaction.Domain.Commits
             return fileInfo;
         }
 
-        //FileType GetFileType (string fileName, string kind, FileState fileState )
-        //{
-        //    // can we get it from kind ? 
-        //}
 
         FileState ParseAction(string action )
         {
@@ -357,56 +356,10 @@ namespace CodeReaction.Domain.Commits
         {
             return line.Contains('\0');
         }
-
-        //FileDiff ParseFile(string file, StreamReader reader)
-        //{
-        //    FileDiff diff = new FileDiff();
-        //    diff.Name = file;
-
-        //    string line = reader.ReadLine();
-        //    while (line != null)
-        //    {
-        //        if (line.StartsWith("Index: "))
-        //        {
-        //            // next file
-        //            line = null;
-        //        }
-        //        else if ( line.StartsWith( "+++ " ) || line.StartsWith( "--- " ) || line.StartsWith( "==============" ) )
-        //        {
-        //            line = reader.ReadLine();
-        //        }
-        //        else
-        //        {
-        //            if (line.StartsWith("@@"))
-        //            {
-        //                string[] filePos = line.Split(new char[] { '@', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-        //                diff.Previous = filePos[0];
-        //                diff.Current = filePos[1];
-        //            } 
-        //            else if (line.StartsWith("+"))
-        //            {
-        //                diff.AddLine(ChangeState.Added, line.Substring(1));
-        //            }
-        //            else if ( line.StartsWith("-") )
-        //            {
-        //                diff.AddLine(ChangeState.Removed, line.Substring(1) );
-        //            }
-        //            else
-        //            {
-        //                diff.AddLine(ChangeState.None, line );
-        //            }
-
-        //            line = reader.ReadLine();
-        //        }
-        //    }
-
-        //    return diff;
-        //}
-
+        
         private Process RunSvnCommand(string command)
         {
-            var proc = new ProcessStartInfo(@"c:\Program Files\CollabNet\Subversion Client\svn.exe", command );
+            var proc = new ProcessStartInfo(CommandLine, command + ConnectionArguments );
             proc.StandardOutputEncoding = Encoding.UTF8;
             proc.StandardErrorEncoding = Encoding.UTF8;
             proc.RedirectStandardError = true;
@@ -414,7 +367,7 @@ namespace CodeReaction.Domain.Commits
             proc.CreateNoWindow = true;
             proc.UseShellExecute = false;
 
-            proc.WorkingDirectory = LocalRepro;
+            //proc.WorkingDirectory = LocalRepro;
 
             return System.Diagnostics.Process.Start(proc);
         }

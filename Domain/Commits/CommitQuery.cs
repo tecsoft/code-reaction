@@ -8,23 +8,22 @@ namespace CodeReaction.Domain.Commits
 {
     public class CommitQuery
     {
-        //public long? Revision { get; set; }
         public string Keyword { get; set; }
         public int? Max { get; set; }
         public string ExcludeAuthor { get; set; }
         public string IncludeAuthor { get; set; }
         public bool ExcludeApproved { get; set; }
 
-        private UnitOfWork _uow;
+        private IQueryable<Commit> query;
 
-        public CommitQuery( UnitOfWork unitofWork )
+        public CommitQuery( IQueryable<Commit> commits )
         {
-            _uow = unitofWork;
+            query = commits;
         }
 
         public IEnumerable<Commit> Execute()
         {
-            IQueryable<Commit> query = _uow.Context.Commits;
+            //IQueryable<Commit> query = _uow.Context.Commits;
             
             if (string.IsNullOrEmpty(ExcludeAuthor) == false)
             {

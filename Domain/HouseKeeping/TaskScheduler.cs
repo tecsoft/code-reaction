@@ -10,7 +10,7 @@ namespace CodeReaction.Domain.HouseKeeping
     /// <summary>
     /// A timer based Task Scheduler for use in calling a function every N seconds
     /// </summary>
-    public class TaskScheduler
+    public class TaskScheduler : IDisposable
     {
         /* Default timer period */
         int _delaySeconds = -1;
@@ -84,6 +84,28 @@ namespace CodeReaction.Domain.HouseKeeping
                     Start();
                 }
             }
+        }
+
+        private bool disposed = false;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    if ( _timer != null )
+                    {
+                        _timer.Dispose();
+                    }
+                }
+            }
+            this.disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

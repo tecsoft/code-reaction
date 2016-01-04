@@ -36,6 +36,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SQLite, Version=1.0.98.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.Core.1.0.98.1\lib\net451\System.Data.SQLite.dll</HintPath>
@@ -48,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeReactionConfigurationSection.cs" />
     <Compile Include="Commits\ChangeState.cs" />
     <Compile Include="Commits\Commit.cs" />
     <Compile Include="Commits\CommitDiff.cs" />
@@ -55,12 +57,14 @@
     <Compile Include="Commits\CommitService.cs" />
     <Compile Include="Commits\CommitStats.cs" />
     <Compile Include="Commits\FileStateEnum.cs" />
+    <Compile Include="Commits\ISourceControl.cs" />
     <Compile Include="DomainException.cs" />
     <Compile Include="Feedback\Comment.cs" />
+    <Compile Include="Feedback\CommentQuery.cs" />
     <Compile Include="Feedback\IAnnotation.cs" />
     <Compile Include="Feedback\Like.cs" />
     <Compile Include="Commits\LineDiff.cs" />
-    <Compile Include="Commits\CommitRepository.cs" />
+    <Compile Include="Commits\SourceControl.cs" />
     <Compile Include="Commits\FileDiff.cs" />
     <Compile Include="Database\Database.cs" />
     <Compile Include="Feedback\CommentService.cs" />

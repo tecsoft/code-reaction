@@ -38,43 +38,43 @@ namespace CodeReaction.Tests.WebApp.RevisionDetail
             Assert.AreEqual(2, result.RevisedFileDetails.First().LineDetails.Count());
             Assert.AreEqual(0, result.RevisedFileDetails.Sum(i => i.LikedBy.Count()));
         }
-        [Test]
-        public void Create_With_Liked_File()
-        {
-            CommitDiff cd = CreateCommitDiff(0);
-            FileDiff fd1 = AddFileDiff(cd, "file1");
-            AddLineDiff(fd1, ChangeState.Added, "line0");
-            AddLineDiff(fd1, ChangeState.Removed, "line1");
+        //[Test]
+        //public void Create_With_Liked_File()
+        //{
+        //    CommitDiff cd = CreateCommitDiff(0);
+        //    FileDiff fd1 = AddFileDiff(cd, "file1");
+        //    AddLineDiff(fd1, ChangeState.Added, "line0");
+        //    AddLineDiff(fd1, ChangeState.Removed, "line1");
 
-            FileDiff fd2 = AddFileDiff(cd, "file2");
-            AddLineDiff(fd2, ChangeState.Added, "line0");
-            AddLineDiff(fd2, ChangeState.Removed, "line1");
+        //    FileDiff fd2 = AddFileDiff(cd, "file2");
+        //    AddLineDiff(fd2, ChangeState.Added, "line0");
+        //    AddLineDiff(fd2, ChangeState.Removed, "line1");
 
-            Like like = LikeFile(fd2, "mickey");
+        //    Like like = LikeFile(fd2, "mickey");
 
-            var result = RevisionDetailViewModel.Create(new Commit(), cd, new Like[] { like }, new Comment[] { });
+        //    var result = RevisionDetailViewModel.Create(new Commit(), cd, new Like[] { like }, new Comment[] { });
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(2, result.RevisedFileDetails.Count());
-            Assert.AreEqual(0, result.RevisedFileDetails.Where(i => i.Filename == fd1.Name).First().LikedBy.Count());
-            Assert.AreEqual(1, result.RevisedFileDetails.Where(i => i.Filename == fd2.Name).First().LikedBy.Count());
+        //    Assert.IsNotNull(result);
+        //    Assert.AreEqual(2, result.RevisedFileDetails.Count());
+        //    Assert.AreEqual(0, result.RevisedFileDetails.Where(i => i.Filename == fd1.Name).First().LikedBy.Count());
+        //    Assert.AreEqual(1, result.RevisedFileDetails.Where(i => i.Filename == fd2.Name).First().LikedBy.Count());
 
-            Like like2 = LikeFile(fd2, "daffy");
-            result = RevisionDetailViewModel.Create(new Commit(), cd, new Like[] { like, like2 }, new Comment[] { });
+        //    Like like2 = LikeFile(fd2, "daffy");
+        //    result = RevisionDetailViewModel.Create(new Commit(), cd, new Like[] { like, like2 }, new Comment[] { });
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(2, result.RevisedFileDetails.Count());
-            Assert.AreEqual(0, result.RevisedFileDetails.Where(i => i.Filename == fd1.Name).First().LikedBy.Count());
-            Assert.AreEqual(2, result.RevisedFileDetails.Where(i => i.Filename == fd2.Name).First().LikedBy.Count());
+        //    Assert.IsNotNull(result);
+        //    Assert.AreEqual(2, result.RevisedFileDetails.Count());
+        //    Assert.AreEqual(0, result.RevisedFileDetails.Where(i => i.Filename == fd1.Name).First().LikedBy.Count());
+        //    Assert.AreEqual(2, result.RevisedFileDetails.Where(i => i.Filename == fd2.Name).First().LikedBy.Count());
 
-            Like like3 = LikeFile(fd1, "donald");
-            result = RevisionDetailViewModel.Create(new Commit(), cd, new Like[] { like, like2, like3 }, new Comment[] { });
+        //    Like like3 = LikeFile(fd1, "donald");
+        //    result = RevisionDetailViewModel.Create(new Commit(), cd, new Like[] { like, like2, like3 }, new Comment[] { });
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(2, result.RevisedFileDetails.Count());
-            Assert.AreEqual(1, result.RevisedFileDetails.Where(i => i.Filename == fd1.Name).First().LikedBy.Count());
-            Assert.AreEqual(2, result.RevisedFileDetails.Where(i => i.Filename == fd2.Name).First().LikedBy.Count());
-        }
+        //    Assert.IsNotNull(result);
+        //    Assert.AreEqual(2, result.RevisedFileDetails.Count());
+        //    Assert.AreEqual(1, result.RevisedFileDetails.Where(i => i.Filename == fd1.Name).First().LikedBy.Count());
+        //    Assert.AreEqual(2, result.RevisedFileDetails.Where(i => i.Filename == fd2.Name).First().LikedBy.Count());
+        //}
 
         [Test]
         public void Create_With_Liked_Line()
