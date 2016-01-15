@@ -42,6 +42,9 @@
     <Reference Include="nunit.framework">
       <HintPath>..\CodeReview\Libs\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="SharpSvn">
+      <HintPath>..\..\SSvn\SharpSvn\SharpSvn.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -75,6 +78,7 @@
     <Compile Include="Services\LikeServiceFixture.cs" />
     <Compile Include="Services\SourceControlDummy.cs" />
     <Compile Include="Services\UserServiceFixture.cs" />
+    <Compile Include="SvnClient\SvnClientFixture.cs" />
     <Compile Include="SvnLogReaderFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebApp\RevisionDetail\RevisionDetailViewModelFixture.cs" />
