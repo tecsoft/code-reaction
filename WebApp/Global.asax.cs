@@ -33,6 +33,8 @@ namespace CodeReaction.Web
 
                 int logsImported = houseKeeper.ImportLatestLogs();
 
+                unitOfWork.Save();
+
                 System.Diagnostics.Trace.TraceInformation(logsImported + " revisions imported");
             }
             catch(Exception ex)
