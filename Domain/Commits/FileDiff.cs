@@ -10,7 +10,7 @@ namespace CodeReaction.Domain.Commits
     public class FileDiff
     {
         public string Name { get; set; }
-        public long Revision { get; set; }
+        //public long Revision { get; set; }
         public int Index { get; set; }
         public string Previous { get; set; }
         public string Current { get; set; }

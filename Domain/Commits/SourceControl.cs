@@ -24,5 +24,11 @@ namespace CodeReaction.Domain.Commits
 
             return diffs;
         }
+
+        public IList<string> GetFile( long revision, string filename )
+        {
+            SvnLogReader reader = new SvnLogReader();
+            return reader.GetCurrentVersionOfFile(revision, filename);
+        }
     }
 }

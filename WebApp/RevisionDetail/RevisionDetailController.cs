@@ -281,6 +281,27 @@ namespace CodeReaction.Web.Controllers
             return Ok();
         }
 
+        [Route("api/commits/file/{revision}")]
+        public IHttpActionResult GetCompleteFile(long revision)
+        {
+            IList<string> viewModel = null;
+
+            try
+            {
+                var parameters = this.Request.GetQueryNameValuePairs().FirstOrDefault(i => i.Key == "filename");
+
+                viewModel = new SourceControl().GetFile(revision, parameters.Value);
+
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError("GetRevision: " + ex);
+                return InternalServerError(ex);
+            }
+
+            return Ok(viewModel);
+        }
+
         T? ParseNullable<T>(string str) where T : struct
         {
             if (string.IsNullOrEmpty(str))

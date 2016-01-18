@@ -97,50 +97,73 @@ namespace CodeReaction.Domain.Commits
             return logs;
         }
 
-        //public IList<LineDiff> GetUnifiedDiff(FileDiff diff)
-        //{
-        //    IList<LineDiff> lines = new List<LineDiff>();
+        public IList<string> GetCurrentVersionOfFile( long revision, string filename)
+        {
+            IList<string> lines = new List<string>();
+            var reg = RunSvnCommand(string.Format(@"cat -r {0} {1}@{0}", revision, @"svn://technix01" + filename));
+            //reg.WaitForExit();
 
-        //    var reg = RunSvnCommand(string.Format("cat -r {0} {1}", diff.Revision, diff.Index ));
+            using (var reader = reg.StandardOutput)
+            {
+                string line = reader.ReadLine();
+                while (line != null )
+                {
+                    lines.Add(line);
+                    line = reader.ReadLine();
+                }
+            }
 
-        //    int fileIndex = 0;
-        //    int diffStartIndex = int.Parse( diff.Current.Split(',')[0] );
-        //    int diffLineIndex = 0;
+            return lines;
+        }
 
-        //    using (var reader = reg.StandardOutput)
-        //    {
-        //        string line = reader.ReadLine();
-        //        while (line != null)
-        //        {
-        //            if (fileIndex < diffStartIndex)
-        //            {
-        //                diff.AddLine(ChangeState.None, line, 0, 0);
+        public IList<LineDiff> GetUnifiedDiff(long revision, FileDiff diff)
+        {
+            IList < LineDiff > lines = new List<LineDiff>();
 
-        //                line = reader.ReadLine();
-        //                fileIndex++;
-        //            }
-        //            else if (diffLineIndex < diff.Lines.Count)
-        //            {
-        //                // possible change
-        //                var diffLine = diff.Lines[diffLineIndex];
+            var reg = RunSvnCommand(string.Format("cat -r {0} {1}", revision, @"svn://technix01" + diff.Name ));
 
-        //                lines.Add(diffLine);
+            reg.WaitForExit();
+            Console.WriteLine(reg.StandardError.ReadToEnd());
+            Console.WriteLine(reg.StandardOutput.ReadToEnd());
 
-        //                diffLineIndex++;
-        //                fileIndex++;
-        //                line = reader.ReadLine();
-       
-        //            }
-        //            else
-        //            {
-        //                diff.AddLine( ChangeState.None, line, 0, 0);
-        //                line = reader.ReadLine();
-        //            }
-        //        }
-        //    }
+            int fileIndex = 0;
+            int diffStartIndex = int.Parse(diff.Lines[0].Text.Split(',')[0]);
+            int diffLineIndex = 0;
 
-        //    return lines;
-        //}
+            using (var reader = reg.StandardOutput)
+            {
+                string line = reader.ReadLine();
+                while (line != null)
+                {
+                    if (fileIndex < diffStartIndex)
+                    {
+                        diff.AddLine(ChangeState.None, line, 0, 0);
+
+                        line = reader.ReadLine();
+                        fileIndex++;
+                    }
+                    else if (diffLineIndex < diff.Lines.Count)
+                    {
+                        // possible change
+                        var diffLine = diff.Lines[diffLineIndex];
+
+                        lines.Add(diffLine);
+
+                        diffLineIndex++;
+                        fileIndex++;
+                        line = reader.ReadLine();
+
+                    }
+                    else
+                    {
+                        diff.AddLine(ChangeState.None, line, 0, 0);
+                        line = reader.ReadLine();
+                    }
+                }
+            }
+
+            return lines;
+        }
 
         public CommitDiff GetRevisionDiffs( long revision )
         {
@@ -356,6 +379,17 @@ namespace CodeReaction.Domain.Commits
         {
             return line.Contains('\0');
         }
+
+        private Tuple<int,int> ReadSvnChangeLine( string line )
+        {
+            string[] filePos = line.Split(new char[] { '@', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            int startRemovedLineNumber = int.Parse(filePos[0].Split(',')[0].Substring(1));
+            int startAddedLineNumber = int.Parse(filePos[1].Split(',')[0].Substring(1));
+
+            return new Tuple<int, int>(startRemovedLineNumber, startAddedLineNumber);
+
+        }
         
         private Process RunSvnCommand(string command)
         {
@@ -368,6 +402,8 @@ namespace CodeReaction.Domain.Commits
             proc.UseShellExecute = false;
 
             //proc.WorkingDirectory = LocalRepro;
+
+            Debug.Write("SVN commmand: " + CommandLine + command + ConnectionArguments);
 
             return System.Diagnostics.Process.Start(proc);
         }
