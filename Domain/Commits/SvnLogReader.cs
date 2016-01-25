@@ -1,4 +1,5 @@
 ﻿using CodeReaction.Domain;
+using SharpSvn;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -13,237 +14,157 @@ namespace CodeReaction.Domain.Commits
 {
     public class SvnLogReader
     {
-        string RemoteRepro { get; set; }
-
-        string CommandLine { get; set; }
-
-        string ConnectionArguments { get; set; }
+        Uri RemoteRepro { get; set; }
+        string Username { get; set; }
+        string Password { get; set; }
 
         public SvnLogReader()
         {
             var svnConfig = (ConfigurationManager.GetSection("codeReaction") as CodeReactionConfigurationSection).Svn;
 
-            RemoteRepro = svnConfig.Server;
-
-            ConnectionArguments = string.Format(" --username={0} --password={1}", svnConfig.Username, svnConfig.Password);
-
-            CommandLine = string.Format(@"{0}/svn.exe", svnConfig.Path);
+            RemoteRepro = new Uri(svnConfig.Server);
+            Username = svnConfig.Username;
+            Password = svnConfig.Password;
         }
 
         public IEnumerable<Commit> GetLatestLogs(long lastRevision, int limit)
         {
-            var reg = RunSvnCommand( 
-                string.Format( "log -r {0}:HEAD --limit {1} --xml {2}", lastRevision + 1, limit, RemoteRepro) );
+            SvnLogHandler handler = new SvnLogHandler();
 
-            XmlDocument doc = new XmlDocument();
-            doc.Load(reg.StandardOutput);
+            using (SvnClient svnClient = new SvnClient())
+            {
+                svnClient.Authentication.ForceCredentials(Username, Password);
 
-            return ParseXmlLogs(doc);
+                svnClient.Log( 
+                    RemoteRepro, 
+                    new SvnLogArgs()
+                    {
+                        Range = new SvnRevisionRange(lastRevision, SvnRevision.Head),
+                        Limit = limit
+                    },
+                    handler.Handler);
+            }
+
+            return handler.Logs;
         }
 
-        public IEnumerable<Commit> ParseLogs(StreamReader reader)
+        class SvnLogHandler
         {
-            IList<Commit> commits = new List<Commit>();
-
-            string line = reader.ReadLine();
-
-            Commit currentCommit = null;
-            while (line != null)
+            IList<Commit> _commits;
+            public SvnLogHandler()
             {
-                currentCommit = new Commit();
+                _commits = new List<Commit>();
+            }
 
-                line = reader.ReadLine(); // to read info bar
+            public IList<Commit> Logs { get { return _commits; } }
 
-                if (line == null) break;
-
-
-                string[] data = line.Split('|');
-                currentCommit.Revision = int.Parse(data[0].Substring(1).Trim());
-                currentCommit.Author = data[1].Trim();
-                currentCommit.Timestamp = DateTime.Parse(data[2].Trim().Substring(0, 25));
-                currentCommit.Message = String.Empty;
-
-                line = reader.ReadLine(); // read past the following blank line
-                line = reader.ReadLine();
-                while (line != null && line.StartsWith("----------------------") == false)
+            public void Handler(object sender, SvnLogEventArgs args)
+            {
+                Commit commit = new Commit()
                 {
-                    currentCommit.Message += (line + System.Environment.NewLine);
-                    line = reader.ReadLine();
-                }
+                    Author = args.Author,
+                    Message = args.LogMessage,
+                    Timestamp = args.Time,
+                    Revision = args.Revision,
+                };
 
-                commits.Add(currentCommit);                   
+                Logs.Add(commit);
+            
             }
-
-            return commits;
         }
 
-        public IEnumerable<Commit> ParseXmlLogs(XmlDocument doc)
+        class SvnChangeHandler
         {
-            var nodes = doc.SelectNodes("//log//logentry");
-
-            IList<Commit> logs = new List<Commit>();
-            foreach (XmlNode node in nodes)
+            IDictionary<string, FileDiff> _fileInfo;
+            public SvnChangeHandler()
             {
-                Commit log = new Commit();
-                log.Revision = int.Parse(node.Attributes.GetNamedItem("revision").InnerText );
-
-                log.Author = node.SelectSingleNode("author").InnerText;
-                log.Message = node.SelectSingleNode("msg").InnerText;
-                log.Timestamp = DateTime.Parse(node.SelectSingleNode("date").InnerText); // UTC or local time ?
-
-                logs.Add(log);
+                _fileInfo = new Dictionary<string, FileDiff>();
             }
 
-            return logs;
+            public IDictionary<string, FileDiff> FileChanges { get { return _fileInfo; } }
+
+            public void Handler(object sender, SvnLogEventArgs args)
+            {
+                foreach( var changedPath in args.ChangedPaths )
+                {
+                    FileDiff fileInfo = new FileDiff(
+                        ConvertFrom(changedPath.Action),
+                        ConvertFrom(changedPath.NodeKind),
+                        changedPath.Path,
+                        changedPath.CopyFromPath);
+
+                    FileChanges.Add(fileInfo.Name, fileInfo);
+                }
+            }
+
+            private FileState ConvertFrom( SvnChangeAction action )
+            {
+                switch(action)
+                {
+                    case SvnChangeAction.Add:
+                        return FileState.Added;
+                    case SvnChangeAction.Delete:
+                        return FileState.Deleted;
+                    case SvnChangeAction.Modify:
+                        return FileState.Modified;
+                    case SvnChangeAction.Replace:
+                        return FileState.Moved;
+                    default:
+                        return FileState.None;
+                }
+            }
+
+            private FileType ConvertFrom( SvnNodeKind nodeKind )
+            {
+                switch(nodeKind)
+                {
+                    case SvnNodeKind.File:
+                        return FileType.Text;
+                    case SvnNodeKind.Directory:
+                        return FileType.Directory;
+                    default:
+                        return FileType.None;
+                }
+            }
         }
-
-        //public IList<LineDiff> GetUnifiedDiff(FileDiff diff)
-        //{
-        //    IList<LineDiff> lines = new List<LineDiff>();
-
-        //    var reg = RunSvnCommand(string.Format("cat -r {0} {1}", diff.Revision, diff.Index ));
-
-        //    int fileIndex = 0;
-        //    int diffStartIndex = int.Parse( diff.Current.Split(',')[0] );
-        //    int diffLineIndex = 0;
-
-        //    using (var reader = reg.StandardOutput)
-        //    {
-        //        string line = reader.ReadLine();
-        //        while (line != null)
-        //        {
-        //            if (fileIndex < diffStartIndex)
-        //            {
-        //                diff.AddLine(ChangeState.None, line, 0, 0);
-
-        //                line = reader.ReadLine();
-        //                fileIndex++;
-        //            }
-        //            else if (diffLineIndex < diff.Lines.Count)
-        //            {
-        //                // possible change
-        //                var diffLine = diff.Lines[diffLineIndex];
-
-        //                lines.Add(diffLine);
-
-        //                diffLineIndex++;
-        //                fileIndex++;
-        //                line = reader.ReadLine();
-       
-        //            }
-        //            else
-        //            {
-        //                diff.AddLine( ChangeState.None, line, 0, 0);
-        //                line = reader.ReadLine();
-        //            }
-        //        }
-        //    }
-
-        //    return lines;
-        //}
 
         public CommitDiff GetRevisionDiffs( long revision )
         {
-            try
+            CommitDiff result = null;
+
+            SvnChangeHandler handler = new SvnChangeHandler();
+
+            using (SvnClient svnClient = new SvnClient())
             {
-                var reg = RunSvnCommand(string.Format("log -r {0} --verbose --xml {1}", revision, RemoteRepro));
+                svnClient.Authentication.ForceCredentials(Username, Password);
 
-                var fileInfo = GetCommitedFileInfo(revision, reg.StandardOutput);
-
-                // use this information to avoid diffing or handling files not needing a diff
-
-                reg = RunSvnCommand(string.Format(" diff -r {0}:{1} {2}", revision - 1, revision, RemoteRepro));
-
-                return GetRevisionDiffs(revision, fileInfo, reg.StandardOutput);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                throw;
-            }
-        }
-
-        /* RENAMED FILE - could be in a differnet order
-         *<path
-             kind=""
-               copyfrom-path="/directory/trunk/Dev/WebViews/Player/Quizzes/ProposalFeedbackdTOServiceImpl.cs"
-               copyfrom-rev="35581"
-               action="A">/directory/trunk/Dev/WebViews/Player/Quizzes/ProposalFeedbackDtoServiceImpl.cs</path>
-            <path
-               kind=""
-               action="D">/directory/trunk/Dev/WebViews/Player/Quizzes/ProposalFeedbackdTOServiceImpl.cs</path>
-            </paths> */
-
-        /*  Kind does not seem to be used - cannot tel if file is a directory or not */
-
-        /// <summary>
-        // Action D: deleted file M: modified file, A : Added
-        /// </summary>
-        /// <param name="revision"></param>
-        /// <param name="reader"></param>
-        public IDictionary<string, FileDiff> GetCommitedFileInfo(long revision, StreamReader reader)
-        {
-            IDictionary<string, FileDiff> fileInfo = new Dictionary<string, FileDiff>();
-
-            XmlDocument doc = new XmlDocument();
-            doc.Load(reader);
-
-            // filename starts with /directory
-            // need repos url ex svn://technixO1
-            // path: ex /directory/trunk/Dev
-
-            var nodes = doc.SelectNodes("//paths//path");
-            foreach ( XmlNode node in nodes)
-            {
-                FileState fileState = ParseAction( node.Attributes.GetNamedItem("action").InnerText );
-                string fileName = node.FirstChild.InnerText;
-
-
-                XmlNode copyFromAttr = node.Attributes.GetNamedItem("copyfrom-path");
-
-                // dont bother check if its a directory
-
-                if ( copyFromAttr == null )
-                {
-                    fileInfo[fileName] = new FileDiff( fileState, FileType.None, fileName, null  );
-                }
-                else
-                {
-                    string copyFrom = copyFromAttr.InnerText;
-                    // action added or modified possible ?
-                    // create a moved item but first check so see of the old file has already been logged
-                    // if that's the case remove it first
-                    if ( fileInfo.ContainsKey( copyFrom ) )
+                svnClient.Log(
+                    RemoteRepro,
+                    new SvnLogArgs()
                     {
-                        fileInfo.Remove(copyFrom);
-                    }
-                    fileInfo[fileName] = new FileDiff(FileState.Moved, FileType.None, fileName, copyFrom );
-                } 
+                        Range = new SvnRevisionRange(revision-1, revision)
+                    },
+                    handler.Handler);
+
+
+                SvnTarget target = SvnTarget.FromUri(RemoteRepro);
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    svnClient.Diff(target, new SvnRevisionRange(revision - 1, revision), ms);
+                    ms.Position = 0;
+                    StreamReader reader = new StreamReader(ms);
+                    result = GetRevisionDiffs(revision, handler.FileChanges, reader);
+                }
             }
 
-            return fileInfo;
+            return result;
         }
 
-
-        FileState ParseAction(string action )
-        {
-            switch (action)
-            {
-                case "A":
-                    return FileState.Added;
-                case "D":
-                    return FileState.Deleted;
-                case "M":
-                    return FileState.Modified;
-                default:
-                    return FileState.None;
-            }
-        }
-        
         public CommitDiff GetRevisionDiffs(long revision, IDictionary<string, FileDiff> fileInfo, StreamReader reader)
         {
 
-            Uri repro = new Uri(RemoteRepro);
+            Uri repro = RemoteRepro;
             string path = repro.AbsolutePath + '/';
 
             var results = new CommitDiff(revision);
@@ -355,21 +276,6 @@ namespace CodeReaction.Domain.Commits
         private bool IsBinaryFile(string line)
         {
             return line.Contains('\0');
-        }
-        
-        private Process RunSvnCommand(string command)
-        {
-            var proc = new ProcessStartInfo(CommandLine, command + ConnectionArguments );
-            proc.StandardOutputEncoding = Encoding.UTF8;
-            proc.StandardErrorEncoding = Encoding.UTF8;
-            proc.RedirectStandardError = true;
-            proc.RedirectStandardOutput = true;
-            proc.CreateNoWindow = true;
-            proc.UseShellExecute = false;
-
-            //proc.WorkingDirectory = LocalRepro;
-
-            return System.Diagnostics.Process.Start(proc);
         }
     }
 }

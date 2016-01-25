@@ -39,7 +39,39 @@ namespace CodeReaction.Tests.SvnClient2
         }
 
         [Test]
-        public void Diff()
+        public void FildDiffs()
+        {
+
+            using (SvnClient svnClient = new SvnClient())
+            {
+                try
+                {
+                    svnClient.Log(rep, new SvnLogArgs()
+                    {
+                        Range = new SvnRevisionRange(30018, 30019)
+                    },
+                        OnLogResult2
+
+                        );
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            }
+        }
+
+        private void OnLogResult2( object sender, SvnLogEventArgs args )
+        {
+            foreach( var item in args.ChangedPaths )
+            {
+                Console.WriteLine(item.Action + " " + item.NodeKind + " " + item.RepositoryPath + " " + item.CopyFromPath);
+            }
+        }
+
+        [Test]
+        public void GetRevisionDiffs()
         {
             using (SvnClient svnClient = new SvnClient())
             {
@@ -66,7 +98,8 @@ namespace CodeReaction.Tests.SvnClient2
 
         private void OnLogResult( object sender, SvnLogEventArgs args )
         {
-            Console.WriteLine(args.Revision + " -> " + args.LogMessage);
+            Console.WriteLine(args.Revision + " -> " + args.LogMessage + " by " + args.Author);
+
         }
     }
 }
