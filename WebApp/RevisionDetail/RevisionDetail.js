@@ -71,60 +71,147 @@ function showRevision(revisionNumber, revisedFileDetailsViewModel) {
 
         lineDetailViewModel = revisedFileDetailsViewModel.LineDetails[lineIndex];
 
-        lineFragment = $('<tr></tr>')
-            .attr('class', 'revision-line ' + getExtraStyleForState(lineDetailViewModel.ChangeState));
+        lineFragment = FileDiff_GetLineFragment(
+                lineDetailViewModel.ChangeState,
+                getRemovedLineNumber(lineDetailViewModel),
+                getAddedLineNumber(lineDetailViewModel),
+                getLineText(lineDetailViewModel));
  
-        table.append(lineFragment);
+        if (lineDetailViewModel.ChangeState !== 3) {
 
-        if (lineDetailViewModel.ChangeState === 3) {
-            $('<td></td>')
-                .attr('colspan', '4')
-                .attr('class', 'revision-line-text')
-                .text( '-- non-modified lines --')
-                .appendTo(lineFragment);
-        }
-        else {
             lineFragment
                 .attr('data-revision', revisionNumber)
                 .attr('data-file', revisedFileDetailsViewModel.Index)
                 .attr('data-line', lineDetailViewModel.LineId)
-                .on('click', addNewCommentBox);
+                .on('click', addNewCommentBox); // TODO add style for cursor only in this case
 
-            $('<td></td>')
-                .attr('class', 'revision-line-number ' + getExtraStyleForState(lineDetailViewModel.ChangeState))
-                .text( getRemovedLineNumber(lineDetailViewModel) )
-                .appendTo(lineFragment);
-
-            $('<td></td>')
-                .attr('class', 'revision-line-number ' + getExtraStyleForState(lineDetailViewModel.ChangeState))
-                .text(getAddedLineNumber(lineDetailViewModel))
-                .appendTo(lineFragment);
-
-            $('<td></td>')
-                .attr('class', 'revision-line-state')
-                .text(getChangedSymbol(lineDetailViewModel.ChangeState))
-                .appendTo(lineFragment);
-
-            codeCell = $('<td></td>')
-                .attr('class', 'revision-line-text')
-                .text(getLineText(lineDetailViewModel))
-                .appendTo(lineFragment);
+            var codeCell = lineFragment.children[3];
 
             addComments(revisionNumber, revisedFileDetailsViewModel.Index, lineDetailViewModel, codeCell);
         }
+
+        table.append(lineFragment);
     }
+
+    var expandButton = $('<button></button>')
+        .text('+')
+        .on('click', { revision: revisionNumber, filename: revisedFileDetailsViewModel.Filename }, expandFile);
 
     tableWrapper
         .append($('<div></div>')
         .attr('class', 'file-header')
-        .append($('<button></button>').text('+'))
-        .append($('<span></span>')
-        .text(revisedFileDetailsViewModel.ModText + " --> " + revisedFileDetailsViewModel.Filename))
-        );
+        .append(expandButton)
+        .append($('<span></span>').text(revisedFileDetailsViewModel.ModText + " --> "))
+        .append($('<span></span>').text(revisedFileDetailsViewModel.Filename)));
 
     tableWrapper.append(table);
     
     $('#insertPoint').append(tableWrapper);
+}
+
+function FileDiff_GetLineFragment(lineState, oldLineNumber, newLineNumber, text) {
+
+    var changeStyle = getExtraStyleForState(lineState);
+
+    lineFragment = $('<tr></tr>').attr('class', 'revision-line ' + changeStyle);
+
+    if (lineState === 3) {
+        $('<td></td>')
+            .attr('colspan', '4')
+            .attr('class', 'revision-line-text')
+            .text('-- non-modified lines --')
+            .appendTo(lineFragment);
+    }
+    else {
+        $('<td></td>')
+        .attr('class', 'revision-line-number ' + changeStyle)
+        .text(oldLineNumber)
+        .appendTo(lineFragment);
+
+        $('<td></td>')
+            .attr('class', 'revision-line-number ' + changeStyle)
+            .text(newLineNumber)
+            .appendTo(lineFragment);
+
+        $('<td></td>')
+            .attr('class', 'revision-line-state')
+            .text(getChangedSymbol(lineState))
+            .appendTo(lineFragment);
+
+        $('<td></td>')
+            .attr('class', 'revision-line-text')
+            .text(text)
+            .appendTo(lineFragment);
+    }
+
+    return lineFragment;
+}
+
+function expandFile(event) {
+    var revision = event.data.revision;
+    var filename = event.data.filename;
+
+    var uri = 'api/commits/file/' + revision + '?filename=' + encodeURIComponent(filename);
+
+    $.getJSON(uri)
+        .done( function(data, textStatus, jqXHR)
+        {
+            var tbody = $(event.target).parent().parent().find('tbody').first();
+            insertFile( tbody, data);
+        });
+}
+
+function insertFile(tbody, lines) {
+
+    var rows = tbody.children();
+    var row;
+    var lineIndex = 0;
+
+    if ( rows.length == 0 )
+        return;
+    
+    row = rows[0];
+
+    while (row) {
+
+        if (row.className.indexOf('state-break') >= 0) {
+
+            // non modified place holder
+            // peak line number of next row
+            //insert before new lines from lineIndex to peekedlinenum
+            // get next line (cannot be a place holder normally)
+            // removeplaceholder
+
+            var peekNode = row.nextSibling;
+
+            if (peekNode === null) {
+                row = null;
+            }
+            else {
+               
+                var td = peekNode.childNodes[0];
+                var n = parseInt( td.innerText);
+
+                for (; lineIndex < n - 1; lineIndex++) {
+
+                    lineFragment = FileDiff_GetLineFragment(0, lineIndex + 1, lineIndex + 1, lines[lineIndex]);
+
+                    lineFragment.insertBefore(peekNode);
+                }
+
+            }
+            
+            var del = row;
+            row = peekNode;
+            del.remove();
+        }
+        else {
+            // move to next line
+            row = row.nextSibling;
+            lineIndex++;
+        }
+
+    }
 }
 
 function showReviews(reviews) {

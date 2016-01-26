@@ -15,6 +15,9 @@ namespace CodeReaction.Domain.Commits
     public class SvnLogReader
     {
         Uri RemoteRepro { get; set; }
+
+        string RemoteReproAuthority { get; set; }
+
         string Username { get; set; }
         string Password { get; set; }
 
@@ -23,6 +26,8 @@ namespace CodeReaction.Domain.Commits
             var svnConfig = (ConfigurationManager.GetSection("codeReaction") as CodeReactionConfigurationSection).Svn;
 
             RemoteRepro = new Uri(svnConfig.Server);
+            RemoteReproAuthority = RemoteRepro.GetLeftPart(UriPartial.Authority);
+
             Username = svnConfig.Username;
             Password = svnConfig.Password;
         }
@@ -43,7 +48,7 @@ namespace CodeReaction.Domain.Commits
                         Limit = limit
                     },
                     handler.Handler);
-            }
+        }
 
             return handler.Logs;
         }
@@ -69,7 +74,7 @@ namespace CodeReaction.Domain.Commits
                 };
 
                 Logs.Add(commit);
-            
+
             }
         }
 
@@ -85,7 +90,7 @@ namespace CodeReaction.Domain.Commits
 
             public void Handler(object sender, SvnLogEventArgs args)
             {
-                foreach( var changedPath in args.ChangedPaths )
+                foreach (var changedPath in args.ChangedPaths)
                 {
                     FileDiff fileInfo = new FileDiff(
                         ConvertFrom(changedPath.Action),
@@ -97,9 +102,9 @@ namespace CodeReaction.Domain.Commits
                 }
             }
 
-            private FileState ConvertFrom( SvnChangeAction action )
+            private FileState ConvertFrom(SvnChangeAction action)
             {
-                switch(action)
+                switch (action)
                 {
                     case SvnChangeAction.Add:
                         return FileState.Added;
@@ -142,7 +147,7 @@ namespace CodeReaction.Domain.Commits
                     RemoteRepro,
                     new SvnLogArgs()
                     {
-                        Range = new SvnRevisionRange(revision-1, revision)
+                        Range = new SvnRevisionRange(revision, revision)
                     },
                     handler.Handler);
 
@@ -157,13 +162,11 @@ namespace CodeReaction.Domain.Commits
                     result = GetRevisionDiffs(revision, handler.FileChanges, reader);
                 }
             }
-
             return result;
         }
-
+        
         public CommitDiff GetRevisionDiffs(long revision, IDictionary<string, FileDiff> fileInfo, StreamReader reader)
         {
-
             Uri repro = RemoteRepro;
             string path = repro.AbsolutePath + '/';
 
@@ -273,9 +276,60 @@ namespace CodeReaction.Domain.Commits
             return results;
         }
 
+        public IList<string> GetCurrentVersionOfFile(long revision, string filename)
+        {
+            IList<string> lines = new List<string>();
+            using (SvnClient client = new SvnClient())
+            {
+                client.Authentication.ForceCredentials(Username, Password);
+                SvnTarget target = SvnTarget.FromUri(new Uri(RemoteReproAuthority + filename) );
+                SvnCatHandler handler = new SvnCatHandler();
+
+                client.FileVersions(
+                    target,
+                    new SvnFileVersionsArgs()
+                    {
+                        Start = new SvnRevision(revision),
+                        End = new SvnRevision(revision),
+                        RetrieveContents = true,
+
+                    },
+                    handler.Handler);
+
+                lines = handler.Lines;
+            }
+
+            return lines;
+        }
+
+        class SvnCatHandler
+        {
+            public IList<string> Lines { get; private set; }
+            public SvnCatHandler()
+            {
+                Lines = new List<string>();
+            }
+
+            public void Handler( object sender, SvnFileVersionEventArgs args)
+            {
+                using (StreamReader reader = new StreamReader(args.GetContentStream()))
+                {
+                    string line = reader.ReadLine();
+                    while (line != null )
+                    {
+                        Lines.Add(line);
+                        line = reader.ReadLine();
+                    }
+                }
+            }
+
+
+        }
+
         private bool IsBinaryFile(string line)
         {
             return line.Contains('\0');
         }
+       
     }
 }
