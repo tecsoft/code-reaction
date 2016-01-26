@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeReaction.Tests.SvnClient2
+namespace CodeReaction.Tests.Svn
 {
     [TestFixture]
     public class SvnClientFixture
@@ -41,13 +41,12 @@ namespace CodeReaction.Tests.SvnClient2
             using (SvnClient client = new SvnClient())
             {
                 Uri fileUri = new Uri(@"svn://technix01/directory/trunk/Dev/WebSite/Studio/Courses/Items/Modules/Edit.ascx.cs");
-                SvnTarget target = SvnTarget.FromUri(fileUri);
+                SvnTarget target = new SvnUriTarget(fileUri, 30078);
 
                 using (MemoryStream ms = new MemoryStream())
                 {
                     client.Write(target,
-                        ms,
-                        new SvnWriteArgs() { Revision = new SvnRevision(30078) });
+                        ms, new SvnWriteArgs() { Revision = new SvnRevision(30078) });
 
                     ms.Position = 0;
                     using (StreamReader reader = new StreamReader(ms))

@@ -282,48 +282,28 @@ namespace CodeReaction.Domain.Commits
             using (SvnClient client = new SvnClient())
             {
                 client.Authentication.ForceCredentials(Username, Password);
-                SvnTarget target = SvnTarget.FromUri(new Uri(RemoteReproAuthority + filename) );
-                SvnCatHandler handler = new SvnCatHandler();
+                SvnTarget target = new SvnUriTarget(new Uri(RemoteReproAuthority + filename), revision );
 
-                client.FileVersions(
-                    target,
-                    new SvnFileVersionsArgs()
-                    {
-                        Start = new SvnRevision(revision),
-                        End = new SvnRevision(revision),
-                        RetrieveContents = true,
-
-                    },
-                    handler.Handler);
-
-                lines = handler.Lines;
-            }
-
-            return lines;
-        }
-
-        class SvnCatHandler
-        {
-            public IList<string> Lines { get; private set; }
-            public SvnCatHandler()
-            {
-                Lines = new List<string>();
-            }
-
-            public void Handler( object sender, SvnFileVersionEventArgs args)
-            {
-                using (StreamReader reader = new StreamReader(args.GetContentStream()))
+                using (MemoryStream ms = new MemoryStream())
                 {
-                    string line = reader.ReadLine();
-                    while (line != null )
+                    client.Write(target,
+                        ms,
+                        new SvnWriteArgs() { Revision = new SvnRevision(revision) });
+
+                    ms.Position = 0;
+                    using (StreamReader reader = new StreamReader(ms))
                     {
-                        Lines.Add(line);
-                        line = reader.ReadLine();
+                        string line = reader.ReadLine();
+                        while (line != null)
+                        {
+                            lines.Add(line);
+                            line = reader.ReadLine();
+                        }
                     }
                 }
             }
 
-
+            return lines;
         }
 
         private bool IsBinaryFile(string line)
