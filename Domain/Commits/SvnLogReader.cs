@@ -38,6 +38,7 @@ namespace CodeReaction.Domain.Commits
 
             using (SvnClient svnClient = new SvnClient())
             {
+                svnClient.LoadConfiguration(Path.Combine(Path.GetTempPath(), "Svn"), true);
                 svnClient.Authentication.ForceCredentials(Username, Password);
 
                 svnClient.Log( 
@@ -48,7 +49,7 @@ namespace CodeReaction.Domain.Commits
                         Limit = limit
                     },
                     handler.Handler);
-        }
+            }
 
             return handler.Logs;
         }
@@ -141,6 +142,7 @@ namespace CodeReaction.Domain.Commits
 
             using (SvnClient svnClient = new SvnClient())
             {
+                svnClient.LoadConfiguration(Path.Combine(Path.GetTempPath(), "Svn"), true);
                 svnClient.Authentication.ForceCredentials(Username, Password);
 
                 svnClient.Log(
@@ -281,6 +283,7 @@ namespace CodeReaction.Domain.Commits
             IList<string> lines = new List<string>();
             using (SvnClient client = new SvnClient())
             {
+                client.LoadConfiguration(Path.Combine(Path.GetTempPath(), "Svn"), true);
                 client.Authentication.ForceCredentials(Username, Password);
                 SvnTarget target = new SvnUriTarget(new Uri(RemoteReproAuthority + filename), revision );
 
