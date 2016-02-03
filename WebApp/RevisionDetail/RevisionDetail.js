@@ -89,7 +89,7 @@ function showRevision(revisionNumber, revisedFileDetailsViewModel) {
 
                 var codeCell = lineFragment.children[3];
 
-                addComments(revisionNumber, revisedFileDetailsViewModel.Index, lineDetailViewModel, codeCell);
+                addComments(revisionNumber, revisedFileDetailsViewModel.Index, lineDetailViewModel, lineFragment);
             }
 
             table.append(lineFragment);
@@ -304,7 +304,7 @@ function addComments(revisionNumber, fileId, line, appendToItem) {
     var comments = line.Comments;
 
     for (i = 0; i < comments.length; i++) {
-        addComment(comments[i], revisionNumber, fileId, line.LineId, appendToItem);
+        addComment(comments[i], revisionNumber, fileId, line.LineId, appendToItem.children().last());
     }
 }
 
