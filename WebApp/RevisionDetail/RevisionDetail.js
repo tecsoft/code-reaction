@@ -71,26 +71,29 @@ function showRevision(revisionNumber, revisedFileDetailsViewModel) {
 
         lineDetailViewModel = revisedFileDetailsViewModel.LineDetails[lineIndex];
 
-        lineFragment = FileDiff_GetLineFragment(
-                lineDetailViewModel.ChangeState,
-                getRemovedLineNumber(lineDetailViewModel),
-                getAddedLineNumber(lineDetailViewModel),
-                getLineText(lineDetailViewModel));
+        if ( ! IgnoreFirstLine( lineDetailViewModel ) ) {
+
+            lineFragment = FileDiff_GetLineFragment(
+                    lineDetailViewModel.ChangeState,
+                    getRemovedLineNumber(lineDetailViewModel),
+                    getAddedLineNumber(lineDetailViewModel),
+                    getLineText(lineDetailViewModel));
  
-        if (lineDetailViewModel.ChangeState !== 3) {
+            if (lineDetailViewModel.ChangeState !== 3) {
 
-            lineFragment
-                .attr('data-revision', revisionNumber)
-                .attr('data-file', revisedFileDetailsViewModel.Index)
-                .attr('data-line', lineDetailViewModel.LineId)
-                .on('click', addNewCommentBox); // TODO add style for cursor only in this case
+                lineFragment
+                    .attr('data-revision', revisionNumber)
+                    .attr('data-file', revisedFileDetailsViewModel.Index)
+                    .attr('data-line', lineDetailViewModel.LineId)
+                    .on('click', addNewCommentBox); // TODO add style for cursor only in this case
 
-            var codeCell = lineFragment.children[3];
+                var codeCell = lineFragment.children[3];
 
-            addComments(revisionNumber, revisedFileDetailsViewModel.Index, lineDetailViewModel, codeCell);
+                addComments(revisionNumber, revisedFileDetailsViewModel.Index, lineDetailViewModel, codeCell);
+            }
+
+            table.append(lineFragment);
         }
-
-        table.append(lineFragment);
     }
 
     var expandButton = $('<button></button>')
@@ -107,6 +110,10 @@ function showRevision(revisionNumber, revisedFileDetailsViewModel) {
     tableWrapper.append(table);
     
     $('#insertPoint').append(tableWrapper);
+}
+
+function IgnoreFirstLine(lineDetailViewModel) {
+    return (lineDetailViewModel.RemovedLineNumber === 1 && lineDetailViewModel.ChangeState === 3);
 }
 
 function FileDiff_GetLineFragment(lineState, oldLineNumber, newLineNumber, text) {
