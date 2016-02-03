@@ -13,24 +13,6 @@ namespace CodeReaction.Domain.HouseKeeping
         UnitOfWork _uow;
         ISourceControl _sourceControl;
 
-        class SourceControlDummy : ISourceControl
-        {
-            IEnumerable<Commit> _commits;
-            public SourceControlDummy( IEnumerable<Commit> commits )
-            {
-                _commits = commits;
-            }
-            public CommitDiff GetRevision(long revision)
-            {
-                throw new NotImplementedException();
-            }
-
-            public IEnumerable<Commit> GetSince(long revision, int maxNumber)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         public HouseKeepingService(UnitOfWork uow, ISourceControl sourceControl)
         {
             _uow = uow;

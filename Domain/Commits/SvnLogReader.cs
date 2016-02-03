@@ -45,7 +45,7 @@ namespace CodeReaction.Domain.Commits
                     RemoteRepro, 
                     new SvnLogArgs()
                     {
-                        Range = new SvnRevisionRange(lastRevision, SvnRevision.Head),
+                        Range = new SvnRevisionRange(lastRevision + 1, SvnRevision.Head),
                         Limit = limit
                     },
                     handler.Handler);
