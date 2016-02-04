@@ -315,9 +315,7 @@ function addComment(comment, revisionNumber, fileId, lineId, appendToItem) {
 
     var appendPoint = appendToItem;
     if ( comment.ReplyToId !== null ) {
-        appendPoint = $(appendPoint).children("div[data-idcomment='" + comment.ReplyToId + "']:first");
-
-       if (!appendPoint) alert("insert point not found");
+        appendPoint = $(appendPoint).find("div[data-idcomment='" + comment.ReplyToId + "']:first");
     }
 
     var commentBox = newCommentFragment(comment.Id, comment.Author, comment.Comment, revisionNumber, fileId, lineId);
@@ -330,17 +328,21 @@ function addComment(comment, revisionNumber, fileId, lineId, appendToItem) {
 //
 function newCommentFragment(id, author, comment, revisionNumber, fileId, lineId ) {
 
-    var row, cell, block;
+    var block, header;
 
     block = $('<div></div>')
             .attr('class', 'comments-block')
             .attr('data-idComment', id);
 
-    $('<div></div>').attr('class','comments-author').text(author).appendTo(block);
-    $('<div></div>').attr('class', 'comments-text').text(comment).appendTo(block);
+    header = $('<div></div>')
+        .attr('class', 'comments-author');
+
+    $('<span></span>').text(author).appendTo(header);
     
     // anyone can reply to a comment
-    commentReplyFragment(addNewReplyBox).appendTo(block);
+    commentReplyFragment(addNewReplyBox).appendTo(header);
+    header.appendTo(block);
+    $('<div></div>').attr('class', 'comments-text').text(comment).appendTo(block);
 
     return block;
 }
@@ -365,7 +367,7 @@ function addNewCommentBox(event) {
 
 function addNewReplyBox(event) {
     event.stopPropagation();
-    var parentComment = $(this).parent();
+    var parentComment = $(this).parent().parent();
     var commentBox = commentEditBoxFragment( postReplyHandler, cancelReplyHandler);
 
     commentBox.attr('data-idcomment', parentComment.attr('data-idcomment'));
