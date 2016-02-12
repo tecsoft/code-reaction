@@ -1,52 +1,40 @@
 ﻿
-function setUsername1(username) {
+function setUsername(username) {
     window.sessionStorage.setItem('username', username);
 }
 
-function getUsername1() {
+function getUsername() {
     return window.sessionStorage.getItem('username');
 }
 
-function setPassword1(password) {
-    window.sessionStorage.setItem('password', password);
+function setToken(token) {
+    window.sessionStorage.setItem('token', token);
 }
 
-function getPassword1() {
-    return window.sessionStorage.getItem('password');
+function getToken() {
+    return window.sessionStorage.getItem('token');
 }
 
 $(document).ajaxSend(
            function (event, jqxhr, settings) {
-               var data = getUsername1() + ":" + getPassword1();
-               jqxhr.setRequestHeader("Authorization", "Basic " + btoa( data ));
+               jqxhr.setRequestHeader("Authorization", "Bearer " + getToken() );
            });
 
 $(document).ajaxError(
     function (event, jqxhr, settings, message) {
         if (jqxhr.status === 401) {
-            alert("authen error ");
+            alert("You are not authorizedto access this resosurce");
         }
     });
 
 function authenticate() {
 
-    if ( getUsername1() && getPassword1() ) {
-        window.location = "Commits/commits.html";
+    if (getUsername() && getToken()) {
+        window.location = "/Commits/commits.html";
     }
     else {
-        window.location = "login.html"; // with redirect
+        window.location = "/Users/login.html"; // with redirect
     }
-}
-
-function showLogin() {
-    // get dialog
-    // insert form
-    // set actions on the buttons
-}
-
-function closeLogin() {
-    // remove content
-    // close dialog
 }
 
 function loginReady() {
@@ -72,69 +60,89 @@ function doLogin(event) {
         return;
     }
 
-    setUsername1(username);
-    setPassword1(password);
+    var data = 'username=' + username + '&password=' + password + '&grant_type=password';
 
-    $.post('api/users/login')
+    $.post('/token', data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
         .done(
-            function () {
-                $('#log').html("ok");
-                window.location = "Commits/commits.html";
+            function (data) {
+                setUsername(username);
+                setToken(data.access_token);
+                window.location = "/Commits/commits.html";
             })
         .fail(
             function (xhr, textStatus, error) {
-                // TODO print message and allow retry
-                $('#log').html(xhr.statusText);
-                setUsername1(null);
-                setPassword1(null);
+                alert( JSON.parse(xhr.responseText)["error_description"] );
             });
+
     return false;
 }
 
 function doLogout() {
-    setUsername1(null);
-    setPassword1(null);
+    setUsername(null);
+    setToken(null);
 }
 
-function createUser() {
 
-    var userName = $('#newuser-username').val();
+function registerReady() {
+    $('#connectButton').on('click', doRegister);
+}
+
+function doRegister() {
+
+    var username = $('#newuser-username').val();
     var password = $('#newuser-password').val();
     var confirm = $('#newuser-confirm').val();
+    var email = $('#newuser-email').val();
 
-    alert($('#newuser-username').val());
-    if (!userName) {
-        alert("username required");
+    if (!username) {
+        alert("Username required");
         return;
     }
 
     if (!password) {
-        alert("password required");
+        alert("Password required");
         return;
     }
 
     if (password.length < 8) {
-        alert("min 8 caracters please");
+        alert("Min 8 characters please");
         return;
     }
 
     if (!confirm) {
-        alert("password confirmation rquired");
+        alert("Password confirmation required");
         return;
     }
 
     if (password !== confirm) {
-        alert("entered password does not match confirmed");
+        alert("Entered password does not match confirmed");
         return;
     }
 
-    $.post('api/users/create/' + userName + '?password=' + encodeURIComponent(password))
+    if (!email) {
+        alert("Email is required");
+    }
+
+    var form = $('#register');
+    $.post('/api/users/register', form.serialize())
         .done(
-            function () {
-                window.location = "Commits/commits.html";
-            })
+            function (data) {
+                setUsername(username);
+                var data = 'username=' + username + '&password=' + password + '&grant_type=password';
+                $.post('/token', data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+                    .done(
+                        function (data) {
+                            setUsername(username);
+                            setToken(data.access_token);
+                            window.location = "/Commits/commits.html";
+                        })
+                    .fail(
+                        function (xhr, textStatus, error) {
+                            alert(JSON.parse(xhr.responseText)["error_description"]);
+                        });
+                 })
         .fail(
             function (xhr, textStatus, error) {
-                alert(xhr.responseJSON.ExceptionMessage);
+                alert(xhr.statusText);
             });
 }

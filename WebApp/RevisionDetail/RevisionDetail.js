@@ -31,7 +31,7 @@ function loadReview() {
                     .appendTo(insertPoint);
             }
 
-            if (revisionDetailViewModel.Author != getUsername1()) {
+            if (revisionDetailViewModel.Author != getUsername()) {
                 $('<button></button>')
                     .text('Add comment')
                     .on('click', { revision: revision }, markAsReviewed )
@@ -245,7 +245,7 @@ function createReviewBoxFragment(review) {
 function markAsApproved(event) {
 
     var revision = event.data.revision;
-    var approver = getUsername1();
+    var approver = getUsername();
 
     var uri = 'api/commits/approve/' + revision + '/' + approver;
     $.post(uri)
@@ -273,7 +273,7 @@ function postReviewComment(event) {
     var revision = block.parent().attr('data-revision');
     var textArea = block.find('textarea').first();
     var comment = textArea.val();
-    var author = getUsername1();
+    var author = getUsername();
     var uri;
     var newBlock;
 
@@ -382,7 +382,7 @@ function postReplyHandler(event) {
     var idComment = parent.attr('data-idcomment');
     textArea = parent.find('textarea').first();
 
-    var author = getUsername1();
+    var author = getUsername();
     var comment = textArea.val();
 
     var uri = '/api/commits/reply/' + idComment + '/' + author + '?comment=' + encodeURIComponent(comment);
@@ -471,7 +471,7 @@ function postComment() {
     var revision = row.attr('data-revision');
     var fileIndex = row.attr('data-file');
     var line = row.attr('data-line');
-    var author = getUsername1();
+    var author = getUsername();
     var comment = textArea.val();
 
     if (!comment) {

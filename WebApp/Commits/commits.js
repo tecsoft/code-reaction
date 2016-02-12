@@ -3,14 +3,14 @@
 //-------------------------------
 function loadCommits() {
 
-    var uri; // = '/api/commits?exclude=' + encodeURIComponent(getUsername1()) + '&max=30';
+    var uri;
     var keyword = $('#inputKeyWord').val();
 
     if (keyword) {
         uri = '/api/commits?keyword=' + keyword;
     }
     else {
-        uri = '/api/commits?exclude=' + encodeURIComponent(getUsername1()) + '&max=30';
+        uri = '/api/commits?exclude=' + encodeURIComponent(getUsername()) + '&max=30';
     }
     
     $.getJSON(uri)
@@ -58,7 +58,7 @@ function createItem(revision) {
             .text('Cool! Approved by: ' + revision.ApprovedBy)
             .appendTo(actions);
     }
-    else if (getUsername1() !== revision.Author) {
+    else if (getUsername() !== revision.Author) {
         $('<button></button>').text('Approve').on('click', { revision: revision.Revision }, approveCommit).appendTo(actions);
     }
 // IGNORE $('<button></button>').text('Ignore').on('click', ignoreCommit).appendTo(actions);
@@ -73,7 +73,7 @@ function createItem(revision) {
 // open for review action to show revision changes and allow a review
 function openForReview(event) {
     var revision = event.data.revision;
-    window.location = "../review.html?revision=" + revision;
+    window.location = "/review.html?revision=" + revision;
 }
 
 //
@@ -89,7 +89,7 @@ function approveCommit(event) {
 
     // TODO refactor same code in revision detail.js
     var revision = event.data.revision;
-    var approver = getUsername1();
+    var approver = getUsername();
 
     var uri = '/api/commits/approve/' + revision + '/' + approver;
     $.post(uri)

@@ -3,7 +3,7 @@
 //-------------------------------
 function loadFollowUps() {
 
-    var uri = '/api/commits?include=' + encodeURIComponent(getUsername1()) + '&max=30';
+    var uri = '/api/commits?include=' + encodeURIComponent(getUsername()) + '&max=30';
     var keyword = $('#inputKeyWord').val();
 
     if (keyword) {
@@ -53,7 +53,7 @@ function createItem(revision) {
         .append($('<span></span>').attr('class', 'label label-warning').text(revision.NumberReplies)).append(' replies')
         .appendTo(block);
 
-    if (getUsername1() !== revision.Author) {
+    if (getUsername() !== revision.Author) {
         $('<button></button>').text('Approve').on('click', approveCommit).appendTo(actions);
     }
 

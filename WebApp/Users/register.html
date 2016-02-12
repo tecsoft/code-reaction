@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" meidia="screen" />
+    <link rel="stylesheet" type="text/css" href="../styles.css" media="screen" />
+    
+</head>
+<body>
+    <div class="header">
+        Code Reaction
+    </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Sign Up!</h4>
+            </div>
+            <div class="modal-body">
+                <form role="search" id="register">
+                    <div class="form-group">
+                        <label for="userName">Name:</label>
+                        <input type="text" class="form-control" id="newuser-username" name="newuser-username">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="text" class="form-control" id="newuser-email" name="newuser-email">
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Password:</label>
+                        <input type="password" class="form-control" id="newuser-password" name="newuser-password">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPwd">Confirm password:</label>
+                        <input type="password" class="form-control" id="newuser-confirm">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="doRegister()">Sign up</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div>
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+            <script src="users.js"></script>
+            <script>
+                $(document).ready(registerReady);
+            </script>
+
+</body>
+</html>

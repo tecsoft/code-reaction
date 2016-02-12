@@ -13,7 +13,6 @@ using System.Web.Http;
 
 namespace CodeReaction.Web.Controllers
 {
-    [IdentityBasicAuthentication]
     [Authorize]
     public class RevisionDetailController : ApiController
     {
