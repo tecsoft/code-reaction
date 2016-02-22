@@ -19,13 +19,6 @@ namespace CodeReaction
 
     public class SvnElement : ConfigurationElement
     {
-        [ConfigurationProperty("path")]
-        public string Path
-        {
-            get { return this["path"] as string;  }
-            set { this["path"] = value; }
-        }
-
         [ConfigurationProperty("server")]
         public string Server
         {

@@ -94,7 +94,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="Database\CodeReview.sql" />
-    <Content Include="Database\CodeReview.sqlite" />
+    <None Include="Database\CodeReview.sqlite" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
