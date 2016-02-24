@@ -7,21 +7,25 @@
     
 </head>
 <body>
-    <div class="header">
-        Code Reaction  
+    
+    <nav>
+        <div class="header">
+            <div class="title">Code Reaction</div>
+        </div>
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="/Commits/commits.html">Commits</a></li>
+            <li><a href="/Followups/followups.html">My follow-ups</a></li>
+        </ul>
+        
+    </nav>  
+    <div class="well well-sm" id="criteriaPanel">
+        <span>Search by keyword: <input type="text" id="inputKeyWord" /></span>
+        <button id="refresh" onclick="refreshPage(event);" class="btn btn-primary">Refresh</button>
     </div>
-
-    <div id="container" >
-        <div class="toolbar">
-            <a href="../Commits/commits.html">Commits</a>
-            <a href="../Followups/followups.html">My follow-ups</a>
-        </div>
-        <div id="criteriaPanel">
-            <span>Search by keyword: <input type="text" id="inputKeyWord" /></span>
-          <!--  <span>Search by status: <input type="text" id="inputStatus" /> </span>-->
-          <button id="refresh" onclick="refreshPage(event);" >Refresh</button>
-        </div>
+    <div id="container-commits">
+        
         <div id="detailPanel2">
+            
             <div id="insertPoint">
 
             </div>

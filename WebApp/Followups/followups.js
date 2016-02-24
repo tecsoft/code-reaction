@@ -31,20 +31,21 @@ function refreshPage(event) {
 // creates a line for a commit
 // - contains, commit log, revision details, review state and action buttons
 //
+// TODO fusion with commits.js version
 function createItem(revision) {
 
     var block = $('<div></div>').attr('class', 'commit-item2');
     var actions = $('<div></div>').attr('class', 'commit-actions2');
 
-    $('<div></div>')
+    var title = $('<div></div>')
         .text(revision.Message)
         .attr('class', 'commit-title2')
         .appendTo(block);
 
     $('<div></div>')
-        .text("Revision : " + revision.Revision + " by " + revision.Author + " on " + revision.Timestamp)
-        .attr('class', 'commit-subtitle')
-        .appendTo(block);
+       .text("Revision : " + revision.Revision + " by " + revision.Author + " on " + revision.Timestamp)
+       .attr('class', 'commit-subtitle')
+       .appendTo(title);
 
     $('<div></div>')
         .attr('class', 'commit-annotation-summary')
@@ -53,13 +54,19 @@ function createItem(revision) {
         .append($('<span></span>').attr('class', 'label label-warning').text(revision.NumberReplies)).append(' replies')
         .appendTo(block);
 
-    if (getUsername() !== revision.Author) {
-        $('<button></button>').text('Approve').on('click', approveCommit).appendTo(actions);
+    if (revision.ApprovedBy) {
+        $('<div></div>')
+            .text('Cool! Approved by: ' + revision.ApprovedBy)
+            .appendTo(actions);
     }
-
+    else if (getUsername() !== revision.Author) {
+        $('<button ></button>').attr('class', 'btn btn-success').text('Approve').on('click', approveCommit).appendTo(actions);
+    }
     actions.appendTo(block);
 
     block.on('click', { revision: revision.Revision }, openForReview);
+
+    $('<div></div>').attr('class', 'commit-item-footer').appendTo(block);
 
     block.appendTo(insertPoint);
 }

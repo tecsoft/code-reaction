@@ -13,37 +13,49 @@ function loadReview() {
             var insertPoint = $('#insertPoint');
             insertPoint.empty();
 
-            $('<div></div>')
+            var block = $('<div></div>').attr('class', 'commit-item2');
+            var actions = $('<div></div>').attr('class', 'commit-actions2');
+
+            var title = $('<div></div>')
                 .text(revisionDetailViewModel.Message)
                 .attr('class', 'commit-title2')
-                .appendTo(insertPoint);
+                .appendTo(block);
 
             $('<div></div>')
-                .text("Revision : " + revisionDetailViewModel.Revision + " by " + revisionDetailViewModel.Author + " on " + revisionDetailViewModel.Timestamp)
-                .attr('class', 'commit-subtitle')
-                .appendTo(insertPoint);
+               .text("Revision : " + revisionDetailViewModel.Revision + " by " + revisionDetailViewModel.Author + " on " + revisionDetailViewModel.Timestamp)
+               .attr('class', 'commit-subtitle')
+               .appendTo(title);
 
-            showReviews(revisionDetailViewModel.Reviews);
+            $('<div></div>')
+                .attr('class', 'commit-annotation-summary')
+                .appendTo(block);
 
             if (revisionDetailViewModel.ApprovedBy) {
                 $('<div></div>')
                     .text('This commit has been approved by: ' + revisionDetailViewModel.ApprovedBy)
-                    .appendTo(insertPoint);
+                    .appendTo(actions);
             }
-
-            if (revisionDetailViewModel.Author != getUsername()) {
+            else if (revisionDetailViewModel.Author != getUsername()) {
                 $('<button></button>')
-                    .text('Add comment')
-                    .on('click', { revision: revision }, markAsReviewed )
-                    .appendTo(insertPoint);
-
-                if (!revisionDetailViewModel.ApprovedBy) {
-                    $('<button></button>')
-                        .text('Approve')
-                        .on('click', { revision: revision }, markAsApproved)
-                        .appendTo(insertPoint);
-                }
+                    .attr('class', 'btn btn-success button-ok')
+                    .text('Approve')
+                    .on('click', { revision: revision }, markAsApproved)
+                    .appendTo(actions);
             }
+
+            actions.appendTo(block);
+
+            $('<div></div>').attr('class', 'commit-item-footer').appendTo(block);
+
+            block.appendTo(insertPoint);
+
+            showReviews(revisionDetailViewModel.Reviews);
+            
+            $('<button></button>')
+                .attr('class', 'btn btn-success button-ok')
+                .text('Add comment')
+                .on('click', { revision: revision }, markAsReviewed)
+                .appendTo(insertPoint);
 
             // On success, 'data' contains a list of products.
             $.each(revisionDetailViewModel.RevisedFileDetails,
@@ -226,15 +238,21 @@ function showReviews(reviews) {
     var fragment;
     var insertPoint = $('#insertPoint');
     var i;
+    
+    var outer = $('<div></div>')
+        .attr('class', 'review-line');
+
+    insertPoint.append(outer);
+
     for( i = 0; i < nbReviews; i++ ) {
         fragment = createReviewBoxFragment(reviews[i]);
-        insertPoint.append(fragment);
+        outer.append(fragment);
     }
 }
 
 function createReviewBoxFragment(review) {
     var newBlock = $('<div></div>')
-    .attr('class', 'review-line');
+        .attr('class', 'comments-block');
 
     $('<div></div>').attr('class', 'comments-author').text(review.Author).appendTo(newBlock);
     $('<div></div>').attr('class', 'comments-text').text(review.Comment).appendTo(newBlock);
@@ -284,7 +302,8 @@ function postReviewComment(event) {
 
     // we update screen optimistically before post
 
-    newBlock = $('<div></div>');
+    newBlock = $('<div></div>')
+        .attr('class', 'comments-block');;
     
     $('<div></div>').attr('class', 'comments-author').text(author).appendTo(newBlock);
     $('<div></div>').attr('class', 'comments-text').text(comment).appendTo(newBlock);
@@ -400,7 +419,6 @@ function postReplyHandler(event) {
 }
 
 function cancelReplyHandler() {
-    //alert("cancel reply");
 }
     
 //
@@ -424,13 +442,13 @@ function commentEditBoxFragment( postCommentHandler, cancelCommentHandler) {
         .appendTo(block);
 
     $('<button></button>')
-        .attr('class', 'button-cancel')
+        .attr('class', 'btn btn-default btn-xs button-cancel')
         .text('Cancel')
         .on('click', cancelCommentHandler)
         .appendTo(block);
 
     $('<button></button>')
-        .attr('class', 'button-ok')
+        .attr('class', 'btn btn-success btn-xs button-ok')
         .text('Post')
         .on('click', postCommentHandler)
         .appendTo(block);
@@ -443,7 +461,7 @@ function commentReplyFragment(commentReplyHandler) {
     // button is float right but is badly placed in or out of a div
 
     var block = $('<button></button>')
-        .attr('class', 'button-reply')
+        .attr('class', 'btn btn-success btn-xs button-reply')
         .text('Reply')
         .on('click', commentReplyHandler);
 

@@ -16,18 +16,50 @@ td, th, tr {
 } 
 
 .header {
-    font-size: 2em;
-    height:6%;
     background-color:#313131;
-    color:#ffffff;  
+    color:#ffffff;
+}
+
+.header .title {
+    font-size: 1.5em;
+    padding-bottom: .5em;
+    padding-left:.5em;
+    color:#4ce008;
+}
+
+.nav {
+    padding-left: 1em;
+    font-size:1em;
+    background-color:#313131;
+    color:#ffffff;
+}
+
+.nav>li>a
+{
+    position:relative;
+    display: block;
+    padding: 5px 10px;
+    color:#efefef;
+}
+
+.nav>li>a:hover
+{
+    color:#555;
 }
 
 #container {
     position:relative;
     min-width:92%;
-    height:100%;
-    
+    height:88%;
+    padding-top:2em;
 }
+
+#container-commits {
+    position:relative;
+    min-width:92%;
+    height:80%;
+}
+
 #commitPanel {
     float:left;
     width:300px;
@@ -55,16 +87,12 @@ td, th, tr {
 
 #detailPanel2 {
     background-color:#ffffff;
-    margin-left:2em;
-    margin-right:2em;
-    padding: 2%;
-    bottom:0;
+    padding-left: 2%;
+    padding-right: 2%;
     overflow-y:auto;
     overflow-x:auto;
     position:relative;
-    bottom:0;
-    height:80%
-
+    height:96%
 }
 
 #footer {
@@ -78,11 +106,12 @@ td, th, tr {
 
 
 #criteriaPanel {
-    margin-top:2em;
+    margin-top:1em;
     margin-left: 2em;
     margin-right: 2em;
-    border : 1px solid #888888;
+    border : 1px solid #CCC8C7;
     padding: 1em;
+    position:relative;
 }
 
 .commit-list2 {
@@ -92,18 +121,16 @@ td, th, tr {
 }
 
 .commit-title2 {
-    font-size: 0.95em;
-    font-weight:bold;
+    font-size: 1em;
+    font-weight:bolder;
     white-space:pre-wrap;
-    width:100%;
+    width:50%;
+    float:left;
     
 }
 
 .commit-item2 {
-    border-top: 1px solid #CCC8C7;
-    padding-bottom:1.5em;
     padding-top:0.5em;
-    clear:both;
 }
 .commit-item2:hover
 {
@@ -112,16 +139,27 @@ td, th, tr {
 
 .commit-annotation-summary
 {
-    padding-bottom:1em;
+    padding:1em;
     float:left;
-    width:30%;
+    width:25%;
     text-align:right;
 }
 
+.label{
+    font-size: .9em;
+}
+
 .commit-actions2 {
+    padding:1em;
     float:left;
-    width:30%;
+    width:25%;
     text-align:right;
+}
+
+.commit-item-footer {
+    clear:both;
+    border-bottom: 1px solid #CCC8C7;
+    padding-bottom:1em;
 }
 
 .commit-list {
@@ -138,7 +176,6 @@ td, th, tr {
 
 .commit-item {
     padding: 0.25em;
-    /*box-shadow: 3px 3px 1px #888888;*/
     height: 4em;
     overflow:hidden;
 }
@@ -149,11 +186,9 @@ td, th, tr {
 }
 
 .commit-subtitle {
-    font-size:0.9em;
+    font-size:0.85em;
     color:#808080;
-    padding-bottom:1em;
-    float:left;
-    width:40%;
+    font-weight:normal;
 }
 
 .revision-table-wrapper {
@@ -220,7 +255,6 @@ td, th, tr {
 
 .revision-line-state {
     width:4%;
-    /*padding-left:1%;*/
     border-right: 1px solid transparent;
 }
 
@@ -273,18 +307,14 @@ td, th, tr {
 {
     margin-top:1em;
     margin-left:2em;
-    /*margin-right:1em;*/
     background-color: #fff;
+    
     
     border: 1px solid #cac4c4;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
 }
 
 .comments-author {
-    
-    /*border: 1px solid #222;*/
-    /*margin-left:2em;*/
-    /*margin-right:2em;*/
     border-bottom: 1px solid #cac4c4;
     font-size : 1.1em;
     padding: .2em;
@@ -295,9 +325,7 @@ td, th, tr {
     white-space:pre-wrap;
     padding:1em;
     margin-left:1em;
-    /*margin-right:4em;*/
     font-size : 1em;
-    
 }
 
 
@@ -307,12 +335,7 @@ td, th, tr {
 }
 
 .button-ok, .button-cancel, .button-reply {
-    /*padding:0.3em;
-    margin-top:0.5em;
-    margin-bottom:0.5em;
-    margin-left: 1em;*/
     float:right;
-
 }
 
 .dialog{

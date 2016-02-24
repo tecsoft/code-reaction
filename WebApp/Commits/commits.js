@@ -31,20 +31,21 @@ function refreshPage(event) {
 // creates a line for a commit
 // - contains, commit log, revision details, review state and action buttons
 //
+// TODO refactoring duplicted version in followup.js
 function createItem(revision) {
 
     var block = $('<div></div>').attr('class', 'commit-item2');
     var actions = $('<div></div>').attr('class', 'commit-actions2');
 
-    $('<div></div>')
-        .text(revision.Message)
-        .attr('class', 'commit-title2')
-        .appendTo(block);
+     var title = $('<div></div>')
+         .text(revision.Message)
+         .attr('class', 'commit-title2')
+         .appendTo(block);
 
-    $('<div></div>')
+     $('<div></div>')
         .text("Revision : " + revision.Revision + " by " + revision.Author + " on " + revision.Timestamp)
         .attr('class', 'commit-subtitle')
-        .appendTo(block);
+        .appendTo(title);
 
     $('<div></div>')
         .attr('class', 'commit-annotation-summary')
@@ -58,13 +59,12 @@ function createItem(revision) {
             .text('Cool! Approved by: ' + revision.ApprovedBy)
             .appendTo(actions);
     }
-    else if (getUsername() !== revision.Author) {
-        $('<button></button>').text('Approve').on('click', { revision: revision.Revision }, approveCommit).appendTo(actions);
-    }
-// IGNORE $('<button></button>').text('Ignore').on('click', ignoreCommit).appendTo(actions);
+
     actions.appendTo(block);
 
     block.on('click', { revision: revision.Revision }, openForReview);
+
+    $('<div></div>').attr('class', 'commit-item-footer').appendTo(block);
 
     block.appendTo(insertPoint);
 }
