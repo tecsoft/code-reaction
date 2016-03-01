@@ -41,21 +41,19 @@ function loadReview() {
                     .text('Approve')
                     .on('click', { revision: revision }, markAsApproved)
                     .appendTo(actions);
+
+                $('<button></button>')
+                .attr('class', 'btn btn-success button-ok')
+                .text('Add comment')
+                .on('click', { revision: revision}, markAsReviewed)
+                .appendTo(actions);
             }
 
             actions.appendTo(block);
 
-            $('<div></div>').attr('class', 'commit-item-footer').appendTo(block);
-
             block.appendTo(insertPoint);
 
-            showReviews(revisionDetailViewModel.Reviews);
-            
-            $('<button></button>')
-                .attr('class', 'btn btn-success button-ok')
-                .text('Add comment')
-                .on('click', { revision: revision }, markAsReviewed)
-                .appendTo(insertPoint);
+            showReviews(revisionDetailViewModel.Reviews, revision);
 
             // On success, 'data' contains a list of products.
             $.each(revisionDetailViewModel.RevisedFileDetails,
@@ -233,31 +231,46 @@ function insertFile(tbody, lines) {
     }
 }
 
-function showReviews(reviews) {
+function showReviews(reviews, revision) {
     var nbReviews = reviews.length;
     var fragment;
     var insertPoint = $('#insertPoint');
     var i;
     
     var outer = $('<div></div>')
+        .attr('Id', 'file-comments')
+        .attr('data-revision', revision)
         .attr('class', 'review-line');
 
     insertPoint.append(outer);
 
     for( i = 0; i < nbReviews; i++ ) {
         fragment = createReviewBoxFragment(reviews[i]);
-        outer.append(fragment);
+        if (reviews[i].ReplyToId !== null) {
+            fragment.appendTo($(outer).find("div[data-idcomment='" + reviews[i].ReplyToId + "']:first"));
+        }
+        else {
+            fragment.appendTo(outer);
+        }
     }
 }
 
 function createReviewBoxFragment(review) {
-    var newBlock = $('<div></div>')
-        .attr('class', 'comments-block');
+    var block = $('<div></div>')
+        .attr('class', 'comments-block')
+        .attr('data-idComment', review.Id );
 
-    $('<div></div>').attr('class', 'comments-author').text(review.Author).appendTo(newBlock);
-    $('<div></div>').attr('class', 'comments-text').text(review.Comment).appendTo(newBlock);
+    var header = $('<div></div>')
+        .attr('class', 'comments-author');
 
-    return newBlock;
+    $('<span></span>').text(review.Author).appendTo(header);
+
+    commentReplyFragment(addNewReplyBox).appendTo(header);
+    header.appendTo(block);
+
+    $('<div></div>').attr('class', 'comments-text').text(review.Comment).appendTo(block);
+
+    return block;
 }
 
 function markAsApproved(event) {
@@ -274,12 +287,15 @@ function markAsReviewed(event) {
     var revision = event.data.revision;
     var source = $(this);
 
-    var block = $('<div></div>');
-    block.attr('class','review-line')
-        .attr('data-revision', revision);
+    // find div where reviews are insert andd appendTo
+    var reviewLine = $('#file-comments');
 
-    commentEditBoxFragment(postReviewComment, cancelReviewPost).appendTo(block);
-    block.insertBefore(source);
+    //var block = $('<div></div>');
+    //block.attr('class','review-line')
+    //    .attr('data-revision', revision);
+
+    commentEditBoxFragment(postReviewComment, cancelReviewPost).appendTo(reviewLine);
+    //block.appendTo(reviewLine);
 }
 
 function cancelReviewPost(event) {
@@ -434,12 +450,14 @@ function newCommentBoxFragment(revisionNumber, fileId, lineId) {
 function commentEditBoxFragment( postCommentHandler, cancelCommentHandler) {
     var block =
         $('<div></div>')
-        .attr('class', 'comments-block');
+        .attr('class', 'comments-block new');
 
     var textArea =
         $('<textarea></textarea>')
         .attr('class', 'comments-box')
         .appendTo(block);
+
+    var actionBar = $('<div></div>').attr('class','actionBar');
 
     $('<button></button>')
         .attr('class', 'btn btn-default btn-xs button-cancel')
@@ -452,6 +470,8 @@ function commentEditBoxFragment( postCommentHandler, cancelCommentHandler) {
         .text('Post')
         .on('click', postCommentHandler)
         .appendTo(block);
+
+    actionBar.appendTo(block);
 
     return block;
 }

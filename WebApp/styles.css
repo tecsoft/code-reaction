@@ -15,6 +15,12 @@ td, th, tr {
     vertical-align: inherit 
 } 
 
+.actionBar {
+    clear: both;
+    /*padding: .2em;
+    background-color: #cac4c4;*/
+}
+
 .header {
     background-color:#313131;
     color:#ffffff;
@@ -308,16 +314,19 @@ td, th, tr {
     margin-top:1em;
     margin-left:2em;
     background-color: #fff;
-    
-    
     border: 1px solid #cac4c4;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
 }
 
+.comments-block .new {
+    border: none;
+}
+
 .comments-author {
     border-bottom: 1px solid #cac4c4;
-    font-size : 1.1em;
-    padding: .2em;
+    font-size : 1.2em;
+    padding: .7em;
+    padding-top: .2em;
     background-color: #dfeef3;
 }
 
@@ -336,6 +345,7 @@ td, th, tr {
 
 .button-ok, .button-cancel, .button-reply {
     float:right;
+    margin-right: 1em;
 }
 
 .dialog{
