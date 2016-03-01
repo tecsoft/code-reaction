@@ -32,7 +32,6 @@ namespace CodeReaction.Web.Models
                         .Select( fd => new RevisedFileDetailViewModel()
                                         {
                                             Filename = fd.Name,
-                                            Index = fd.Index,
                                             ModText = fd.FileState.ToString(),
                                             LikedBy = new List<string>(),
                                             //LikedBy = likes
@@ -67,27 +66,19 @@ namespace CodeReaction.Web.Models
 
         static bool  MatchesLine( IAnnotation annotation, FileDiff fileDiff, LineDiff lineDiff )
         {
-            return annotation.FileId == fileDiff.Index && annotation.LineId == lineDiff.Id;
+            return annotation.File == fileDiff.Name && annotation.LineId == lineDiff.Id;
         }
 
         static bool IsReview(IAnnotation annotation)
         {
-            return annotation.FileId == null && annotation.LineId == null;
+            return string.IsNullOrEmpty( annotation.File ) && string.IsNullOrEmpty(annotation.LineId );
         }
-
-        //IEnumerable<Like> LikesForLine(IEnumerable<Like> likes, FileDiff fileDiff, LineDiff lineDiff)
-        //{
-        //    var matchingLikes = likes.Where( like  => like.FileId == fileDiff.Index && (lineDiff.Id == like.LineId));
-
-        //    return likes;
-        //}
     }
 
     public class RevisedFileDetailViewModel
     {
         public string Filename { get; set; }
         public string ModText { get; set; }
-        public int Index { get; set; }
         public IEnumerable<string> LikedBy { get; set; }
         public IEnumerable<LineDetailViewModel> LineDetails { get; set; }
     }

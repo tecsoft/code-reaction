@@ -15,7 +15,7 @@ namespace CodeReaction.Domain.Entities
         public long Id { get; set; }
         public string User { get; set; }
         public long Revision { get; set; }
-        public int? FileId { get; set; }
+        public string File { get; set; }
         public string LineId { get; set; }
 
     }

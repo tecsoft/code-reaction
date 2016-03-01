@@ -16,16 +16,16 @@ namespace CodeReaction.Domain.Services
             unitOfWork = aUnitOfWork;
         }
 
-        public void LikeFile(string user, int revision, int fileId)
+        public void LikeFile(string user, int revision, string file)
         {
             unitOfWork.Context.Likes.Add(
-                    new Like() { User = user, Revision = revision, FileId = fileId });
+                    new Like() { User = user, Revision = revision, File = file });
         }
 
-        public void LikeLine(string user, int revision, int fileId, string lineId)
+        public void LikeLine(string user, int revision, string fileId, string lineId)
         {
             unitOfWork.Context.Likes.Add(
-                    new Like() { User = user, Revision = revision, FileId = fileId, LineId = lineId });
+                    new Like() { User = user, Revision = revision, File = fileId, LineId = lineId });
         }
 
         public IEnumerable<Like> GetLikes(long revision)

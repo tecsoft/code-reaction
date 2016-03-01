@@ -143,17 +143,17 @@ namespace CodeReaction.Tests.WebApp.RevisionDetail
 
         Like LikeFile(FileDiff fileDiff, string user)
         {
-            return new Like() { FileId = fileDiff.Index, User = user };
+            return new Like() { File = fileDiff.Name, User = user };
         }
 
         Like LikeLine(FileDiff fileDiff, LineDiff lineDiff, string user)
         {
-            return new Like() { FileId = fileDiff.Index, LineId = lineDiff.Id, User = user };
+            return new Like() { File = fileDiff.Name, LineId = lineDiff.Id, User = user };
         }
 
         Comment CommentLine( FileDiff fileDiff, LineDiff lineDiff, string user, string comment )
         {
-            return new Comment() { FileId = fileDiff.Index, LineId = lineDiff.Id, User = user, Text = comment };
+            return new Comment() { File = fileDiff.Name, LineId = lineDiff.Id, User = user, Text = comment };
         }
     }
 }

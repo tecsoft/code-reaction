@@ -22,7 +22,7 @@ namespace CodeReaction.Tests.Likes
             using (UnitOfWork uow = new UnitOfWork())
             {
                 var sut = new CommentService(uow);
-                sut.CommentLine("daffy", 1212, 1, "line_id", "a nice comment");
+                sut.CommentLine("daffy", 1212, "1", "line_id", "a nice comment");
                 uow.Save();
             }
 
@@ -33,7 +33,7 @@ namespace CodeReaction.Tests.Likes
                 Assert.AreEqual(1, results.Count);
                 Assert.AreEqual("daffy", results[0].User);
                 Assert.AreEqual(1212, results[0].Revision);
-                Assert.AreEqual(1, results[0].FileId);
+                Assert.AreEqual("1", results[0].File);
                 Assert.AreEqual("line_id", results[0].LineId);
                 Assert.AreEqual("a nice comment", results[0].Text);
                 Assert.AreEqual(null, results[0].ReplyToId);
@@ -48,7 +48,7 @@ namespace CodeReaction.Tests.Likes
             using (UnitOfWork uow = new UnitOfWork())
             {
                 var sut = new CommentService(uow);
-                sut.CommentLine(null, 1212, 1, "line_id", "a nice comment");
+                sut.CommentLine(null, 1212, "1", "line_id", "a nice comment");
                 uow.Save();
             }
         }
@@ -60,7 +60,7 @@ namespace CodeReaction.Tests.Likes
             using (UnitOfWork uow = new UnitOfWork())
             {
                 var sut = new CommentService(uow);
-                sut.CommentLine("fred", 1212, 1, "line_id", null);
+                sut.CommentLine("fred", 1212, "1", "line_id", null);
                 uow.Save();
             }
         }
@@ -71,9 +71,9 @@ namespace CodeReaction.Tests.Likes
             using (UnitOfWork uow = new UnitOfWork())
             {
                 var sut = new CommentService(uow);
-                sut.CommentLine("daffy", 1212, 1, "line_id", "a nice comment1");
-                sut.CommentLine("daffy", 1212, 1, "line_id1", "a nice comment2");
-                sut.CommentLine("daffy", 1212, 1, "line_id2", "a nice comment3");
+                sut.CommentLine("daffy", 1212, "1", "line_id", "a nice comment1");
+                sut.CommentLine("daffy", 1212, "1", "line_id1", "a nice comment2");
+                sut.CommentLine("daffy", 1212, "1", "line_id2", "a nice comment3");
                 uow.Save();
             }
 
@@ -98,7 +98,7 @@ namespace CodeReaction.Tests.Likes
                 Assert.AreEqual(originalComment.Id, replies[0].ReplyToId);
                 Assert.AreEqual("pluto", replies[0].User);
                 Assert.AreEqual("thank you", replies[0].Text);
-                Assert.AreEqual(originalComment.FileId, replies[0].FileId);
+                Assert.AreEqual(originalComment.File, replies[0].File);
                 Assert.AreEqual(originalComment.LineId, replies[0].LineId);
                 Assert.AreEqual(originalComment.Revision, replies[0].Revision);
                 Assert.AreNotEqual(originalComment.Id, replies[0].Id);
@@ -112,7 +112,7 @@ namespace CodeReaction.Tests.Likes
             using (UnitOfWork uow = new UnitOfWork())
             {
                 var sut = new CommentService(uow);
-                sut.CommentLine("daffy", 1212, 1, "line_id", "a nice comment1");
+                sut.CommentLine("daffy", 1212, "1", "line_id", "a nice comment1");
                 uow.Save();
             }
 
@@ -132,7 +132,7 @@ namespace CodeReaction.Tests.Likes
             using (UnitOfWork uow = new UnitOfWork())
             {
                 var sut = new CommentService(uow);
-                sut.CommentLine("daffy", 1212, 1, "line_id", "a nice comment1");
+                sut.CommentLine("daffy", 1212, "1", "line_id", "a nice comment1");
                 uow.Save();
             }
 

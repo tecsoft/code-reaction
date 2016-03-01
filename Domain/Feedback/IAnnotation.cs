@@ -9,7 +9,7 @@ namespace CodeReaction.Domain.Feedback
     {
         string User { get; }
         long Revision { get;}
-        int? FileId { get; }
+        string File { get; }
         string LineId { get; }
     }
 }

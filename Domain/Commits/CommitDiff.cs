@@ -19,7 +19,6 @@ namespace CodeReaction.Domain.Commits
 
         public FileDiff AddFileDiff(FileDiff fileDiff)
         {
-            fileDiff.Index = FileDiffs.Count;
             FileDiffs.Add(fileDiff);
             return fileDiff;
         }

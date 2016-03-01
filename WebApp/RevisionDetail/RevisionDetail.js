@@ -95,7 +95,7 @@ function showRevision(revisionNumber, revisedFileDetailsViewModel) {
 
                 lineFragment
                     .attr('data-revision', revisionNumber)
-                    .attr('data-file', revisedFileDetailsViewModel.Index)
+                    .attr('data-file', revisedFileDetailsViewModel.Filename)
                     .attr('data-line', lineDetailViewModel.LineId)
                     .on('click', addNewCommentBox); // TODO add style for cursor only in this case
 
@@ -496,7 +496,7 @@ function postComment() {
         return;
     }
 
-    var uri = 'api/commits/comment/' + author + '/' + revision + '/' + fileIndex + '/' + line + "?comment=" + encodeURIComponent(comment);
+    var uri = 'api/commits/comment/' + author + '/' + revision  + '/' + line + "?comment=" + encodeURIComponent(comment) + "&file=" + encodeURIComponent(fileIndex);
 
     // we update screen optimistically before post
     var block = newCommentFragment(-1, author, comment, revision, fileIndex, line);

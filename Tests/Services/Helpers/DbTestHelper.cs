@@ -8,7 +8,7 @@ namespace CodeReaction.Tests.Services.Helpers
     {
         public static void ResetDatabase()
         {
-            FileInfo dbFile = new FileInfo("../../../Domain/Database/CodeReview.sqlite");
+            FileInfo dbFile = new FileInfo("../../Services/Helpers/CodeReaction.sqlite");
             if (dbFile.Exists == false)
                 throw new FileNotFoundException();
 

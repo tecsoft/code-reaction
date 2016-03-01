@@ -197,8 +197,8 @@ namespace CodeReaction.Web.Controllers
             return Ok();
         }
 
-        [Route("api/commits/comment/{user}/{revision}/{file}/{lineId}")]
-        public IHttpActionResult CommentLine(string user, int revision, int file, string lineId)
+        [Route("api/commits/comment/{user}/{revision}/{lineId}")]
+        public IHttpActionResult CommentLine(string user, int revision, string lineId)
         {
             UnitOfWork unitOfWork = null;
 
@@ -206,9 +206,11 @@ namespace CodeReaction.Web.Controllers
             {
                 unitOfWork = new UnitOfWork();
 
-                var parameters = this.Request.GetQueryNameValuePairs().FirstOrDefault(i => i.Key == "comment");
+                var parameters = this.Request.GetQueryNameValuePairs();
+                var comment = parameters.FirstOrDefault(i => i.Key == "comment");
+                var file = parameters.FirstOrDefault(i => i.Key == "file");
 
-                new CommentService(unitOfWork).CommentLine(user, revision, file, lineId, parameters.Value);
+                new CommentService(unitOfWork).CommentLine(user, revision, file.Value, lineId, comment.Value);
 
                 unitOfWork.Save();
 
