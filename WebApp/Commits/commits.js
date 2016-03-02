@@ -15,9 +15,15 @@ function loadCommits() {
     
     $.getJSON(uri)
         .done(function (data) {
-            $.each(data.Commits, function (key, item) {
-                createItem(item);
-            });
+            if ( data.Commits.length == 0 ) {
+                $('#insertPoint').empty();
+                $('#insertPoint').append($('<div></div>').text('Nothing to show'));
+            }
+            else{
+                $.each(data.Commits, function (key, item) {
+                    createItem(item);
+                });
+             }
         });
 }
 

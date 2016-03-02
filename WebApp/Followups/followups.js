@@ -13,11 +13,15 @@ function loadFollowUps() {
 
     $.getJSON(uri)
         .done(function (data) {
-            // On success, 'data' contains a list of products.
-            $.each(data.Commits, function (key, item) {
-                // Add a list item for the product.
-                createItem(item);
-            });
+            if (data.Commits.length == 0) {
+                $('#insertPoint').empty();
+                $('#insertPoint').append($('<div></div>').text('Nothing to show - looks like your up to date!'));
+            }
+            else {
+                $.each(data.Commits, function (key, item) {
+                    createItem(item);
+                });
+            }
         });
 }
 
