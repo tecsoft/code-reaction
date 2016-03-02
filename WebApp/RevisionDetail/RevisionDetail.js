@@ -250,6 +250,7 @@ function showReviews(reviews, revision) {
             fragment.appendTo($(outer).find("div[data-idcomment='" + reviews[i].ReplyToId + "']:first"));
         }
         else {
+            fragment.attr('class', fragment.attr('class') + ' comments-block-outer');
             fragment.appendTo(outer);
         }
     }
@@ -348,12 +349,17 @@ function addComments(revisionNumber, fileId, line, appendToItem) {
 //
 function addComment(comment, revisionNumber, fileId, lineId, appendToItem) {
 
+    var isOuter = true;
     var appendPoint = appendToItem;
-    if ( comment.ReplyToId !== null ) {
+    if (comment.ReplyToId !== null) {
+        isOuter = false;
         appendPoint = $(appendPoint).find("div[data-idcomment='" + comment.ReplyToId + "']:first");
     }
 
     var commentBox = newCommentFragment(comment.Id, comment.Author, comment.Comment, revisionNumber, fileId, lineId);
+
+    if (isOuter)
+        commentBox.attr('class', commentBox.attr('class') + ' comments-block-outer');
 
     commentBox.appendTo(appendPoint);
 }

@@ -291,9 +291,13 @@ td, th, tr {
     color: #808080;
 }
 
-.comments-line, .review-line {
-    font-size:0.7em;
-    background-color:#fcfcfc;
+.comments-line 
+{
+    
+} 
+.review-line {
+    font-size:0.8em;
+    /*/background-color:#fcfcfc;*/
     /**border-bottom: 1px solid #cac4c4;*/
 }
 
@@ -309,30 +313,48 @@ td, th, tr {
     display:block;
 }
 
+
+
 .comments-block
 {
     margin-top:1em;
     margin-left:2em;
     background-color: #fff;
-    border: 1px solid #cac4c4;
+    border: none;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
 }
 
+.comments-block-outer
+{
+    max-width: 75%;
+    border: 1px solid #cac4c4;
+}
+
+
 .comments-block .new {
     border: none;
+    
+    
 }
 
 .comments-author {
-    border-bottom: 1px solid #cac4c4;
-    font-size : 1.2em;
+    border: 1px solid #cac4c4;
+    border-right: 0;
+    font-size : 1.1em;
     padding: .7em;
     padding-top: .2em;
     background-color: #dfeef3;
 }
+.comments-block-outer > .comments-author {
+    border: 0;
+    border-bottom: 1px solid #cac4c4;
+}
+
 
 .comments-text {
     white-space:pre-wrap;
-    padding:1em;
+    padding:.5em;
+    padding-bottom: 0.3em;
     margin-left:1em;
     font-size : 1em;
 }
