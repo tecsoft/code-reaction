@@ -1,11 +1,10 @@
 ﻿body,
 html {
-margin:0;
-padding:0;
-
-font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-height:100%;
-overflow:hidden;
+    margin:0;
+    padding:0;
+    font-family:Helvetica Neue, Helvetica, Arial, sans-serif;
+    height:100%;
+    overflow:hidden;
 }
 
 thead, tbody, tfoot { 
@@ -17,8 +16,6 @@ td, th, tr {
 
 .actionBar {
     clear: both;
-    /*padding: .2em;
-    background-color: #cac4c4;*/
 }
 
 .header {
@@ -40,16 +37,14 @@ td, th, tr {
     color:#ffffff;
 }
 
-.nav>li>a
-{
+.nav>li>a {
     position:relative;
     display: block;
     padding: 5px 10px;
     color:#efefef;
 }
 
-.nav>li>a:hover
-{
+.nav>li>a:hover {
     color:#555;
 }
 
@@ -81,7 +76,6 @@ td, th, tr {
 #detailPanel {
     background-color:#ffffff;
     padding: 2%;
-    /*position:absolute;*/
     bottom:0;
     overflow-y:auto;
     overflow-x:auto;
@@ -102,14 +96,8 @@ td, th, tr {
 }
 
 #footer {
-
     clear:both;
 }
-
-#headerPanel {
-    
-}
-
 
 #criteriaPanel {
     margin-top:1em;
@@ -131,27 +119,25 @@ td, th, tr {
     font-weight:bolder;
     white-space:pre-wrap;
     width:50%;
-    float:left;
-    
+    float:left;    
 }
 
 .commit-item2 {
     padding-top:0.5em;
 }
-.commit-item2:hover
-{
+
+.commit-item2:hover {
     cursor: pointer;
 }
 
-.commit-annotation-summary
-{
+.commit-annotation-summary {
     padding:1em;
     float:left;
     width:25%;
     text-align:right;
 }
 
-.label{
+.label {
     font-size: .9em;
 }
 
@@ -217,7 +203,6 @@ td, th, tr {
 .file-header, .modal-header {
     padding:0.3em;
     background-color:#dfeef3;
-    
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
 }
@@ -237,8 +222,7 @@ td, th, tr {
 
 .revision-line-text, .revision-line-number, .revision-line-state {
     font-family: DroidSansMono, Monospace, Consolas, Courier;
-    font-size: 0.75em;
-    padding: 0.2em;
+    font-size: 0.85em;
 }
 
 .revision-line-text {
@@ -286,79 +270,73 @@ td, th, tr {
     background-color: inherit;
 }
 
-.revision-line-liked{
-
+.revision-line-liked {
     color: #808080;
 }
 
-.comments-line 
-{
-    
-} 
 .review-line {
-    font-size:0.8em;
-    /*/background-color:#fcfcfc;*/
-    /**border-bottom: 1px solid #cac4c4;*/
-}
-
-.review-line {
+    border-top: 1px solid #cac4c4;
+    padding-left:4em;
+    padding-top:.5em;
     clear:both;
 }
 
-.comments-box
-{
+.comments-box {
     resize:vertical;
     width:100%;
-    min-height:3em;
+    min-height:5em;
     display:block;
+    margin-bottom:.8em;
+    background-color: #fff;
 }
 
-
-
-.comments-block
-{
-    margin-top:1em;
+.comments-block{
+    margin-top:.5em;
     margin-left:2em;
     background-color: #fff;
     border: none;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+    font-family:Helvetica Neue, Helvetica, Arial, sans-serif;
+    margin-bottom:.5em;
 }
 
-.comments-block-outer
-{
+.revision-line-text > .comments-block {
+    font-size:1.18em;
+    margin-left:8em;
+    background-color: #fff;
+}
+
+.comments-block-outer {
     max-width: 75%;
     border: 1px solid #cac4c4;
 }
 
-
-.comments-block .new {
-    border: none;
-    
-    
+.comments-block-new {
+    border: none;   
+    background-color: #fff;
 }
 
 .comments-author {
-    border: 1px solid #cac4c4;
-    border-right: 0;
-    font-size : 1.1em;
-    padding: .7em;
-    padding-top: .2em;
-    background-color: #dfeef3;
+    font-size : .95em;
+    font-weight:bold;
+    color:#808080;
+    background-color: #fff;
+    padding: .2em;
+    background-color: #eeeeee;
+    border:1px solid #CCC8C7;
+    border-right:none;
 }
+
 .comments-block-outer > .comments-author {
     border: 0;
     border-bottom: 1px solid #cac4c4;
 }
 
-
 .comments-text {
     white-space:pre-wrap;
-    padding:.5em;
-    padding-bottom: 0.3em;
-    margin-left:1em;
+    padding:.2em;
     font-size : 1em;
+    background-color: #fff;
 }
-
 
 .button-bar {
    padding-top: 0.5em;
@@ -370,8 +348,17 @@ td, th, tr {
     margin-right: 1em;
 }
 
-.dialog{
+.button-expand {
+    margin-right: .5em;
+}
 
+.label-change-type {
+    margin-left:.2em;
+    margin-right:.2em;
+    float:right;
+}
+
+.dialog {
     position:absolute;
     width: 50%;
     height:50%;

@@ -108,13 +108,14 @@ function showRevision(revisionNumber, revisedFileDetailsViewModel) {
 
     var expandButton = $('<button></button>')
         .text('+')
+        .attr('class','button-expand')
         .on('click', { revision: revisionNumber, filename: revisedFileDetailsViewModel.Filename }, expandFile);
 
     tableWrapper
         .append($('<div></div>')
         .attr('class', 'file-header')
         .append(expandButton)
-        .append($('<span></span>').text(revisedFileDetailsViewModel.ModText + " --> "))
+        .append($('<span></span>').attr('class','label-change-type').text(revisedFileDetailsViewModel.ModText))
         .append($('<span></span>').text(revisedFileDetailsViewModel.Filename)));
 
     tableWrapper.append(table);
@@ -264,7 +265,7 @@ function createReviewBoxFragment(review) {
     var header = $('<div></div>')
         .attr('class', 'comments-author');
 
-    $('<span></span>').text(review.Author).appendTo(header);
+    $('<span></span>').text(review.Author ).appendTo(header);
 
     commentReplyFragment(addNewReplyBox).appendTo(header);
     header.appendTo(block);
@@ -291,12 +292,9 @@ function markAsReviewed(event) {
     // find div where reviews are insert andd appendTo
     var reviewLine = $('#file-comments');
 
-    //var block = $('<div></div>');
-    //block.attr('class','review-line')
-    //    .attr('data-revision', revision);
-
-    commentEditBoxFragment(postReviewComment, cancelReviewPost).appendTo(reviewLine);
-    //block.appendTo(reviewLine);
+    var block = commentEditBoxFragment(postReviewComment, cancelReviewPost);
+    block.appendTo(reviewLine);
+    block.attr('class', block.attr('class') + ' comments-block-outer');
 }
 
 function cancelReviewPost(event) {
@@ -320,10 +318,14 @@ function postReviewComment(event) {
     // we update screen optimistically before post
 
     newBlock = $('<div></div>')
-        .attr('class', 'comments-block');;
-    
+        .attr('class', 'comments-block');
+
     $('<div></div>').attr('class', 'comments-author').text(author).appendTo(newBlock);
     $('<div></div>').attr('class', 'comments-text').text(comment).appendTo(newBlock);
+
+    if (block.parent().attr('class').indexOf('comments-block') == -1) {
+        newBlock.attr('class', newBlock.attr('class') + ' comments-block-outer');
+    }
 
     newBlock.insertAfter(block);
     block.remove();
@@ -401,6 +403,8 @@ function addNewCommentBox(event) {
     var line = $(this);
     var commentBox = newCommentBoxFragment(line.attr('data-revision'), line.attr('data-file'), line.attr('data-line'));
 
+        commentBox.attr('class', commentBox.attr('class') + ' comments-block-outer');
+
     var codeCell = line.children().last();
 
     codeCell.append(commentBox);
@@ -413,6 +417,8 @@ function addNewReplyBox(event) {
 
     commentBox.attr('data-idcomment', parentComment.attr('data-idcomment'));
     commentBox.appendTo(parentComment);
+
+
 }
 
 function postReplyHandler(event) {
@@ -425,6 +431,10 @@ function postReplyHandler(event) {
 
     var author = getUsername();
     var comment = textArea.val();
+
+    if (!comment) {
+        return;
+    }
 
     var uri = '/api/commits/reply/' + idComment + '/' + author + '?comment=' + encodeURIComponent(comment);
 
@@ -440,7 +450,10 @@ function postReplyHandler(event) {
     $.post(uri);
 }
 
-function cancelReplyHandler() {
+function cancelReplyHandler(event) {
+    event.stopPropagation();
+    $(this).parent().remove();
+
 }
     
 //
@@ -455,8 +468,9 @@ function newCommentBoxFragment(revisionNumber, fileId, lineId) {
 
 function commentEditBoxFragment( postCommentHandler, cancelCommentHandler) {
     var block =
-        $('<div></div>')
-        .attr('class', 'comments-block new');
+        $('<div></div>').attr('class', 'comments-block comments-block-new');
+
+    
 
     var textArea =
         $('<textarea></textarea>')
@@ -479,6 +493,10 @@ function commentEditBoxFragment( postCommentHandler, cancelCommentHandler) {
 
     actionBar.appendTo(block);
 
+    setTimeout(function () {
+        block.find('textarea').focus();
+    }, 20);
+
     return block;
 }
 
@@ -487,7 +505,7 @@ function commentReplyFragment(commentReplyHandler) {
     // button is float right but is badly placed in or out of a div
 
     var block = $('<button></button>')
-        .attr('class', 'btn btn-success btn-xs button-reply')
+        .attr('class', 'btn btn-link btn-xs')
         .text('Reply')
         .on('click', commentReplyHandler);
 
@@ -529,6 +547,10 @@ function postComment() {
 
     var toRemove = textArea.parent();
     var insertPoint = toRemove.parent();
+
+    if (insertPoint.attr('class').indexOf('comments-block') == -1 ){
+        block.attr('class', block.attr('class') + ' comments-block-outer');
+    }
 
     insertPoint.append(block);
     toRemove.remove();
