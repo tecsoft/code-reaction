@@ -188,6 +188,7 @@ td, th, tr {
     overflow-y:hidden;
     padding:0;
     clear:both;
+    margin-bottom:.5em;
 }
 .revision-file-table {
     display:table;

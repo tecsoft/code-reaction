@@ -180,7 +180,6 @@ function expandFile(event) {
 }
 
 function insertFile(tbody, lines) {
-
     var rows = tbody.children();
     var row;
     var lineIndex = 0;
@@ -191,12 +190,11 @@ function insertFile(tbody, lines) {
     row = rows[0];
 
     while (row) {
-
         if (row.className.indexOf('state-break') >= 0) {
 
             // non modified place holder
             // peak line number of next row
-            //insert before new lines from lineIndex to peekedlinenum
+            // insert before new lines from lineIndex to peekedlinenum
             // get next line (cannot be a place holder normally)
             // removeplaceholder
 
@@ -206,9 +204,8 @@ function insertFile(tbody, lines) {
                 row = null;
             }
             else {
-               
                 var td = peekNode.childNodes[0];
-                var n = parseInt( td.innerText);
+                var n = parseInt( td.innerHTML);
 
                 for (; lineIndex < n - 1; lineIndex++) {
 
@@ -216,19 +213,24 @@ function insertFile(tbody, lines) {
 
                     lineFragment.insertBefore(peekNode);
                 }
-
             }
             
             var del = row;
             row = peekNode;
-            del.remove();
+            $(del).remove();
         }
         else {
             // move to next line
             row = row.nextSibling;
             lineIndex++;
         }
+    }
 
+    // add remaining lines
+    while (lineIndex < lines.length) {
+        lineFragment = FileDiff_GetLineFragment(0, lineIndex +1, lineIndex + 1, lines[lineIndex]);
+        lineFragment.appendTo(tbody);
+        lineIndex++;
     }
 }
 
