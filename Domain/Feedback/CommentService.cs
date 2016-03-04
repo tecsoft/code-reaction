@@ -15,13 +15,14 @@ namespace CodeReaction.Domain.Services
             unitOfWork = aUnitOfWork;
         }
 
-        public void CommentLine(string user, int revision, string file, string lineId, string text)
+        public Comment CommentLine(string user, int revision, string file, string lineId, string text)
         {
-            unitOfWork.Context.Comments.Add(
-                    new Comment() { User = user, Revision = revision, File = file, LineId = lineId, Text = text });
+            Comment newComment = new Comment() { User = user, Revision = revision, File = file, LineId = lineId, Text = text };
+            unitOfWork.Context.Comments.Add(newComment);
+            return newComment;
         }
 
-        public void Reply(long idComment, string author, string text)
+        public Comment Reply(long idComment, string author, string text)
         {
             Comment originalComment = unitOfWork.Context.Comments.First(c => c.Id == idComment);
 
@@ -36,6 +37,8 @@ namespace CodeReaction.Domain.Services
             };
 
             unitOfWork.Context.Comments.Add( reply );
+
+            return reply;
         }
     }
 }

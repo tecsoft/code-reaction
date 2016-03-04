@@ -1,5 +1,6 @@
 ﻿using CodeReaction.Domain;
 using CodeReaction.Domain.Commits;
+using CodeReaction.Domain.Entities;
 using CodeReaction.Domain.Feedback;
 using CodeReaction.Domain.Services;
 using CodeReaction.Web.Auth;
@@ -172,14 +173,14 @@ namespace CodeReaction.Web.Controllers
         public IHttpActionResult ReviewCommit(string user, int revision)
         {
             UnitOfWork unitOfWork = null;
-
+            Comment comment = null;
             try
             {
                 unitOfWork = new UnitOfWork();
 
                 var parameters = this.Request.GetQueryNameValuePairs().FirstOrDefault(i => i.Key == "comment");
 
-                new CommentService(unitOfWork).CommentLine(user, revision, null, null, parameters.Value);
+                comment = new CommentService(unitOfWork).CommentLine(user, revision, null, null, parameters.Value);
 
                 unitOfWork.Save();
 
@@ -194,23 +195,23 @@ namespace CodeReaction.Web.Controllers
                 if (unitOfWork != null)
                     unitOfWork.Dispose();
             }
-            return Ok();
+            return Ok(comment);
         }
 
         [Route("api/commits/comment/{user}/{revision}/{lineId}")]
         public IHttpActionResult CommentLine(string user, int revision, string lineId)
         {
             UnitOfWork unitOfWork = null;
-
+            Comment comment = null;
             try
             {
                 unitOfWork = new UnitOfWork();
 
                 var parameters = this.Request.GetQueryNameValuePairs();
-                var comment = parameters.FirstOrDefault(i => i.Key == "comment");
+                var text = parameters.FirstOrDefault(i => i.Key == "comment");
                 var file = parameters.FirstOrDefault(i => i.Key == "file");
 
-                new CommentService(unitOfWork).CommentLine(user, revision, file.Value, lineId, comment.Value);
+                comment = new CommentService(unitOfWork).CommentLine(user, revision, file.Value, lineId, text.Value);
 
                 unitOfWork.Save();
 
@@ -225,21 +226,21 @@ namespace CodeReaction.Web.Controllers
                 if (unitOfWork != null)
                     unitOfWork.Dispose();
             }
-            return Ok();
+            return Ok(comment);
         }
 
         [Route("api/commits/reply/{idComment}/{author}")]
         public IHttpActionResult CommentLine(long idComment, string author)
         {
             UnitOfWork unitOfWork = null;
-
+            Comment comment = null;
             try
             {
                 unitOfWork = new UnitOfWork();
 
                 var parameters = this.Request.GetQueryNameValuePairs().FirstOrDefault(i => i.Key == "comment");
 
-                new CommentService(unitOfWork).Reply( idComment, author, parameters.Value );
+                comment = new CommentService(unitOfWork).Reply( idComment, author, parameters.Value );
 
                 unitOfWork.Save();
 
@@ -254,7 +255,7 @@ namespace CodeReaction.Web.Controllers
                 if (unitOfWork != null)
                     unitOfWork.Dispose();
             }
-            return Ok();
+            return Ok(comment);
         }
 
         [Route("api/commits/approve/{revision}/{approver}")]

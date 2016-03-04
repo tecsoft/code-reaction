@@ -284,7 +284,9 @@ function markAsApproved(event) {
 
     var uri = 'api/commits/approve/' + revision + '/' + approver;
     $.post(uri)
-    .done(function() { location.reload(true)}); // TODO
+        .done(function () {
+            location.reload(true)
+        }); // TODO
 }
 
 function markAsReviewed(event) {
@@ -319,10 +321,12 @@ function postReviewComment(event) {
 
     // we update screen optimistically before post
 
-    newBlock = $('<div></div>')
-        .attr('class', 'comments-block');
+    newBlock = $('<div></div>').attr('class', 'comments-block');
 
-    $('<div></div>').attr('class', 'comments-author').text(author).appendTo(newBlock);
+    var authorBlock = $('<div></div>').attr('class', 'comments-author').text(author).appendTo(newBlock);
+
+    commentReplyFragment(addNewReplyBox).appendTo(authorBlock);
+
     $('<div></div>').attr('class', 'comments-text').text(comment).appendTo(newBlock);
 
     if (block.parent().attr('class').indexOf('comments-block') == -1) {
@@ -332,7 +336,10 @@ function postReviewComment(event) {
     newBlock.insertAfter(block);
     block.remove();
 
-    $.post(uri);
+    $.post(uri,
+        function (data) {
+            newBlock.attr('data-idcomment', data.Id); 
+    });
 }
 
 
@@ -386,7 +393,9 @@ function newCommentFragment(id, author, comment, revisionNumber, fileId, lineId 
     
     // anyone can reply to a comment
     commentReplyFragment(addNewReplyBox).appendTo(header);
+
     header.appendTo(block);
+
     $('<div></div>').attr('class', 'comments-text').text(comment).appendTo(block);
 
     return block;
@@ -449,7 +458,9 @@ function postReplyHandler(event) {
     insertPoint.append(block);
     toRemove.remove();
 
-    $.post(uri);
+    $.post(uri, function (data) {
+            block.attr('data-idcomment', data.Id); 
+    });
 }
 
 function cancelReplyHandler(event) {
@@ -471,8 +482,6 @@ function newCommentBoxFragment(revisionNumber, fileId, lineId) {
 function commentEditBoxFragment( postCommentHandler, cancelCommentHandler) {
     var block =
         $('<div></div>').attr('class', 'comments-block comments-block-new');
-
-    
 
     var textArea =
         $('<textarea></textarea>')
@@ -557,7 +566,10 @@ function postComment() {
     insertPoint.append(block);
     toRemove.remove();
 
-    $.post(uri);
+    $.post(uri,
+        function (data) {
+            block.attr('data-idcomment', data.Id); 
+        });
 }
 
 //
