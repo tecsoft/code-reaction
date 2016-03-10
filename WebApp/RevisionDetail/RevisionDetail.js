@@ -527,10 +527,7 @@ function commentReplyFragment(commentReplyHandler) {
 // handles the cancellation of a new comment
 //
 function cancelComment() {
-    var cell = $(this).parent().parent();
-    var row = cell.parent();
-
-    row.remove();
+    $(this).parent().remove();
 }
 
 //
