@@ -1,0 +1,12 @@
+﻿TODO
+====
+
+1. Copy sqlLite.Interop.dll (according to version x86, x64 and runtime .NET) from package to bin directory for release
+
+2. codeReaction.config and connectionString.config to modify are those in installation root
+
+3. connectionString (DataSource) can point to a location outside of directory full path required (I think)
+
+4. Need to create an empty database and run the sql script on first install
+
+5.
