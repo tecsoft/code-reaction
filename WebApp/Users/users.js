@@ -1,18 +1,18 @@
 ﻿
 function setUsername(username) {
-    window.sessionStorage.setItem('username', username);
+    window.localStorage.setItem('username', username);
 }
 
 function getUsername() {
-    return window.sessionStorage.getItem('username');
+    return window.localStorage.getItem('username');
 }
 
 function setToken(token) {
-    window.sessionStorage.setItem('token', token);
+    window.localStorage.setItem('token', token);
 }
 
 function getToken() {
-    return window.sessionStorage.getItem('token');
+    return window.localStorage.getItem('token');
 }
 
 $(document).ajaxSend(
@@ -23,7 +23,8 @@ $(document).ajaxSend(
 $(document).ajaxError(
     function (event, jqxhr, settings, message) {
         if (jqxhr.status === 401) {
-            alert("You are not authorizedto access this resosurce");
+            alert("You are not authorized to access this resosurce");
+            window.location = "/Users/login.html"; // with redirect
         }
     });
 
