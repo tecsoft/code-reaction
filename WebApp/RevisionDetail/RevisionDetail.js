@@ -314,8 +314,10 @@ function postReviewComment(event) {
     var uri;
     var newBlock;
 
-    if (!comment)
+    if (!comment || comment.trim().length === 0) {
+        textArea.focus();
         return;
+    }
 
     uri = 'api/commits/comment/' + author + '/' + revision + "?comment=" + encodeURIComponent(comment);
 
@@ -443,7 +445,8 @@ function postReplyHandler(event) {
     var author = getUsername();
     var comment = textArea.val();
 
-    if (!comment) {
+    if (!comment || comment.trim().length === 0) {
+        textArea.focus();
         return;
     }
 
@@ -544,7 +547,8 @@ function postComment() {
     var author = getUsername();
     var comment = textArea.val();
 
-    if (!comment) {
+    if (!comment || comment.trim().length === 0) {
+        textArea.focus();
         return;
     }
 
