@@ -141,6 +141,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\LICENCE.txt">
+      <Link>LICENCE.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Commits\commits.html" />
     <Content Include="Commits\commits.js" />
     <Content Include="Followups\followups.js" />
