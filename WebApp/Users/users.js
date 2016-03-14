@@ -23,7 +23,6 @@ $(document).ajaxSend(
 $(document).ajaxError(
     function (event, jqxhr, settings, message) {
         if (jqxhr.status === 401) {
-            alert("You are not authorized to access this resosurce");
             window.location = "/Users/login.html"; // with redirect
         }
     });
