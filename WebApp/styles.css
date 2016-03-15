@@ -373,3 +373,16 @@ td, th, tr {
 .modal-header {
     background-color:#dfeef3;
 }
+
+.line-hover-in, .line-hover-out {
+    position:absolute;
+    margin-left: 8px; 
+}
+
+.line-hover-out {
+    display:none;
+}
+
+.line-hover-in {
+    display:block;
+}

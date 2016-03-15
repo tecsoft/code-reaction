@@ -94,8 +94,8 @@ function showRevision(revisionNumber, revisedFileDetailsViewModel) {
                 lineFragment
                     .attr('data-revision', revisionNumber)
                     .attr('data-file', revisedFileDetailsViewModel.Filename)
-                    .attr('data-line', lineDetailViewModel.LineId)
-                    .on('click', addNewCommentBox); // TODO add style for cursor only in this case
+                    .attr('data-line', lineDetailViewModel.LineId);
+                    // TODO add style for cursor only in this case
 
                 var codeCell = lineFragment.children[3];
 
@@ -160,9 +160,22 @@ function FileDiff_GetLineFragment(lineState, oldLineNumber, newLineNumber, text)
             .attr('class', 'revision-line-text')
             .text(text)
             .appendTo(lineFragment);
+
+        lineFragment.hover(showLineHover, hideLineHover);
     }
 
     return lineFragment;
+}
+
+function showLineHover(event) {
+    var hoverPanel = $("#line-hover-panel");
+    $($(this).children()[2]).prepend(hoverPanel);
+    hoverPanel.attr("class", hoverPanel.attr("class").replace("line-hover-out", "line-hover-in"));
+}
+
+function hideLineHover(event) {
+    var hoverPanel = $("#line-hover-panel");
+    hoverPanel.attr("class", hoverPanel.attr("class").replace("line-hover-in", "line-hover-out"));
 }
 
 function expandFile(event) {
@@ -403,24 +416,25 @@ function newCommentFragment(id, author, comment, revisionNumber, fileId, lineId 
     return block;
 }
 
+
+
 //
 // inserts a new comment box into the page
 //
 function addNewCommentBox(event) {
-
     event.stopPropagation();
 
-    if (event.target.nodeName !== "TD")
-        return;
+    var line = $(event.target).parent().parent().parent();
 
-    var line = $(this);
     var commentBox = newCommentBoxFragment(line.attr('data-revision'), line.attr('data-file'), line.attr('data-line'));
 
-        commentBox.attr('class', commentBox.attr('class') + ' comments-block-outer');
+    commentBox.attr('class', commentBox.attr('class') + ' comments-block-outer');
 
     var codeCell = line.children().last();
 
     codeCell.append(commentBox);
+
+    hideLineHover(event);
 }
 
 function addNewReplyBox(event) {
