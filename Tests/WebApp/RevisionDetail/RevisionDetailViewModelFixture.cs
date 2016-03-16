@@ -123,6 +123,31 @@ namespace CodeReaction.Tests.WebApp.RevisionDetail
 
         }
 
+        [Test]
+        public void Create_Order_By_File_Name()
+        {
+            var cd1 = CreateCommitDiff(1);
+            var f1 = AddFileDiff(cd1, "Test/Show/By/Filename/CTheSecondone");
+            var l1f1 = AddLineDiff(f1, ChangeState.Added, "text");
+            var l2f1 = AddLineDiff(f1, ChangeState.Added, "text");
+
+            var f2 = AddFileDiff(cd1, "Test/Show/By/Filename/ZTheLastone");
+            var l1f2 = AddLineDiff(f2, ChangeState.Added, "text");
+            var l2f2 = AddLineDiff(f2, ChangeState.Added, "text");
+
+            var f3 = AddFileDiff(cd1, "Test/Show/By/Filename/ATheFirstone");
+            var l1f3 = AddLineDiff(f2, ChangeState.Added, "text");
+            var l2f3 = AddLineDiff(f2, ChangeState.Added, "text");
+
+            var result = RevisionDetailViewModel.Create(new Commit(), cd1, new Like[] { }, new Comment[] { });
+
+            var fileList = result.RevisedFileDetails.ToList();
+
+            Assert.AreEqual(3, fileList.Count );
+            Assert.IsTrue(fileList[0].Filename.CompareTo(fileList[1].Filename) < 0);
+            Assert.IsTrue(fileList[1].Filename.CompareTo(fileList[2].Filename) < 0);
+        }
+
         CommitDiff CreateCommitDiff(int revision)
         {
             return new CommitDiff(revision);

@@ -29,6 +29,7 @@ namespace CodeReaction.Web.Models
             {
                 RevisedFileDetails = 
                     commitDiff.FileDiffs
+                        .OrderBy(fd => fd.Name)
                         .Select( fd => new RevisedFileDetailViewModel()
                                         {
                                             Filename = fd.Name,
