@@ -23,7 +23,7 @@ namespace CodeReaction.Web.Models
         
 
 
-        public static RevisionDetailViewModel Create(Commit commit, CommitDiff commitDiff, IEnumerable<Like> likes, IEnumerable<Comment> comments)
+        public static RevisionDetailViewModel Create(Commit commit, CommitDiff commitDiff, IEnumerable<Comment> comments)
         {
             RevisionDetailViewModel viewModel = new RevisionDetailViewModel()
             {
@@ -34,11 +34,6 @@ namespace CodeReaction.Web.Models
                                         {
                                             Filename = fd.Name,
                                             ModText = fd.FileState.ToString(),
-                                            LikedBy = new List<string>(),
-                                            //LikedBy = likes
-                                            //            .Where(ld => ld.FileId == fd.Index && string.IsNullOrEmpty(ld.LineId)== false)
-                                            //            .Select(like => like.User).ToList(),
-
                                             LineDetails = fd.Lines
                                                 .Select( ld => new LineDetailViewModel()
                                                             {
@@ -47,8 +42,6 @@ namespace CodeReaction.Web.Models
                                                                 AddedLineNumber = ld.AddedLineNumber,
                                                                 ChangeState = ld.Changed,
                                                                 LineId = ld.Id,
-                                                                LikedBy = likes.Where(like => MatchesLine(like, fd, ld))
-                                                                                .Select(like => like.User).ToList(),
                                                                 Comments = comments.Where( comment => MatchesLine(comment, fd, ld ) )
                                                                                 .Select( comment => CommentViewModel.CreateFrom(comment) ).ToList()
                                                             } )
@@ -79,8 +72,9 @@ namespace CodeReaction.Web.Models
     public class RevisedFileDetailViewModel
     {
         public string Filename { get; set; }
+
         public string ModText { get; set; }
-        public IEnumerable<string> LikedBy { get; set; }
+
         public IEnumerable<LineDetailViewModel> LineDetails { get; set; }
     }
 
@@ -91,7 +85,6 @@ namespace CodeReaction.Web.Models
         public int RemovedLineNumber { get; set; }
         public int AddedLineNumber { get; set; }
         public string LineId { get; set; }
-        public IEnumerable<string> LikedBy { get; set; }
         public IEnumerable<CommentViewModel> Comments { get; set; }
     }
 

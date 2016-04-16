@@ -100,7 +100,6 @@
     <Compile Include="Services\CommentServiceFixture.cs" />
     <Compile Include="Services\Helpers\DbTestHelper.cs" />
     <Compile Include="Services\HouseKeepingServiceFixture.cs" />
-    <Compile Include="Services\LikeServiceFixture.cs" />
     <Compile Include="Services\SourceControlDummy.cs" />
     <Compile Include="SvnClient\SvnClientFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -130,9 +129,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Services\Helpers\CodeReaction.sqlite">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />

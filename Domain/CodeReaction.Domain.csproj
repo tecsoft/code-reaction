@@ -96,13 +96,11 @@
     <Compile Include="Feedback\Comment.cs" />
     <Compile Include="Feedback\CommentQuery.cs" />
     <Compile Include="Feedback\IAnnotation.cs" />
-    <Compile Include="Feedback\Like.cs" />
     <Compile Include="Commits\LineDiff.cs" />
     <Compile Include="Commits\SourceControl.cs" />
     <Compile Include="Commits\FileDiff.cs" />
     <Compile Include="Database\Database.cs" />
     <Compile Include="Feedback\CommentService.cs" />
-    <Compile Include="Feedback\LikeService.cs" />
     <Compile Include="Commits\SvnLogReader.cs" />
     <Compile Include="HouseKeeping\HouseKeepingService.cs" />
     <Compile Include="HouseKeeping\TaskScheduler.cs" />
@@ -110,9 +108,9 @@
     <Compile Include="Database\UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Database\CodeReaction.sqlite" />
     <None Include="packages.config" />
-    <None Include="Database\CodeReview.sql" />
-    <None Include="Database\CodeReview.sqlite" />
+    <None Include="Database\CodeReaction.sql" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

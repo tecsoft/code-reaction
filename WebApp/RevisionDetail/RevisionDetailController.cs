@@ -96,8 +96,6 @@ namespace CodeReaction.Web.Controllers
 
                 var commitDiff = new SourceControl().GetRevision(revision);
 
-                var likes = new LikeService(unitOfWork).GetLikes(revision).ToList();
-
                 var commentQuery = new CommentQuery(unitOfWork.Context.Comments)
                 {
                     Revision = revision
@@ -109,7 +107,7 @@ namespace CodeReaction.Web.Controllers
 
                 Commit commit = unitOfWork.Context.Commits.FirstOrDefault(c => c.Revision == revision);
 
-                viewModel = RevisionDetailViewModel.Create(commit, commitDiff, likes, comments);
+                viewModel = RevisionDetailViewModel.Create(commit, commitDiff,comments);
             }
             catch( Exception ex )
             {
@@ -124,50 +122,6 @@ namespace CodeReaction.Web.Controllers
 
             return Ok(viewModel);
         }
-
-        //[Route("api/commits/like/{user}/{revision}/{file}")]
-        //public IHttpActionResult LikeFile(string user, int revision, int file)
-        //{
-        //    UnitOfWork unitOfWork = new UnitOfWork();
-
-        //    try
-        //    {
-        //        new LikeService(unitOfWork).LikeFile(user, revision, file);
-        //        unitOfWork.Save();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return InternalServerError(ex);
-        //    }
-        //    finally
-        //    {
-        //        unitOfWork.Dispose();
-        //    }
-        //    return Ok();
-        //}
-
-        //[Route("api/commits/like/{user}/{revision}/{file}/{lineId}")]
-        //public IHttpActionResult LikeLine(string user, int revision, int file, string lineId )
-        //{
-        //    UnitOfWork unitOfWork = new UnitOfWork();
-
-        //    try
-        //    {
-        //        new LikeService(unitOfWork).LikeLine(user, revision, file, lineId);
-
-        //        unitOfWork.Save();
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return InternalServerError(ex);
-        //    }
-        //    finally
-        //    {
-        //        unitOfWork.Dispose();
-        //    }
-        //    return Ok();
-        //}
 
         [Route("api/commits/comment/{user}/{revision}")]
         public IHttpActionResult ReviewCommit(string user, int revision)
