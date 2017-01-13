@@ -50,31 +50,36 @@ function doLogin(event) {
     username = $('#login-username').val();
     password = $('#login-password').val();
 
+    var alertMsg = "";
+
     if (!username ) {
-        alert("please provide username");
-        return;
+        alertMsg = "please provide username";
     }
 
     if (!password) {
-        alert("please provide a password");
-        return;
+        alertMsg = "please provide a password";
     }
 
-    var data = 'username=' + username + '&password=' + password + '&grant_type=password';
+    if (alertMsg) {
+        $(".alert").removeClass("hidden");
+        $(".alert-text").html(alertMsg);
+    }
+    else {
+        var data = 'username=' + username + '&password=' + password + '&grant_type=password';
 
-    $.post('/token', data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
-        .done(
-            function (data) {
-                setUsername(username);
-                setToken(data.access_token);
-                window.location = "/Commits/commits.html";
-            })
-        .fail(
-            function (xhr, textStatus, error) {
-                alert( JSON.parse(xhr.responseText)["error_description"] );
-            });
-
-    return false;
+        $.post('/token', data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+            .done(
+                function (data) {
+                    setUsername(username);
+                    setToken(data.access_token);
+                    window.location = "/Commits/commits.html";
+                })
+            .fail(
+                function (xhr, textStatus, error) {
+                    $(".alert").removeClass("hidden");
+                    $(".alert-text").html(JSON.parse(xhr.responseText)["error_description"]);
+                });
+    }
 }
 
 function doLogout() {
@@ -93,56 +98,69 @@ function doRegister() {
     var password = $('#newuser-password').val();
     var confirm = $('#newuser-confirm').val();
     var email = $('#newuser-email').val();
+    var alertMsg = "";
 
     if (!username) {
-        alert("Username required");
-        return;
+        alertMsg = "Username required";
     }
 
     if (!password) {
-        alert("Password required");
-        return;
+        alertMsg = "Password required";
     }
 
     if (password.length < 8) {
-        alert("Min 8 characters please");
-        return;
+        alertMsg = "Min 8 characters please";
     }
 
     if (!confirm) {
-        alert("Password confirmation required");
-        return;
+        alertMsg = "Password confirmation required";
     }
 
     if (password !== confirm) {
-        alert("Entered password does not match confirmed");
-        return;
+        alertMsg = "Entered password does not match confirmed";
     }
 
     if (!email) {
-        alert("Email is required");
+        alertMsg = "Email is required";
     }
 
-    var form = $('#register');
-    $.post('/api/users/register', form.serialize())
-        .done(
-            function (data) {
-                setUsername(username);
-                var data = 'username=' + username + '&password=' + password + '&grant_type=password';
-                $.post('/token', data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
-                    .done(
-                        function (data) {
-                            setUsername(username);
-                            setToken(data.access_token);
-                            window.location = "/Commits/commits.html";
-                        })
-                    .fail(
-                        function (xhr, textStatus, error) {
-                            alert(JSON.parse(xhr.responseText)["error_description"]);
-                        });
-                 })
-        .fail(
-            function (xhr, textStatus, error) {
-                alert(xhr.statusText);
-            });
+    if (alertMsg) {
+        $(".alert").removeClass("hidden");
+        $(".alert-text").html(alertMsg);
+    }
+    else {
+
+        var form = $('#register');
+        $.post('/api/users/register', form.serialize())
+            .done(
+                function (data) {
+                    setUsername(username);
+                    var data = 'username=' + username + '&password=' + password + '&grant_type=password';
+                    $.post('/token', data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+                        .done(
+                            function (data) {
+                                setUsername(username);
+                                setToken(data.access_token);
+                                window.location = "/Commits/commits.html";
+                            })
+                        .fail(
+                            function (xhr, textStatus, error) {
+                                $(".alert").removeClass("hidden");
+                                $(".alert-text").html(JSON.parse(xhr.responseText)["error_description"]);
+                            });
+                })
+            .fail(
+                function (xhr, textStatus, error) {
+                    $(".alert").removeClass("hidden");
+                    $(".alert-text").html(xhr.statusText);
+                });
+    }
 }
+
+$(window).keydown(function (e) {
+    switch (e.keyCode) {
+        case 13:
+            $(".btn-submit").click();
+            return;
+    }
+});

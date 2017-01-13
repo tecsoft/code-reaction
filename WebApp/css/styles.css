@@ -9,10 +9,15 @@ html {
 
 thead, tbody, tfoot { 
     vertical-align: top
-} 
+}
+
 td, th, tr { 
     vertical-align: inherit 
-} 
+}
+
+.btn {
+    border-radius: 1px;
+}
 
 .actionBar {
     clear: both;
@@ -24,10 +29,13 @@ td, th, tr {
 }
 
 .header .title {
-    font-size: 1.5em;
-    padding-bottom: .5em;
-    padding-left:.5em;
-    color:#4ce008;
+    font-size: 2.0em;
+    color:#ffffff;
+    text-align: center;
+}
+
+.form-control {
+    border-radius: 1px;
 }
 
 .nav {
@@ -42,10 +50,53 @@ td, th, tr {
     display: block;
     padding: 5px 10px;
     color:#efefef;
+    border-radius: 1px;
 }
 
 .nav>li>a:hover {
     color:#555;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+  margin-top: 15%;
+}
+
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+
+.form-signin .checkbox {
+  font-weight: normal;
+}
+
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
 #container {
@@ -99,11 +150,7 @@ td, th, tr {
     clear:both;
 }
 
-#criteriaPanel {
-    margin-top:1em;
-    margin-left: 2em;
-    margin-right: 2em;
-    border : 1px solid #CCC8C7;
+criteria-panel {
     padding: 1em;
     position:relative;
 }
@@ -133,8 +180,12 @@ td, th, tr {
 .commit-annotation-summary {
     padding:1em;
     float:left;
-    width:25%;
+    width:50%;
     text-align:right;
+}
+
+.commit-annotation-summary .label{
+    margin-left: 5px;
 }
 
 .label {
@@ -144,7 +195,7 @@ td, th, tr {
 .commit-actions2 {
     padding:1em;
     float:left;
-    width:25%;
+    width:50%;
     text-align:right;
 }
 

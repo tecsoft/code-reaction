@@ -147,15 +147,17 @@
     </Content>
     <Content Include="Commits\commits.html" />
     <Content Include="Commits\commits.js" />
+    <Content Include="css\font-awesome.min.css" />
+    <Content Include="css\styles.css" />
     <Content Include="Followups\followups.js" />
     <Content Include="Followups\followups.html" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Release.txt" />
     <Content Include="Users\login.html" />
     <Content Include="review.html" />
     <Content Include="RevisionDetail\RevisionDetail.js" />
     <Content Include="Global.asax" />
     <Content Include="index.html" />
-    <Content Include="styles.css" />
     <Content Include="Tools\Tools.js" />
     <Content Include="Users\register.html" />
     <Content Include="Users\users.js" />
@@ -182,12 +184,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <Content Include="connectionString.config.sample">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="codeReaction.config.sample">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="codeReaction.config" />
+    <Content Include="connectionString.config" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\FontAwesome.otf" />
     <None Include="Properties\PublishProfiles\CodeReaction Release.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

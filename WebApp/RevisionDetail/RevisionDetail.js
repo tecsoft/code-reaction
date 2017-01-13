@@ -697,3 +697,65 @@ function createUser() {
             alert(xhr.responseJSON.ExceptionMessage);
         });
 }
+
+
+var indexPosComment = -1;
+var currentPos = 0;
+
+$(window).keydown(function (e) {
+    switch (e.keyCode) {
+        case 38:
+            PreviousComment();
+            return;
+        case 40: // down arrow key
+            NextComment();
+            return;
+    }
+});
+
+$("#NextComment").on("click", function () {
+    NextComment();
+});
+
+$("#PreviousComment").on("click", function () {
+    PreviousComment();
+});
+
+function NextComment() {
+
+    indexPosComment++;
+
+    var anchors = $('.comments-block-outer');
+
+    if (indexPosComment >= anchors.length) {
+        indexPosComment = -1; //Return to the first comment if the while is finish
+        currentPos = 0;
+    }
+    else {
+        var posNextComment = $(anchors[indexPosComment]).position().top;
+        currentPos += posNextComment;
+    }
+
+    $('#detailPanel2').animate({
+        scrollTop: currentPos
+    }, 500);
+}
+
+function PreviousComment() {
+    indexPosComment--;
+
+    var anchors = $('.comments-block-outer');
+
+    if (indexPosComment < 0) {
+        indexPosComment = anchors.length; //Return to the first comment if the while is finish
+        currentPos = 0;
+    }
+    else {
+        var posNextComment = $(anchors[indexPosComment]).position().top;
+        currentPos += posNextComment;
+    }
+
+    $('#detailPanel2').animate({
+        scrollTop: currentPos
+    }, 500);
+}
