@@ -3,7 +3,7 @@
 //-------------------------------
 function loadFollowUps() {
 
-    var uri = '/api/commits?include=' + encodeURIComponent(getUsername()) + '&max=30';
+    var uri = '/api/commits?include=' + encodeURIComponent(getUsername()) + '&max=100';
     var keyword = $('#inputKeyWord').val();
 
     if (keyword) {

@@ -10,7 +10,7 @@ function loadCommits() {
         uri = '/api/commits?keyword=' + keyword;
     }
     else {
-        uri = '/api/commits?exclude=' + encodeURIComponent(getUsername()) + '&max=30';
+        uri = '/api/commits?exclude=' + encodeURIComponent(getUsername()) + '&max=100';
     }
     
     $.getJSON(uri)
