@@ -35,7 +35,7 @@ function loadReview() {
                     .text('This commit has been approved by: ' + revisionDetailViewModel.ApprovedBy)
                     .appendTo(actions);
             }
-            else if (revisionDetailViewModel.Author != getUsername()) {
+            else if (revisionDetailViewModel.Author !== getUsername()) {
                 $('<button></button>')
                     .attr('class', 'btn btn-success button-ok')
                     .text('Approve')
@@ -97,7 +97,7 @@ function showRevision(revisionNumber, revisedFileDetailsViewModel) {
                     .attr('data-line', lineDetailViewModel.LineId);
                     // TODO add style for cursor only in this case
 
-                var codeCell = lineFragment.children[3];
+                codeCell = lineFragment.children[3];
 
                 addComments(revisionNumber, revisedFileDetailsViewModel.Index, lineDetailViewModel, lineFragment);
             }
@@ -197,7 +197,7 @@ function insertFile(tbody, lines) {
     var row;
     var lineIndex = 0;
 
-    if ( rows.length == 0 )
+    if ( rows.length === 0 )
         return;
     
     row = rows[0];
@@ -344,7 +344,7 @@ function postReviewComment(event) {
 
     $('<div></div>').attr('class', 'comments-text').text(comment).appendTo(newBlock);
 
-    if (block.parent().attr('class').indexOf('comments-block') == -1) {
+    if (block.parent().attr('class').indexOf('comments-block') === -1) {
         newBlock.attr('class', newBlock.attr('class') + ' comments-block-outer');
     }
 
@@ -574,7 +574,7 @@ function postComment() {
     var toRemove = textArea.parent();
     var insertPoint = toRemove.parent();
 
-    if (insertPoint.attr('class').indexOf('comments-block') == -1 ){
+    if (insertPoint.attr('class').indexOf('comments-block') === -1 ){
         block.attr('class', block.attr('class') + ' comments-block-outer');
     }
 
@@ -605,7 +605,7 @@ function getAddedLineNumber(data) {
     if (data.ChangeState === 0 || data.ChangeState === 1) {
         return data.AddedLineNumber
     }
-    else if (data.ChangeState == 3) {
+    else if (data.ChangeState === 3) {
         return "...";
     }
 
@@ -619,7 +619,7 @@ function getRemovedLineNumber(data) {
     if (data.ChangeState === 0 || data.ChangeState === 2) {
         return data.RemovedLineNumber
     }
-    else if (data.ChangeState == 3) {
+    else if (data.ChangeState === 3) {
         return "...";
     }
 
