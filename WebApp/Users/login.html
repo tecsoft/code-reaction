@@ -3,52 +3,42 @@
 <head>
     <title>Code Reaction</title>
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" meidia="screen" />
-    <link rel="stylesheet" type="text/css" href="/styles.css" media="screen" />
+    <link rel="stylesheet" href="../css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/styles.css" media="screen" />
     
 </head>
 <body>
-    <div class="header">
-        <div class="title">Code Reaction</div>
-    </div>
-
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Sign In!</h4>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="userName">Name:</label>
-                        <input type="text" class="form-control" id="login-username">
-                    </div>
-                    <div class="form-group">
-                        <label for="pwd">Password:</label>
-                        <input type="password" class="form-control" id="login-password">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <div>
-                    <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
-                    <button type="button" class="btn btn-primary btn-lg" id="connectButton">Connect</button>
-                </div>
-            </div>
-            <div id="log"></div>
-
-        </div>
+    <form class="form-signin">
+        <h2 class="form-signin-heading text-center">CODE REACTION</h2>
         <hr/>
-        <div class="alert" role="alert">
-            <p>To register click <a href="/Users/register.html">here</a></p>
+        <div class="form-group">
+            <label for="userName" class="sr-only">Name</label>
+            <input type="text" placeholder="Login" class="form-control" id="login-username">
         </div>
-    </div>
+        <div class="form-group">
+            <label for="pwd" class="sr-only">Password</label>
+            <input type="password" placeholder="Password" class="form-control" id="login-password">
+        </div>
+        <div class="alert alert-danger hidden" role="alert">
+            <strong>Oh snap!</strong>
+            <span class="alert-text"></span>
+        </div>
+        <button type="button" class="btn btn-primary btn-lg center-block btn-submit" id="connectButton">Sign in</button>
+    </form>
 
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <div id="log"></div>
 
-            <script src="/Users/users.js"></script>
-            <script>
-                $(document).ready(loginReady);
-            </script>
+
+    <p class="text-center">To register click <a href="/Users/register.html">here</a></p>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <script src="/Users/users.js"></script>
+    <script>
+        $(document).ready(loginReady);
+    </script>
 </body>
 </html>

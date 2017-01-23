@@ -3,7 +3,7 @@
 //-------------------------------
 function loadFollowUps() {
 
-    var uri = '/api/commits?include=' + encodeURIComponent(getUsername()) + '&max=30';
+    var uri = '/api/commits?include=' + encodeURIComponent(getUsername()) + '&max=100';
     var keyword = $('#inputKeyWord').val();
 
     if (keyword) {
@@ -53,9 +53,9 @@ function createItem(revision) {
 
     $('<div></div>')
         .attr('class', 'commit-annotation-summary')
-        .append($('<span></span>').attr('class', 'label label-primary').text(revision.NumberReviewers)).append(' reviewers ')
-        .append($('<span></span>').attr('class', 'label label-success').text(revision.NumberComments)).append(' comments ')
-        .append($('<span></span>').attr('class', 'label label-warning').text(revision.NumberReplies)).append(' replies')
+        .append($('<span class="label label-primary"><i class="fa fa-eye"></i> ' + revision.NumberReviewers + ' </span>'))
+        .append($('<span class="label label-success"><i class="fa fa-comment"></i> ' + revision.NumberComments + ' </span>'))
+        .append($('<span class="label label-warning"><i class="fa fa-comments"></i> ' + revision.NumberReplies + ' </span>'))
         .appendTo(block);
 
     if (revision.ApprovedBy) {
