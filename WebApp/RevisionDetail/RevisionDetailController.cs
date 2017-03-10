@@ -3,7 +3,6 @@ using CodeReaction.Domain.Commits;
 using CodeReaction.Domain.Entities;
 using CodeReaction.Domain.Feedback;
 using CodeReaction.Domain.Services;
-using CodeReaction.Web.Auth;
 using CodeReaction.Web.Models;
 using CodeReaction.Web.RevisionDetail;
 using System;
@@ -57,13 +56,16 @@ namespace CodeReaction.Web.Controllers
                 {
                     var comments = unitOfWork.Context.Comments.Where(c => c.Revision == commit.Revision);
 
-                    var replies = comments.Where(c => c.User == commit.Author);
-                    var reviews = comments.Where(c => c.User != commit.Author);
+                    var replies = comments.Where(c => c.User == commit.Author && !c.IsLike);
+                    var reviews = comments.Where(c => c.User != commit.Author && !c.IsLike);
+                    var likes = comments.Where(c => c.IsLike);
 
                     var stats = new CommitStats(
                         reviews.Select(c => c.User).Distinct().Count(),
                         reviews.Count(),
-                        replies.Count());
+                        replies.Count(),
+                        likes.Count()
+                        );
 
                     list.Add(new Tuple<Commit, CommitStats>(commit, stats));
                 }
@@ -256,6 +258,98 @@ namespace CodeReaction.Web.Controllers
             }
 
             return Ok(viewModel);
+        }
+
+        [Route("api/commits/like/{user}/{revision}/{lineId}")]
+        public IHttpActionResult LikeLine(string user, int revision, string lineId)
+        {
+            UnitOfWork unitOfWork = null;
+            Comment like = null;
+            try
+            {
+                unitOfWork = new UnitOfWork();
+
+                like = new LikeService(unitOfWork).LikeLine(user, revision, lineId);
+
+                unitOfWork.Save();
+
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError("LikeLine: " + ex);
+                return InternalServerError(ex);
+            }
+            finally
+            {
+                if (unitOfWork != null)
+                    unitOfWork.Dispose();
+            }
+            return Ok(like);
+        }
+
+        [Route("api/commits/likes/{revision}")]
+        public IHttpActionResult GetLikes(int revision)
+        {
+            UnitOfWork unitOfWork = null;
+            IEnumerable<Comment> likes = null;
+            try
+            {
+                unitOfWork = new UnitOfWork();
+
+                var likeQuery = new LikeQuery(unitOfWork.Context.Comments)
+                {
+                    Revision = revision
+                };
+
+                likes = likeQuery.Execute();
+
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError("LikeLine: " + ex);
+                return InternalServerError(ex);
+            }
+            finally
+            {
+                if (unitOfWork != null)
+                    unitOfWork.Dispose();
+            }
+            return Ok(likes);
+        }
+
+        [HttpDelete]
+        [Route("api/commits/like/{likeId}")]
+        public IHttpActionResult DeleteLikes(long likeId)
+        {
+            UnitOfWork unitOfWork = null;
+            try
+            {
+                unitOfWork = new UnitOfWork();
+
+                var likeQuery = new LikeQuery(unitOfWork.Context.Comments)
+                {
+                    LikeId = likeId
+                };
+
+                var like = likeQuery.Execute().FirstOrDefault();
+
+                if (like != null)
+                {
+                    unitOfWork.Context.Comments.Remove(like);
+                    unitOfWork.Save();
+                }               
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError("unLikeLine: " + ex);
+                return InternalServerError(ex);
+            }
+            finally
+            {
+                if (unitOfWork != null)
+                    unitOfWork.Dispose();
+            }
+            return Ok();
         }
 
         T? ParseNullable<T>(string str) where T : struct

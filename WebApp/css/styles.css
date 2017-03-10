@@ -19,8 +19,9 @@ td, th, tr {
     border-radius: 1px;
 }
 
-.actionBar {
-    clear: both;
+.action-bar {
+    background-color: #ffffff;
+    height: 30px;
 }
 
 .header {
@@ -57,6 +58,12 @@ td, th, tr {
     color:#555;
 }
 
+.well {
+    margin-bottom: 0;
+    border: 0;
+    border-radius: 0px;
+}
+
 .form-signin {
   max-width: 330px;
   padding: 15px;
@@ -83,6 +90,10 @@ td, th, tr {
   font-size: 16px;
 }
 
+.form-signin .remember-me {
+    text-align: center;
+}
+
 .form-signin .form-control:focus {
   z-index: 2;
 }
@@ -99,11 +110,14 @@ td, th, tr {
   border-top-right-radius: 0;
 }
 
+.form-signin .btn-submit {
+    width: 100%
+}
+
 #container {
     position:relative;
     min-width:92%;
     height:88%;
-    padding-top:2em;
 }
 
 #container-commits {
@@ -138,8 +152,6 @@ td, th, tr {
 
 #detailPanel2 {
     background-color:#ffffff;
-    padding-left: 2%;
-    padding-right: 2%;
     overflow-y:auto;
     overflow-x:auto;
     position:relative;
@@ -155,6 +167,13 @@ criteria-panel {
     position:relative;
 }
 
+.commit-actions2 {
+    padding: 1em;
+    float: left;
+    width: 20%;
+    text-align: right;
+}
+
 .commit-list2 {
     margin: 2em;
     padding: 1em;
@@ -165,12 +184,17 @@ criteria-panel {
     font-size: 1em;
     font-weight:bolder;
     white-space:pre-wrap;
-    width:50%;
-    float:left;    
+    width:80%;
+    float:left;
+    padding-left: 20px;
 }
 
 .commit-item2 {
-    padding-top:0.5em;
+    padding-top: 20px;
+}
+
+.commit-item2:nth-child(2n) {
+    background-color: #f8f8f8;
 }
 
 .commit-item2:hover {
@@ -180,23 +204,17 @@ criteria-panel {
 .commit-annotation-summary {
     padding:1em;
     float:left;
-    width:50%;
+    width:20%;
     text-align:right;
 }
 
 .commit-annotation-summary .label{
     margin-left: 5px;
+    padding: 1em;
 }
 
 .label {
     font-size: .9em;
-}
-
-.commit-actions2 {
-    padding:1em;
-    float:left;
-    width:50%;
-    text-align:right;
 }
 
 .commit-item-footer {
@@ -275,6 +293,7 @@ criteria-panel {
 .revision-line-text, .revision-line-number, .revision-line-state {
     font-family: DroidSansMono, Monospace, Consolas, Courier;
     font-size: 0.85em;
+    line-height: 1.5;
 }
 
 .revision-line-text {
@@ -296,7 +315,7 @@ criteria-panel {
 }
 
 .revision-line-state {
-    width:4%;
+    width: 7%;
     border-right: 1px solid transparent;
 }
 
@@ -358,6 +377,33 @@ criteria-panel {
     background-color: #fff;
 }
 
+.btn-like-line, .btn-comment-line{
+    display: none;
+}
+
+.revision-line:hover .btn-comment-line, 
+.revision-line:hover .btn-like-line{
+    display: inline;
+}
+
+.btn-like-line.is-liked, .btn-comment-line.is-liked {
+    display: none!important;
+}
+
+.btn-like-line, .btn-comment-line{
+    margin-left : 5px;
+}
+
+.like-line-message {
+    padding: 10px;
+    float: right;
+    background-color: white;
+}
+
+.like-line-message i {
+    color: red;
+}
+
 .comments-block-outer {
     max-width: 75%;
     border: 1px solid #cac4c4;
@@ -382,6 +428,11 @@ criteria-panel {
 .comments-block-outer > .comments-author {
     border: 0;
     border-bottom: 1px solid #cac4c4;
+}
+
+.btn-comment-action {
+    display: inline-block;
+    float: right;
 }
 
 .comments-text {

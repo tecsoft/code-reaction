@@ -41,7 +41,7 @@ function refreshPage(event) {
 function createItem(revision) {
 
     var block = $('<div></div>').attr('class', 'commit-item2');
-    var actions = $('<div></div>').attr('class', 'commit-actions2');
+    var actions = $('<div></div>');
 
      var title = $('<div></div>')
          .text(revision.Message)
@@ -58,6 +58,7 @@ function createItem(revision) {
         .append($('<span class="label label-primary"><i class="fa fa-eye"></i> ' + revision.NumberReviewers + ' </span>'))
         .append($('<span class="label label-success"><i class="fa fa-comment"></i> ' + revision.NumberComments + ' </span>'))
         .append($('<span class="label label-warning"><i class="fa fa-comments"></i> ' + revision.NumberReplies + ' </span>'))
+        .append($('<span class="label label-danger"><i class="fa fa-heart"></i> ' + revision.NumberLikes + ' </span>'))
         .appendTo(block);
 
     if (revision.ApprovedBy) {

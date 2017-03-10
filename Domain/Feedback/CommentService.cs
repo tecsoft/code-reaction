@@ -1,9 +1,5 @@
 ﻿using CodeReaction.Domain.Entities;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeReaction.Domain.Services
 {
@@ -17,7 +13,7 @@ namespace CodeReaction.Domain.Services
 
         public Comment CommentLine(string user, int revision, string file, string lineId, string text)
         {
-            Comment newComment = new Comment() { User = user, Revision = revision, File = file, LineId = lineId, Text = text };
+            Comment newComment = new Comment() { User = user, Revision = revision, File = file, LineId = lineId, Text = text, IsLike = false };
             unitOfWork.Context.Comments.Add(newComment);
             return newComment;
         }
@@ -33,7 +29,8 @@ namespace CodeReaction.Domain.Services
                 Revision = originalComment.Revision,
                 User = author,
                 Text = text,
-                ReplyToId = idComment
+                ReplyToId = idComment,
+                IsLike = false
             };
 
             unitOfWork.Context.Comments.Add( reply );

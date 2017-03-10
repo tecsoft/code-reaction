@@ -1,9 +1,6 @@
 ﻿using CodeReaction.Domain.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeReaction.Domain.Feedback
 {
@@ -22,7 +19,7 @@ namespace CodeReaction.Domain.Feedback
         {
             if ( Revision.HasValue )
             {
-                query = query.Where(c => c.Revision == Revision);
+                query = query.Where(c => c.Revision == Revision && !c.IsLike);
             }
 
             return query.ToList();

@@ -66,7 +66,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="SharpSvn">
-      <HintPath>..\..\SSvn\SharpSvn\SharpSvn.dll</HintPath>
+      <HintPath>..\..\SharpSvn\SharpSvn.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -102,6 +102,8 @@
     <Compile Include="Database\Database.cs" />
     <Compile Include="Feedback\CommentService.cs" />
     <Compile Include="Commits\SvnLogReader.cs" />
+    <Compile Include="Feedback\LikeQuery.cs" />
+    <Compile Include="Feedback\LikeService.cs" />
     <Compile Include="HouseKeeping\HouseKeepingService.cs" />
     <Compile Include="HouseKeeping\TaskScheduler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

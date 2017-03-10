@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace CodeReaction.Web.RevisionDetail
 {
@@ -25,6 +24,7 @@ namespace CodeReaction.Web.RevisionDetail
         public int NumberReviewers { get; set; }
         public int NumberComments { get; set; }
         public int NumberReplies { get; set; }
+        public int NumberLikes { get; set; }
         public bool CanApprove { get; set; }
         public string ApprovedBy { get; set; } // TODO not used ????
 
@@ -37,6 +37,7 @@ namespace CodeReaction.Web.RevisionDetail
             NumberReviewers = stats.NumberReviewers;
             NumberComments = stats.NumberComments;
             NumberReplies = stats.NumberReplies;
+            NumberLikes = stats.NumberLikes;
             ApprovedBy = commit.ApprovedBy;
         }
     }

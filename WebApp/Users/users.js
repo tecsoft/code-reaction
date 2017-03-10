@@ -1,4 +1,13 @@
-﻿
+﻿$(document).ready(function () {
+    $('#login-username').val(localStorage.username);
+    $('#login-password').val(localStorage.password);
+
+    if (localStorage.rememberme == "true") {
+        $('#login-remember-me').attr('checked', 'checked');
+    }
+});
+
+
 function setUsername(username) {
     window.localStorage.setItem('username', username);
 }
@@ -49,6 +58,18 @@ function doLogin(event) {
 
     username = $('#login-username').val();
     password = $('#login-password').val();
+
+    var rememberme = $('#login-remember-me').is(':checked');
+    if (rememberme) {
+        localStorage.username = username;
+        localStorage.password = password;
+        localStorage.rememberme = rememberme;
+    }
+    else {
+        localStorage.username = '';
+        localStorage.password = '';
+        localStorage.rememberme = false;
+    }
 
     var alertMsg = "";
 
