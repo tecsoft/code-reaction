@@ -145,7 +145,7 @@ function FileDiff_GetLineFragment(lineState, oldLineNumber, newLineNumber, text)
         var htmlLineCommand = '<td class="revision-line-state">' + getChangedSymbol(lineState) +
                                 '<span class="btn btn-primary btn-xs btn-comment-line"><i class="fa fa-edit"/></span>';
                                 if (revisionModel.Author != getUsername()) {
-                                    htmlLineCommand += '<span class="btn btn-success btn-xs btn-like-line"><i class="fa fa-thumbs-up"/></span>';
+                                    htmlLineCommand += '<span class="btn btn-danger btn-xs btn-like-line"><i class="fa fa-heart"/></span>';
                                 }
                                 htmlLineCommand += '</td>';
 
@@ -203,7 +203,7 @@ function deleteLike(elem) {
 
 function addLike(btn, texteBlock, likeId, author) {
 
-    var htmlLikeThis = '<div class="like-line-message" data-idlike="' + likeId + '" data-author="' + author + '">WOOOOW ' + author + ' <i class="fa fa-heart" /> this.';
+    var htmlLikeThis = '<div class="like-line-message" data-idlike="' + likeId + '" data-author="' + author + '">' + author + ' <i class="fa fa-heart" /> this.';
 
     if (author == getUsername()) {
         htmlLikeThis += '<span class="btn btn-xs btn-unlike-line"><i class="fa fa-remove"/></span>';
