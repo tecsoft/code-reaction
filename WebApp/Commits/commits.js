@@ -5,15 +5,25 @@ function loadCommits() {
 
     var uri;
     var keyword = $('#inputKeyWord').val();
+    var excludeApproved = $('#inputExcludeApproved')[0].checked;
+    var exludeMine = $('#inputExcludeMine')[0].checked;
 
+    var parameters = {};
     if (keyword) {
-        uri = '/api/commits?keyword=' + keyword;
+        parameters.keyword = keyword;
     }
-    else {
-        uri = '/api/commits?exclude=' + encodeURIComponent(getUsername()) + '&max=100';
+
+    if (excludeApproved) {
+        parameters.excludeApproved = true;
     }
-    
-    $.getJSON(uri)
+
+    if (exludeMine) {
+        parameters.exclude = getUsername();
+    }
+
+    parameters.max = 100;
+   
+    $.getJSON("/api/commits", parameters)
         .done(function (data) {
             if ( data.Commits.length == 0 ) {
                 $('#insertPoint').empty();

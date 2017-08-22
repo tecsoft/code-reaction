@@ -18,10 +18,20 @@
         </ul>
         
     </nav>
-    <div class="well well-sm criteria-panel form-inline">
+    <div class="well well-sm criteria-panel form-inline" >
         <div class="form-group">
-            <input type="text" id="inputKeyWord" class="form-control" placeholder="Keyword" />
-            <button id="refresh" onclick="refreshPage(event);" class="btn btn-primary"><i class="fa fa-search"></i></button>
+            <div>
+                <input type="text" id="inputKeyWord" class="form-control" placeholder="Keyword, Author" style="min-width:400px;" />
+                <button id="refresh" onclick="refreshPage(event);" class="btn btn-primary"><i class="fa fa-search"></i></button>
+            </div>
+            <div>
+                <label class="form-check-label">
+                    <input type="checkbox" id="inputExcludeApproved" checked="checked">&nbsp;Exclude approved commits
+                </label>
+                <label for="inputExcludeMine" class="form-check-label">
+                    <input type="checkbox" id="inputExcludeMine" checked="checked" />&nbsp;Exclude mine</label>
+                
+            </div>
         </div>
     </div>
     <div id="container-commits">
@@ -42,7 +52,14 @@
     <script src="commits.js"></script>
     
     <script>
-        $(document).ready(loadCommits);
+        $(document).ready(function () {
+            loadCommits();
+            $(document).keypress(function (e) {
+                if (e.keyCode == 13) {
+                    $('#refresh').click();
+                }
+            });
+        });
     </script>
 </body>
 </html>
