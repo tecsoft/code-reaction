@@ -51,32 +51,33 @@ function refreshPage(event) {
 function createItem(revision) {
 
     var block = $('<div></div>').attr('class', 'commit-item2');
-    var actions = $('<div></div>').attr('class', 'commit-actions2');
 
-     var title = $('<div></div>')
+    var title = $('<div></div>')
          .text(revision.Message)
          .attr('class', 'commit-title2')
          .appendTo(block);
 
-     $('<div></div>')
+    $('<div></div>')
         .text("Revision : " + revision.Revision + " by " + revision.Author + " on " + revision.Timestamp)
         .attr('class', 'commit-subtitle')
         .appendTo(title);
 
-    $('<div></div>')
-        .attr('class', 'commit-annotation-summary')
-        .append($('<span class="label label-primary"><i class="fa fa-eye"></i> ' + revision.NumberReviewers + ' </span>'))
-        .append($('<span class="label label-success"><i class="fa fa-comment"></i> ' + revision.NumberComments + ' </span>'))
-        .append($('<span class="label label-warning"><i class="fa fa-comments"></i> ' + revision.NumberReplies + ' </span>'))
-        .appendTo(block);
+    var annotations = $('<div></div>')
+        .attr('class', 'commit-annotation-summary');
 
     if (revision.ApprovedBy) {
-        $('<div></div>')
-            .text('Cool! Approved by: ' + revision.ApprovedBy)
-            .appendTo(actions);
+         $("<span></span>")
+             .attr('class', 'label label-success')
+             .append($('<i class="fa fa-check-circle"></i> '))
+             .append(' ' + revision.ApprovedBy)
+             .appendTo(annotations);
     }
 
-    actions.appendTo(block);
+    annotations.append($('<span class="label label-primary"><i class="fa fa-eye"></i> ' + revision.NumberReviewers + ' </span>'))
+    annotations.append($('<span class="label label-info"><i class="fa fa-comment"></i> ' + revision.NumberComments + ' </span>'))
+    annotations.append($('<span class="label label-warning"><i class="fa fa-comments"></i> ' + revision.NumberReplies + ' </span>'))
+
+    annotations.appendTo(block);
 
     block.on('click', { revision: revision.Revision }, openForReview);
 
