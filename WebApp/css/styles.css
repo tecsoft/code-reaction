@@ -23,6 +23,11 @@ td, th, tr {
     clear: both;
 }
 
+.form-check-label {
+    font-weight: normal;
+    padding-right:1em;
+}
+
 .header {
     background-color:#313131;
     color:#ffffff;

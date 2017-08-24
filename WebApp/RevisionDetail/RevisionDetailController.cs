@@ -41,13 +41,9 @@ namespace CodeReaction.Web.Controllers
                 if (string.IsNullOrEmpty(keyword) == false)
                 {
                     query.Keyword = parameters.FirstOrDefault(p => p.Key == "keyword").Value;
-                    query.ExcludeApproved = false;
-                }
-                else
-                {
-                    query.ExcludeApproved = true;
                 }
 
+                query.ExcludeApproved = String.Equals("true", parameters.FirstOrDefault(p => p.Key == "excludeApproved").Value, StringComparison.InvariantCulture);
                 query.Max = ParseNullable<int>(parameters.FirstOrDefault(p => p.Key == "max").Value);
                 query.IncludeAuthor = parameters.FirstOrDefault(p => p.Key == "include").Value;
                 query.ExcludeAuthor = parameters.FirstOrDefault(p => p.Key == "exclude").Value;

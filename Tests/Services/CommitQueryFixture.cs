@@ -3,10 +3,7 @@ using CodeReaction.Domain.Repositories;
 using CodeReaction.Tests.Services.Helpers;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeReaction.Tests.Services
 {
@@ -75,7 +72,7 @@ namespace CodeReaction.Tests.Services
         }
 
         [Test]
-        public void By_KeyWord()
+        public void By_KeyWord_Includes_Log_And_Author()
         {
             using (var database = new DbCodeReview())
             {
@@ -93,6 +90,18 @@ namespace CodeReaction.Tests.Services
                 var sut = new CommitQuery(database.Commits)
                 {
                     Keyword = "m"
+                };
+
+                var result = sut.Execute();
+
+                Assert.AreEqual(3, result.Count<Commit>());
+            }
+
+            using (var database = new DbCodeReview())
+            {
+                var sut = new CommitQuery(database.Commits)
+                {
+                    Keyword = "mess"
                 };
 
                 var result = sut.Execute();
