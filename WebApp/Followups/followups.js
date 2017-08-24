@@ -3,15 +3,13 @@
 //-------------------------------
 function loadFollowUps() {
 
-    var uri = '/api/commits?include=' + encodeURIComponent(getUsername()) + '&max=100';
-    var keyword = $('#inputKeyWord').val();
-
-    if (keyword) {
-        uri += '&keyword=' + keyword;
-    }
+    var parameters = {};
+    parameters.include = getUsername();
+    parameters.excludeApproved = true;
+    max = 100;
     
 
-    $.getJSON(uri)
+    $.getJSON('/api/commits', parameters)
         .done(function (data) {
             if (data.Commits.length == 0) {
                 $('#insertPoint').empty();
@@ -54,7 +52,7 @@ function createItem(revision) {
     $('<div></div>')
         .attr('class', 'commit-annotation-summary')
         .append($('<span class="label label-primary"><i class="fa fa-eye"></i> ' + revision.NumberReviewers + ' </span>'))
-        .append($('<span class="label label-success"><i class="fa fa-comment"></i> ' + revision.NumberComments + ' </span>'))
+        .append($('<span class="label label-danger"><i class="fa fa-comment"></i> ' + revision.NumberComments + ' </span>'))
         .append($('<span class="label label-warning"><i class="fa fa-comments"></i> ' + revision.NumberReplies + ' </span>'))
         .appendTo(block);
 
