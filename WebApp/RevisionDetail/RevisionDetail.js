@@ -31,9 +31,13 @@ function loadReview() {
                 .appendTo(block);
 
             if (revisionDetailViewModel.ApprovedBy) {
+
                 $('<div></div>')
-                    .text('This commit has been approved by: ' + revisionDetailViewModel.ApprovedBy)
-                    .appendTo(actions);
+                    .append($("<span></span>"))
+                        .attr('class', 'label label-success')
+                        .append($('<i class="fa fa-check-circle"></i> '))
+                        .append(' Approved by ' + revisionDetailViewModel.ApprovedBy)
+                        .appendTo(actions);
             }
             else if (revisionDetailViewModel.Author !== getUsername()) {
                 $('<button></button>')

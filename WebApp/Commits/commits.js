@@ -74,7 +74,7 @@ function createItem(revision) {
     }
 
     annotations.append($('<span class="label label-primary"><i class="fa fa-eye"></i> ' + revision.NumberReviewers + ' </span>'))
-    annotations.append($('<span class="label label-info"><i class="fa fa-comment"></i> ' + revision.NumberComments + ' </span>'))
+    annotations.append($('<span class="label label-danger"><i class="fa fa-comment"></i> ' + revision.NumberComments + ' </span>'))
     annotations.append($('<span class="label label-warning"><i class="fa fa-comments"></i> ' + revision.NumberReplies + ' </span>'))
 
     annotations.appendTo(block);
