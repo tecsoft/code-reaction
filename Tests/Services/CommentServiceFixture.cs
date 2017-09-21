@@ -38,6 +38,7 @@ namespace CodeReaction.Tests.Likes
                 Assert.AreEqual("a nice comment", results[0].Text);
                 Assert.AreEqual(null, results[0].ReplyToId);
                 Assert.AreNotEqual(0, results[0].Id);
+                Assert.IsNotNull(results[0].Timestamp);
             }
         }
 
@@ -102,6 +103,7 @@ namespace CodeReaction.Tests.Likes
                 Assert.AreEqual(originalComment.LineId, replies[0].LineId);
                 Assert.AreEqual(originalComment.Revision, replies[0].Revision);
                 Assert.AreNotEqual(originalComment.Id, replies[0].Id);
+                Assert.IsNotNull(results[0].Timestamp);
             }
         }
 

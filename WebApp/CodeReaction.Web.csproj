@@ -153,6 +153,10 @@
     <Content Include="Followups\followups.html" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Release.txt" />
+    <Content Include="Scripts\moment-with-locales.js" />
+    <Content Include="Scripts\moment-with-locales.min.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
     <Content Include="Users\login.html" />
     <Content Include="review.html" />
     <Content Include="RevisionDetail\RevisionDetail.js" />

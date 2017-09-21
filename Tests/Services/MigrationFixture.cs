@@ -38,7 +38,8 @@ namespace CodeReaction.Tests.Services
 
             using (var db = new DbCodeReview())
             {
-                Assert.AreEqual(Index.Max(), db.SchemaVersion.First().Number);
+                Assert.AreEqual(Index.Migrations.Keys.Max(), db.SchemaVersion.Max( v => v.Number));
+                Assert.AreEqual(Index.Migrations.Count, db.SchemaVersion.Count());
             }
         }
     }

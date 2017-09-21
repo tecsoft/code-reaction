@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CodeReaction.Domain.Database.Migrations
 {
@@ -13,10 +7,7 @@ namespace CodeReaction.Domain.Database.Migrations
         public static readonly IDictionary<int, string> Migrations = new Dictionary<int, string>()
         {
             {1, "InitialiseSchemaInfo" },
+            {2, "AddTimestampOnComments" }
         };
-        public static int Max()
-        {
-            return Migrations.Keys.Max();
-        }
     }
 }
