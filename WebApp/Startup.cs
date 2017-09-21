@@ -9,7 +9,7 @@ using CodeReaction.Domain.Commits;
 using CodeReaction.Domain.HouseKeeping;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security.Cookies;
-
+using CodeReaction.Domain.Database;
 
 [assembly: OwinStartup(typeof(CodeReaction.Web.Startup))]
 
@@ -22,6 +22,8 @@ namespace CodeReaction.Web
 
         public void Configuration(IAppBuilder app)
         {
+            SchemaMigration.Execute();
+
             HttpConfiguration httpConfiguration = new HttpConfiguration();
             ConfigureAuth(app);
             WebApiConfig.Register(httpConfiguration);

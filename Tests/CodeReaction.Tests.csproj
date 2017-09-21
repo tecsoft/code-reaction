@@ -100,6 +100,7 @@
     <Compile Include="Services\CommentServiceFixture.cs" />
     <Compile Include="Services\Helpers\DbTestHelper.cs" />
     <Compile Include="Services\HouseKeepingServiceFixture.cs" />
+    <Compile Include="Services\MigrationFixture.cs" />
     <Compile Include="Services\SourceControlDummy.cs" />
     <Compile Include="SvnClient\SvnClientFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
