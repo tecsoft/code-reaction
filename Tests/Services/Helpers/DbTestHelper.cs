@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CodeReaction.Domain.Database;
+using System;
 using System.Data.Entity.Validation;
 using System.IO;
 
@@ -13,6 +14,8 @@ namespace CodeReaction.Tests.Services.Helpers
                 throw new FileNotFoundException();
 
             dbFile.CopyTo("CodeReaction.sqlite", true);
+
+            SchemaMigration.Execute();
         }
 
         public static void DebugValidationErrors(DbEntityValidationException ex)

@@ -94,9 +94,19 @@ namespace CodeReaction.Web.Models
         public string Author { get; private set; }
         public string Comment { get; private set;  }
         public long? ReplyToId { get; private set; }
+
+        public DateTime? Timestamp { get; set; }
+
         public static CommentViewModel CreateFrom(Comment comment)
         {
-            return new CommentViewModel() { Id = comment.Id, Author = comment.User, Comment = comment.Text, ReplyToId = comment.ReplyToId };
+            return new CommentViewModel()
+            {
+                Id = comment.Id,
+                Author = comment.User,
+                Comment = comment.Text,
+                ReplyToId = comment.ReplyToId,
+                Timestamp = comment.Timestamp
+            };
         }
     }
 

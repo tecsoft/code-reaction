@@ -17,7 +17,16 @@ namespace CodeReaction.Domain.Services
 
         public Comment CommentLine(string user, int revision, string file, string lineId, string text)
         {
-            Comment newComment = new Comment() { User = user, Revision = revision, File = file, LineId = lineId, Text = text };
+            Comment newComment = new Comment()
+            {
+                User = user,
+                Revision = revision,
+                File = file,
+                LineId = lineId,
+                Text = text,
+                Timestamp = DateTime.UtcNow
+            };
+
             unitOfWork.Context.Comments.Add(newComment);
             return newComment;
         }
@@ -33,7 +42,8 @@ namespace CodeReaction.Domain.Services
                 Revision = originalComment.Revision,
                 User = author,
                 Text = text,
-                ReplyToId = idComment
+                ReplyToId = idComment,
+                Timestamp = DateTime.UtcNow
             };
 
             unitOfWork.Context.Comments.Add( reply );

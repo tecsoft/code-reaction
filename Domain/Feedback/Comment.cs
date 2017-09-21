@@ -27,5 +27,7 @@ namespace CodeReaction.Domain.Entities
         public string Text { get; set; }
 
         public long? ReplyToId { get; set; }
+
+        public DateTime? Timestamp { get; set; }
     }
 }

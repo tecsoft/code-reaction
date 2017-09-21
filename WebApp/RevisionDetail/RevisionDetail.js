@@ -284,14 +284,23 @@ function createReviewBoxFragment(review) {
     var header = $('<div></div>')
         .attr('class', 'comments-author');
 
-    $('<span></span>').text(review.Author ).appendTo(header);
+    $('<span></span>').text(review.Author).appendTo(header);
 
     commentReplyFragment(addNewReplyBox).appendTo(header);
+
+    $('<span></span>').attr("class", "comments-when").text(fromNow(review.Timestamp)).appendTo(header);
+
     header.appendTo(block);
 
     $('<div></div>').attr('class', 'comments-text').text(review.Comment).appendTo(block);
 
     return block;
+}
+
+function fromNow(aMoment) {
+
+    if (aMoment)
+        return moment(aMoment).fromNow();
 }
 
 function markAsApproved(event) {
@@ -377,16 +386,16 @@ function addComments(revisionNumber, fileId, line, appendToItem) {
 //
 // added a comment box
 //
-function addComment(comment, revisionNumber, fileId, lineId, appendToItem) {
+function addComment(commentDetails, revisionNumber, fileId, lineId, appendToItem) {
 
     var isOuter = true;
     var appendPoint = appendToItem;
-    if (comment.ReplyToId !== null) {
+    if (commentDetails.ReplyToId !== null) {
         isOuter = false;
-        appendPoint = $(appendPoint).find("div[data-idcomment='" + comment.ReplyToId + "']:first");
+        appendPoint = $(appendPoint).find("div[data-idcomment='" + commentDetails.ReplyToId + "']:first");
     }
 
-    var commentBox = newCommentFragment(comment.Id, comment.Author, comment.Comment, revisionNumber, fileId, lineId);
+    var commentBox = newCommentFragment(commentDetails, revisionNumber, fileId, lineId);
 
     if (isOuter)
         commentBox.attr('class', commentBox.attr('class') + ' comments-block-outer');
@@ -397,25 +406,27 @@ function addComment(comment, revisionNumber, fileId, lineId, appendToItem) {
 //
 // create html fragment for the comment
 //
-function newCommentFragment(id, author, comment, revisionNumber, fileId, lineId ) {
+function newCommentFragment(commentDetails, revisionNumber, fileId, lineId ) {
 
     var block, header;
 
     block = $('<div></div>')
             .attr('class', 'comments-block')
-            .attr('data-idComment', id);
+            .attr('data-idComment', commentDetails.Id);
 
     header = $('<div></div>')
         .attr('class', 'comments-author');
 
-    $('<span></span>').text(author).appendTo(header);
+    $('<span></span>').text(commentDetails.Author).appendTo(header);
     
     // anyone can reply to a comment
     commentReplyFragment(addNewReplyBox).appendTo(header);
 
+    $('<span></span>').attr("class", "comments-when").text(fromNow(commentDetails.Timestamp)).appendTo(header);
+
     header.appendTo(block);
 
-    $('<div></div>').attr('class', 'comments-text').text(comment).appendTo(block);
+    $('<div></div>').attr('class', 'comments-text').text(commentDetails.Comment).appendTo(block);
 
     return block;
 }
@@ -471,7 +482,7 @@ function postReplyHandler(event) {
     var uri = '/api/commits/reply/' + idComment + '/' + author + '?comment=' + encodeURIComponent(comment);
 
     // we update screen optimistically before post
-    var block = newCommentFragment( -1, author, comment, null, null, null);
+    var block = newCommentFragment({ Id: -1, Author: author, Comment: comment }, null, null, null);
 
     var toRemove = textArea.parent();
     var insertPoint = toRemove.parent();
@@ -573,7 +584,7 @@ function postComment() {
     var uri = 'api/commits/comment/' + author + '/' + revision  + '/' + line + "?comment=" + encodeURIComponent(comment) + "&file=" + encodeURIComponent(fileIndex);
 
     // we update screen optimistically before post
-    var block = newCommentFragment(-1, author, comment, revision, fileIndex, line);
+    var block = newCommentFragment({ Id: -1, Author: author, Comment: comment }, revision, fileIndex, line);
 
     var toRemove = textArea.parent();
     var insertPoint = toRemove.parent();

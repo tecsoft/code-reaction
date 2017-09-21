@@ -375,7 +375,7 @@ criteria-panel {
 
 .comments-author {
     font-size : .95em;
-    font-weight:bold;
+    font-weight: bolder;
     color:#808080;
     background-color: #fff;
     padding: .2em;
@@ -383,6 +383,13 @@ criteria-panel {
     border:1px solid #CCC8C7;
     border-right:none;
 }
+
+.comments-when {
+    font-weight: normal;
+    float:right;
+    padding-right: .2em
+}
+
 
 .comments-block-outer > .comments-author {
     border: 0;
