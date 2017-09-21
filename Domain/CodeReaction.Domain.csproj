@@ -92,6 +92,10 @@
     <Compile Include="Commits\CommitStats.cs" />
     <Compile Include="Commits\FileStateEnum.cs" />
     <Compile Include="Commits\ISourceControl.cs" />
+    <Compile Include="Database\Migrations\InitialiseSchemaInfo.cs" />
+    <Compile Include="Database\Migrations\_Index.cs" />
+    <Compile Include="Database\SchemaMigration.cs" />
+    <Compile Include="Database\SchemaVersion.cs" />
     <Compile Include="DomainException.cs" />
     <Compile Include="Feedback\Comment.cs" />
     <Compile Include="Feedback\CommentQuery.cs" />
@@ -110,7 +114,9 @@
   <ItemGroup>
     <None Include="Database\CodeReaction.sqlite" />
     <None Include="packages.config" />
-    <None Include="Database\CodeReaction.sql" />
+    <None Include="Database\CodeReaction.sql">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

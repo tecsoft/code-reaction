@@ -1,4 +1,5 @@
 ﻿using CodeReaction.Domain.Commits;
+using CodeReaction.Domain.Database;
 using CodeReaction.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ namespace CodeReaction.Domain.Repositories
     {
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Commit> Commits { get; set; }
+
+        public DbSet<SchemaVersion> SchemaVersion { get; set; }
 
         public DbCodeReview() : base("CodeReaction")
         {
