@@ -2,42 +2,87 @@
 <html>
 <head>
     <title>Code Reaction</title>
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" meidia="screen" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" media="screen" />
     <link rel="stylesheet" href="../css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="../css/styles.css" media="screen" />
-    
 </head>
 <body>
-    <div class="header">
-        <div class="title">CODE REACTION</div>
-    </div>
-    <nav>
-        <ul class="nav nav-tabs">
-            <li><a href="/Commits/commits.html">Commits</a></li>
-            <li class="active"><a href="/Followups/followups.html">My follow-ups</a></li>
-        </ul>
-    </nav>
-
-    <div id="container" >
-        <div id="detailPanel2">
-            <div id="insertPoint">
-            </div>
-        </div>
-    </div>
-
-           
-    
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.4/vue.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="../Scripts/moment.min.js"></script>
 
-    <script src="../Users/users.js"></script>
-    <script src="../Tools/Tools.js"></script>
-    <script src="followups.js"></script>
-    
+    <script src="/Users/users.js"></script>
+    <script src="/Tools/Tools.js"></script>
+
+    <nav>
+        <div class="header">
+            <div class="title">CODE REACTION BY VUE!!!!</div>
+        </div>
+        <ul class="nav nav-tabs">
+            <li ><a href="/Commits/commits.html">Commits</a></li>
+            <li class="active"><a href="/Followups/followups.html">My follow-ups</a>
+        </ul>
+    </nav>
+    <div id="vue">
+        <div id="container-commits">
+            <div id="detailPanel2">
+                <div id="insertPoint">
+                    <div class="commit-item2" v-for="d in Commits" v-if="Commits.length > 0">
+                        <div class="commit-title2" v-on:click="openReview(d.Revision)" >
+                            <span>{{d.Message}}</span>
+                            <div class="commit-subtitle">
+                                <span>Revision: {{d.Revision}} {{timeAgo(d.Timestamp)}} by {{d.Author}}</span>
+                            </div>
+                        </div>
+                        <div class="commit-annotation-summary">
+                            <span v-if="d.ApprovedBy" class="label label-success"><i class="fa fa-check-circle"></i> {{d.ApprovedBy}}</span>
+                            <span class="label label-primary"><i class="fa fa-eye"></i> {{d.NumberReviewers}}</span>
+                            <span class="label label-danger"><i class="fa fa-comment"></i> {{d.NumberComments   }}</span>
+                            <span class="label label-warning"><i class="fa fa-comments"></i> {{d.NumberReplies}}</span>
+                        </div>
+                        <div class="commit-item-footer"></div>
+                    </div>
+                    <div v-if="Commits.length === 0">
+                        <span>Looks like you are all up to date</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
     <script>
-        $(document).ready(loadFollowUps);
+        var app = new Vue({
+            el: "#vue",
+            data: {
+                Parameters: { max: 100, keyword: "", include: getUsername(), excludeApproved: true },
+                Commits: {}
+            },
+
+            methods : {
+                refreshPage: function (event) {
+
+                    $.getJSON("/api/commits", this.Parameters)
+                        .done(function (data) {
+                            app.$data.Commits = data.Commits;
+                        });
+                },
+                openReview: function (revision) {
+                    window.location = "/review.html?revision=" + revision;
+                },
+                timeAgo : function( aMoment ) {
+                    if (aMoment)
+                        return moment(aMoment).fromNow();
+                }
+
+            },
+
+            mounted: function () {
+                this.refreshPage();
+            }
+
+        });
     </script>
 </body>
 </html>

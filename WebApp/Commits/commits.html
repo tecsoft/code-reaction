@@ -2,64 +2,109 @@
 <html>
 <head>
     <title>Code Reaction</title>
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" meidia="screen" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" media="screen" />
     <link rel="stylesheet" href="../css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/styles.css" media="screen" />    
+    <link rel="stylesheet" type="text/css" href="../css/styles.css" media="screen" />
 </head>
 <body>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.4/vue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="../Scripts/moment.min.js"></script>
+
+    <script src="/Users/users.js"></script>
+    <script src="/Tools/Tools.js"></script>
+
     <nav>
         <div class="header">
-            <div class="title">CODE REACTION</div>
+            <div class="title">CODE REACTION BY VUE!!!!</div>
         </div>
         <ul class="nav nav-tabs">
             <li class="active"><a href="/Commits/commits.html">Commits</a></li>
             <li><a href="/Followups/followups.html">My follow-ups</a></li>
         </ul>
-        
     </nav>
-    <div class="well well-sm criteria-panel form-inline" >
-        <div class="form-group">
-            <div>
-                <input type="text" id="inputKeyWord" class="form-control" placeholder="Keyword, Author" style="min-width:400px;" />
-                <button id="refresh" onclick="refreshPage(event);" class="btn btn-primary"><i class="fa fa-search"></i></button>
-            </div>
-            <div>
-                <label class="form-check-label">
-                    <input type="checkbox" id="inputExcludeApproved" checked="checked">&nbsp;Exclude approved commits
-                </label>
-                <label for="inputExcludeMine" class="form-check-label">
-                    <input type="checkbox" id="inputExcludeMine" checked="checked" />&nbsp;Exclude mine</label>
-                
-            </div>
-        </div>
-    </div>
-    <div id="container-commits">
-        
-        <div id="detailPanel2">
-            
-            <div id="insertPoint">
+    <div id="vue">
+        <div class="well well-sm criteria-panel form-inline">
+            <div class="form-group">
+                <div>
+                    <input type="text" v-model="Parameters.keyword" class="form-control" placeholder="Keyword, Author" style="min-width:400px;" />
+                    <button v-on:click="refreshPage" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                </div>
+                <div>
+                    <label class="form-check-label" for="inputExcludeApproved">
+                        <input type="checkbox" v-model="Parameters.excludeApproved" id="inputExcludeApproved">&nbsp;Exclude approved commits
+                    </label>
+                    <label for="inputExcludeMine" class="form-check-label">
+                        <input type="checkbox" v-model="Parameters.excludeMine" />&nbsp;Exclude mine
+                    </label>
 
+                </div>
             </div>
         </div>
+
+        <div id="container-commits">
+            <div id="detailPanel2">
+                <div id="insertPoint">
+                    <div class="commit-item2" v-for="d in Commits" v-if="Commits.length > 0" >
+                        <div class="commit-title2" v-on:click="openReview(d.Revision)">
+                            <span>{{d.Message}}</span>
+                            <div class="commit-subtitle">
+                                <span>Revision: {{d.Revision}} {{timeAgo(d.Timestamp)}} by {{d.Author}}</span>
+                            </div>
+                        </div>
+                        <div class="commit-annotation-summary">
+                            <span v-if="d.ApprovedBy" class="label label-success"><i class="fa fa-check-circle"></i> {{d.ApprovedBy}}</span>
+                            <span class="label label-primary"><i class="fa fa-eye"></i> {{d.NumberReviewers}}</span>
+                            <span class="label label-danger"><i class="fa fa-comment"></i> {{d.NumberComments   }}</span>
+                            <span class="label label-warning"><i class="fa fa-comments"></i> {{d.NumberReplies}}</span>
+                        </div>
+                        <div class="commit-item-footer"></div>
+                    </div>
+                    <div v-if="Commits.length === 0">
+                        <span>No results found</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src="../Scripts/moment.min.js"></script>
-
-    <script src="../Users/users.js"></script>
-    <script src="../Tools/Tools.js"></script>
-    <script src="commits.js"></script>
-    
+   
     <script>
-        $(document).ready(function () {
-            loadCommits();
-            $(document).keypress(function (e) {
-                if (e.keyCode == 13) {
-                    $('#refresh').click();
+        var app = new Vue({
+            el: "#vue",
+            data: {
+                Parameters: { max: 100, keyword: "", excludeApproved: true, excludeMine: true },
+                Commits: {} 
+            },
+
+            methods : {
+                refreshPage: function (event) {
+
+                    if (this.Parameters.excludeMine)
+                        this.Parameters.exclude = getUsername();
+                    else
+                        this.Parameters.exclude = null;
+
+                    $.getJSON("/api/commits", this.Parameters)
+                        .done(function (data) {
+                            app.$data.Commits = data.Commits;
+                        });
+                },
+                openReview : function( revision ) {
+                    window.location = "/review2.html?revision=" + revision;
+                },
+                timeAgo : function( aMoment ) {
+                    if (aMoment)
+                        return moment(aMoment).fromNow();
                 }
-            });
+
+            },
+
+            mounted: function () {
+                this.refreshPage();
+            }
+            
         });
     </script>
 </body>

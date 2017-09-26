@@ -4,11 +4,10 @@ html {
     padding:0;
     font-family:Helvetica Neue, Helvetica, Arial, sans-serif;
     height:100%;
-    overflow:hidden;
 }
 
 thead, tbody, tfoot { 
-    vertical-align: top
+    vertical-align: top;
 }
 
 td, th, tr { 
@@ -109,6 +108,7 @@ td, th, tr {
     min-width:92%;
     height:88%;
     padding-top:2em;
+    
 }
 
 #container-commits {
@@ -213,6 +213,7 @@ criteria-panel {
 .commit-list {
     list-style-type: none;
 }
+
 .commit {
     border-bottom: 1px solid #888888;
     padding: 0.5em;
@@ -449,3 +450,5 @@ criteria-panel {
 .line-hover-in {
     display:block;
 }
+
+[v-cloak] { display:none; }

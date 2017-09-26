@@ -146,6 +146,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Commits\commits.html" />
+    <Content Include="Commits\commitsOld.html" />
     <Content Include="Commits\commits.js" />
     <Content Include="css\font-awesome.min.css" />
     <Content Include="css\styles.css" />
