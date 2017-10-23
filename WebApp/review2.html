@@ -10,10 +10,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.4/vue.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src="../Scripts/moment.min.js"></script>
+    <script src="Scripts/moment.min.js"></script>
 
     <script src="/Users/users.js"></script>
     <script src="/Tools/Tools.js"></script>
+    <script src="/Scripts/moment.min.js"></script>
 
     <nav>
         <div class="header">
@@ -27,14 +28,24 @@
     <div id="vue">
         <div id="container">
             <div id="detailPanel2">
-                <span id="line-hover-panel" class="line-hover-out">
-                    <button class="btn btn-primary btn-xs" onclick="addNewCommentBox(event)">+</button>
-                </span>
                 <div id="insertPoint">
-                    <div id="file-comments" data-revision="41648" v-for="d in CommitComments" class="review-line" >
-                        <comment-block v-bind:Comment="d"></comment-block>
+                    <div class="commit-item2">
+                        <commit-details v-bind:commit="Commit"></commit-details>
+
+                        <commit-actions v-bind:commit="Commit" v-on:approve="approooove" v-on:comment="comment"></commit-actions>
+
                     </div>
-                </div>
+
+                    <div id="file-comments" data-revision="41648" class="review-line">
+                        <comment-block v-for="commitComment in CommitComments" v-bind:Comment="commitComment"></comment-block>
+                        <!--<new-comment-block v-bind:show="showEditor" v-on:postedNewComment="postedNewComment" v-on:newCommentCancelled="newCommentCancelled" />-->
+                        <new-comment-block v-bind:show="showEditor" />
+                    </div>
+
+                    <div class="revision-table-wrapper">
+                        <file-block v-for="fileReview in Files" v-bind:file="fileReview"></file-block>
+                    </div>
+                 </div>
             </div>
         </div>
         <div class="text-center">
@@ -50,58 +61,315 @@
         <script src="/Tools/Tools.js"></script>
         <!--<script src="/RevisionDetail/RevisionDetail.js"></script>-->
         <script>
+
+            var newComment = {
+                props: ['show'],
+                name: 'new-comment-block',
+                data: function () {
+                    return { Id: -1, ReplyToId: '', Message: '' };
+                },
+                template:
+                    '<div v-if="show" class="comments-block comments-block-new">' +
+                        '<textarea class="comments-box "v-model="Message"></textarea>' +
+                            '<button class="btn btn-default btn-xs button-cancel" v-on:click="cancelNewComment">Cancel</button>' +
+                            '<button class="btn btn-success btn-xs button-ok" v-on:click="postNewComment">Post</button>' +
+                            '<div class="actionBar"></div>' +
+                    '</div>',
+
+                methods: {
+                    cancelNewComment() {
+                        this.Message = null;
+                        this.$emit('newCommentCancelled');
+                    },
+
+                    postNewComment() {
+                        this.$emit("postedNewComment", this.Message);
+                    },
+                }
+            };
+
             var comment = {
                 props: ['Comment'],
-                name: "comment-block",
+                name: 'comment-block',
+
+                data() { return { showEditor: false }; },
+
                 methods: {
-                    addReply: function(comment) {
-                        alert(comment.Id);
+                    addReply: function () {
+                        this.showEditor = true;
+                    },
+
+                    postedNewComment: function (message) {
+                        
+                        this.Comment.Replies.push({ Id: 0, Author: getUsername(), Message: message, Replies: [] });
+                        this.showEditor = false;
+                        this.$emit("bubbleup", "getting");
+                    },
+
+                    newCommentCancelled: function () {
+                        this.showEditor = false;
                     }
                 },
-                template: 
-                    '<div class="comments-block comments-block-outer">' +
+                components: { 'new-comment-block': newComment },
+                template:
+                    '<div v-if="Comment.Id >= 0" class="comments-block comments-block-outer">' +
                         '<div class="comments-author">' +
-                            '<span>{{Comment.Author}}</span><button class="btn btn-link btn-xs" v-on:click="addReply(Comment)">Reply</button>' +
+                            '<span>{{Comment.Author}}</span><button class="btn btn-link btn-xs" v-on:click="addReply()">Reply</button>' +
                             '<span class="comments-when"></span>' +
                         '</div>' +
                         '<div class="comments-text">{{Comment.Message}}</div>' +
+                        '<new-comment-block v-bind:show="showEditor" v-on:postedNewComment="postedNewComment" v-on:newCommentCancelled="newCommentCancelled"/>' +
                         '<comment-block v-for="reply in Comment.Replies" v-bind:Comment="reply" ></comment-block>' +
-                    '</div>',
+                        
+                    '</div>'
             };
+
+            var commitActions = {
+                name: 'commit-actions',
+                props: ['commit'],
+                //data: function () { return {} },
+                template:
+                    '<div class="commit-actions2">' +
+                        '<button class="btn btn-success button-ok" v-on:click="approve">Approve</button>' +
+                        '<button class="btn btn-success button-ok" v-on:click="newComment">Add comment</button>' +
+                    '</div>',
+                methods: {
+                    approve: function () {
+                        // emit or do action (never sur the best)
+                        alert("approuve");
+                        this.$emit('approve');
+                    },
+                    newComment: function () {
+                        this.$emit('comment');
+                    },
+                    
+                    computed: {
+                        canApprove: function () {
+                            return this.commit.Author != getUsername();
+                        },
+                    }
+
+                }
+            };
+
+            var commitInfo = {
+                name: 'commit-details',
+                props: ['commit'],
+                //data: function () { return {} },
+                components : {'commit-actions' : commitActions },
+                template:
+                    //'<div class="commit-item2">' + 
+                        '<div class="commit-title2">{{commit.Message}}' +
+                            '<div class="commit-subtitle">' +
+                                '<span>Revision: {{commit.Revision}} {{timeAgo}} by {{commit.Author}}</span>' +
+                            '</div>' +
+                        '</div>' //+
+                    //    '<div class="commit-annotation-summary"></div>' +
+                        
+                    //    '<commit-actions v-bind:commit="commit" v-on:approve="approooove"></commit-actions>' + 
+                // '</div>'
+                ,
+                
+
+                computed: {
+                    timeAgo: function () {
+                        if (this.commit.Timestamp) {
+                            return moment(this.commit.Timestamp).fromNow();
+                        }
+                    }
+                }
+                };
+
+
+            
+
+
+
+            var lineActions = {
+                name: 'code-line-actions',
+                data: function () { return {}; },
+                template:
+                    '<span id="line-hover-panel" class="line-hover-in">' +
+                        '<button class="btn btn-primary btn-xs" v-on:click="addComment()">+</button>' +
+                    '</span>',
+                methods: {
+                    addComment: function () {
+                        this.$emit('addComment');
+                    }
+                }
+            };
+
+            
+
+            var codeLine = {
+                props: ['line'],
+                name: 'code-line',
+                data: function () { return { showActions: false, showEditor: false }; },
+                components: { 'code-line-actions': lineActions, 'comment-block' : comment, 'new-comment-block' : newComment },
+                computed : {
+                    getSymbol: function () {
+                        if ( this.line.ChangeState === 'added') return '+';
+                        if ( this.line.ChangeState === 'removed') return '-';
+                        return '';
+                    },
+
+                    getStateClass: function () {
+                        return 'state-' + this.line.ChangeState;
+                    },
+                   
+                },
+
+                methods: {
+                    onMouseOver: function () {
+                        this.showActions = true;
+                    },
+
+                    onMouseLeave: function () {
+                        this.showActions = false;
+                    },
+
+                    addNewLineComment: function () {
+                        this.showEditor = true;
+                    },
+                   
+
+                    postedNewComment: function (message) {
+                        this.line.LineComments.push({ Id: 0, Author: getUsername(), Message: message, Replies: [] });
+                        this.showEditor = false;
+                    },
+
+                    newCommentCancelled: function () {
+                        this.showEditor = false;
+                    },
+                },
+                template:
+                    //'<tr class="revision-line state-break"><td colspan="4" class="revision-line-text">-- non-modified lines --</td></tr>' +
+                    '<tr class="revision-line" v-bind:class="getStateClass" data-revision="39238" data-file="testfile" data-line="76_76"  v-on:mouseover="onMouseOver" v-on:mouseleave="onMouseLeave">' +
+                        '<td class="revision-line-number" v-bind:class="getStateClass">{{line.RemovedLineNumber}}</td>' +
+                        '<td class="revision-line-number" v-bind:class="getStateClass">{{line.AddedLineNumber}}</td>' +
+                        '<td class="revision-line-state">' +
+                            '<code-line-actions v-if="showActions" v-bind:showActions="showActions" v-on:addComment="addNewLineComment" ></code-line-actions>' +
+                            '{{getSymbol}}' +
+                        '</td>' +
+                        '<td class="revision-line-text">{{line.Text}}' +
+                            '<comment-block  v-for="lineComment in line.LineComments" v-bind:Comment="lineComment"></comment-block>' +
+                             '<new-comment-block v-bind:show="showEditor" v-on:postedNewComment="postedNewComment" v-on:newCommentCancelled="newCommentCancelled"/>' +
+                        '</td>' +
+                     '</tr>'
+            };
+
+            var fileBlock = {
+                props: ['file'],
+                name: 'file-block',
+                //data: function () { return {}; },
+                components : {'code-line' : codeLine },
+                template:
+                    '<div>' +
+                    '<div class="file-header">' + 
+                        '<button class="button-expand">+</button>' +
+                        '<span class="label-change-type">{{file.ChangeType}}</span>' +
+                        '<span>{{file.Path}}</span>' +
+                    '</div>' +
+                    '<table class="revision-file-table">' + 
+                        '<tbody>' + 
+                            '<code-line v-for="line in file.Lines" v-bind:line="line"></code-line>' +
+                        '</tbody>' +
+                    '</table></div>'
+            };
+
+            
+
+
+
 
             var app = new Vue({
                 el: "#vue",
-                data: { Revision: 12345678,
-                    CommitComments: [
-                            { Id: 1, Author: 'tcarter', Message: 'lookin good', Replies : [{Id:11, Author:'replyfrom', Message: 'bad', Replies:[]}] },
-                            { Id: 2, Author: 'def', Message: 'not great', Replies: [] }
-                ],
-                    FileData : {}
+                data: function () {
+                    return {
+                        showEditor: false,
+                        Commit: {
+
+                            Revision: 12345678,
+                            Author: 'tcarter',
+                            Message: 'this is the commit message',
+                            Timestamp : Date.now()
+                        },
+
+                        CommitComments: [
+                                { Id: 1, Author: 'tcarter', Message: 'lookin good', Replies: [{ Id: 11, Author: 'replyfrom', Message: 'bad', Replies: [] }] },
+                                { Id: 2, Author: 'def', Message: 'not great', Replies: [] }
+                        ],
+
+                        Files: [
+                            {
+                                Id: 1,
+                                Path: '/pathto/file1',
+                                ChangeType: 'Added',
+                                Lines: [
+                                    {
+                                        Text: '        /// &lt;param name="listCode"&gt;&lt;/param&gt;',
+                                        ChangeState: 'removed',
+                                        RemovedLineNumber: 76,
+                                        AddedLineNumber: 76,
+                                        LineComments: [{ Id: 2, Author: 'def', Message: 'not great', Replies: [] }]
+                                    },
+                                    {
+                                        Text: '        Console.WriteLine(helloworld);',
+                                        ChangeState: 'added',
+                                        RemovedLineNumber: 76,
+                                        AddedLineNumber: 76,
+                                        LineComments: [{ Id: 2, Author: 'def', Message: 'not great', Replies: [] }]
+                                    }
+                                ]
+                            }
+                        ]
+                    };
                 },
 
-                components : { 'comment-block': comment },
+                components: {
+                    'comment-block': comment,
+                    'file-block': fileBlock,
+                    'new-comment-block': newComment,
+                    'commit-details': commitInfo,
+                    'commit-actions': commitActions
+                },
 
-                //methods: {
-                //    addReply: function (comment) {
-                //        alert(comment.Id);
-                //    }
-                //}
+                methods: {
+                    //addNewLineComment: function () {
+                    //    alert("newlinecomment");
+                    //    this.showEditor = true;
+                    //},
 
-                //            // emit new data here
-                //            this.$emit('replyAdded', {Comment: comment, Reply :{ Id: 1111, Author: 'replyto', Message: 'replymessage' }});
-                //            //comment.Replies.add()
-                //            //var replyIndx = app.$data.CommitComments.findIndex(c => c.Id === id);
-                //            //app.$data.CommitComments.splice(replyIndx+1, 0, );
-                //           // app.$data.CommitComments.push({ Author: 'reply', Message: 'a reply' });
-                //        },
+                    postedNewComment: function (message) {
 
-                //        onReplyAdded: function (reply) {
-                //            alert(reply.Reply.Message);
-                //            reply.Comment.Replies.push(reply.Reply);
-                //        }
-                //    }
+                        alert("dzfezfezrfrzefez");
+                        this.CommitComments.push({ Id: 0, Author: getUsername(), Message: message, Replies: [] });
+                        this.showEditor = false;
+                    },
 
-                
+                    //newCommentCancelled: function () {
+                    //    this.showEditor = false;
+                    //},
+
+                    //postedNewComment: function (message) {
+                    //    this.Comment.Replies.push({ Id: 0, Author: getUsername(), Message: message, Replies: [] });
+                    //    this.showEditor = false;
+                    //},
+
+                    //newCommentCancelled: function () {
+                    //    this.showEditor = false;
+                    //}
+
+                    approooove: function () {
+                        alert("aprooove");
+                    },
+
+                    comment: function () {
+                        alert("new commit comment");
+                        //this.CommitComments.push({ Id: 0, Author: getUsername(), Message: message, Replies: [] });
+                        this.showEditor = true
+                    },
+                }
             });
         </script>
 </body>

@@ -146,14 +146,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Commits\commits.html" />
-    <Content Include="Commits\commitsOld.html" />
-    <Content Include="Commits\commits.js" />
     <Content Include="css\font-awesome.min.css" />
     <Content Include="css\styles.css" />
-    <Content Include="Followups\followups.js" />
     <Content Include="Followups\followups.html" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Release.txt" />
+    <Content Include="review2.html" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
