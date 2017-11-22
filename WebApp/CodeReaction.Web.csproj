@@ -182,6 +182,7 @@
     <Compile Include="RevisionDetail\RevisionDetailController.cs" />
     <Compile Include="RevisionDetail\RevisionDetailViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RevisionDetail\RevisionDetailViewModel2.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Users\UserController.cs" />
   </ItemGroup>

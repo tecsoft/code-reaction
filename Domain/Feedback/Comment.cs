@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +28,12 @@ namespace CodeReaction.Domain.Entities
         public string Text { get; set; }
 
         public long? ReplyToId { get; set; }
+
+        [ForeignKey("ReplyToId")]
+        public Comment ReplyTo { get; set; }
+
+        [InverseProperty("ReplyTo")]
+        public virtual ICollection<Comment> Replies { get; set; }
 
         public DateTime? Timestamp { get; set; }
     }

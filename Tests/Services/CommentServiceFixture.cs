@@ -3,6 +3,8 @@ using CodeReaction.Domain.Entities;
 using CodeReaction.Domain.Services;
 using CodeReaction.Tests.Services.Helpers;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CodeReaction.Tests.Likes
@@ -145,6 +147,46 @@ namespace CodeReaction.Tests.Likes
                 sut.Reply(originalComment.Id, "minnie", null);
                 uow.Save();
             }
+        }
+
+        public class CommentDto
+        {
+            public long Id { get; set; }
+            public string Text { get; set; }
+
+            public bool IsRoot { get; set; }
+
+            public IList<CommentDto> Replies { get; set; }
+        }
+
+        [Test]
+        public void CommentHierarchy()
+        {
+            var comments = new List<Comment>()
+            {
+                new Comment { Id = 1, Revision = 12, File = "A", LineId = "1_1", Text = "Comment1", ReplyToId = null },
+                new Comment { Id = 2, Revision = 12, File = "A", LineId = "1_1", Text = "Comment1", ReplyToId = null },
+                new Comment { Id = 3, Revision = 12, File = "A", LineId = "1_1", Text = "Comment1", ReplyToId = 2 },
+                new Comment { Id = 4, Revision = 12, File = "A", LineId = "1_1", Text = "Comment1", ReplyToId = 3 },
+                new Comment { Id = 5, Revision = 12, File = "A", LineId = "1_1", Text = "Comment1", ReplyToId = 4 },
+                new Comment { Id = 6, Revision = 12, File = "A", LineId = "1_1", Text = "Comment1", ReplyToId = 1 },
+            };
+
+            var lookup = comments.Select( c => new CommentDto { Id = c.Id, Text = c.Text, IsRoot = c.ReplyToId == null, Replies = new List<CommentDto>() } ).ToDictionary( c => c.Id );
+            
+            foreach( var c in comments )
+            {
+                if ( c.ReplyToId.HasValue)
+                {
+                    lookup[c.ReplyToId.Value].Replies.Add(lookup[c.Id]);
+                }
+            }
+
+            foreach( var c in lookup.Values.Where( i => i.IsRoot).OrderBy( i => i.Id))
+            {
+                Console.WriteLine(c.Id);
+            }
+
         }
     }
 }

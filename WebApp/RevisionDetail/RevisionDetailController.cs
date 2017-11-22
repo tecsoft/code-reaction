@@ -119,6 +119,38 @@ namespace CodeReaction.Web.Controllers
             return Ok(viewModel);
         }
 
+        [Route("api/commits/revision2/{revision}")]
+        public IHttpActionResult GetRevision2(long revision)
+        {
+            ReviewModel model = null;
+
+            UnitOfWork unitOfWork = null;
+
+            try
+            {
+                unitOfWork = new UnitOfWork();
+
+                var builder = new ModelBuilder(new SourceControl(), unitOfWork.Context);
+
+                model = builder.Build(revision);
+
+                return Ok(model);
+
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError("GetRevision: " + ex);
+                return InternalServerError(ex);
+            }
+            finally
+            {
+                if (unitOfWork != null)
+                    unitOfWork.Dispose();
+            }
+
+            
+        }
+
         [Route("api/commits/comment/{user}/{revision}")]
         public IHttpActionResult ReviewCommit(string user, int revision)
         {
@@ -134,6 +166,8 @@ namespace CodeReaction.Web.Controllers
 
                 unitOfWork.Save();
 
+                return Ok(comment.Id);
+
             }
             catch (Exception ex)
             {
@@ -145,7 +179,7 @@ namespace CodeReaction.Web.Controllers
                 if (unitOfWork != null)
                     unitOfWork.Dispose();
             }
-            return Ok(comment);
+            
         }
 
         [Route("api/commits/comment/{user}/{revision}/{lineId}")]
@@ -165,6 +199,8 @@ namespace CodeReaction.Web.Controllers
 
                 unitOfWork.Save();
 
+                return Ok(comment.Id);
+
             }
             catch (Exception ex)
             {
@@ -176,7 +212,7 @@ namespace CodeReaction.Web.Controllers
                 if (unitOfWork != null)
                     unitOfWork.Dispose();
             }
-            return Ok(comment);
+            
         }
 
         [Route("api/commits/reply/{idComment}/{author}")]
@@ -194,6 +230,8 @@ namespace CodeReaction.Web.Controllers
 
                 unitOfWork.Save();
 
+                return Ok(comment.Id);
+
             }
             catch (Exception ex)
             {
@@ -205,7 +243,7 @@ namespace CodeReaction.Web.Controllers
                 if (unitOfWork != null)
                     unitOfWork.Dispose();
             }
-            return Ok(comment);
+            
         }
 
         [Route("api/commits/approve/{revision}/{approver}")]
