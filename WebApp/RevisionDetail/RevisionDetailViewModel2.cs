@@ -39,6 +39,7 @@ namespace CodeReaction.Web.Models
         public string Name { get; set; }
         public string ModText { get; set; }
         public IList<LineModel> Lines { get; set; }
+        public long Revision { get; set; }
     }
 
     public class ReviewModel
@@ -82,8 +83,6 @@ namespace CodeReaction.Web.Models
                 .Where( c => c.ReplyTo == null && string.IsNullOrEmpty(c.File))
                 .OrderBy(c => c.Id);
 
-            //model.CommitComments = commitComments.ToList();
-
             Func<Comment, CommentModel> recursiveConvert = default(Func<Comment, CommentModel>);
             recursiveConvert = (comment) =>
             {
@@ -112,12 +111,11 @@ namespace CodeReaction.Web.Models
                 {
                     Name = fileDiff.Name,
                     ModText = fileDiff.FileState.ToString(),
-                    Lines = new List<LineModel>()
+                    Lines = new List<LineModel>(),
+                    Revision = revision
                 };
 
                 model.Files.Add(fileModel);
-
-                //var fileComments = comments.Where(c => c.ReplyTo == null && c.File == fileDiff.Name);
 
                 foreach (var lineDiff in fileDiff.Lines)
                 {
@@ -146,5 +144,4 @@ namespace CodeReaction.Web.Models
             return model;
         }
     }
-
 }

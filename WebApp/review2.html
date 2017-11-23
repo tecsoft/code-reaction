@@ -55,7 +55,6 @@
     </div>
         <script src="/Users/users.js"></script>
         <script src="/Tools/Tools.js"></script>
-        <!--<script src="/RevisionDetail/RevisionDetail.js"></script>-->
         <script>
 
             var BUS = new Vue();
@@ -212,17 +211,18 @@
                 components: { 'code-line-actions': lineActions, 'comment-block' : comment, 'new-comment-block' : newComment },
                 computed : {
                     getSymbol: function () {
-                        if ( this.line.ChangeState === 'added') return '+';
-                        if ( this.line.ChangeState === 'removed') return '-';
+                        if ( this.line.ChangeState === 1) return '+';
+                        if ( this.line.ChangeState === 2) return '-';
                         return '';
                     },
 
                     getStateClass: function () {
-                        return 'state-' + this.line.ChangeState;
+                        if (this.line.ChangeState === 1) return 'state-added';
+                        if (this.line.ChangeState === 2) return 'state-removed';
                     },
 
                     isBreak: function () {
-                        return this.line.ChangeState === 'Break';
+                        return this.line.ChangeState === 3;
                     }
                 },
 
@@ -251,8 +251,8 @@
                 },
 
                 template:
-                    '<tr v-if="isBreak" class="revision-line state-break"><td colspan="4" class="revision-line-text">-- non-modified  --</td></tr>' +
-                    '<tr v-else class="revision-line" v-bind:class="getStateClass" data-revision="39238" data-file="testfile" data-line="76_76"  v-on:mouseover="onMouseOver" v-on:mouseleave="onMouseLeave">' +
+                    '<tr v-if="isBreak" class="revision-line state-break"><td colspan="4" class="revision-line-text">{{line.Text}} -- non-modified --</td></tr>' +
+                    '<tr v-else class="revision-line" v-bind:class="getStateClass"  v-on:mouseover="onMouseOver" v-on:mouseleave="onMouseLeave">' +
                         '<td class="revision-line-number" v-bind:class="getStateClass">{{line.RemovedLineNumber}}</td>' +
                         '<td class="revision-line-number" v-bind:class="getStateClass">{{line.AddedLineNumber}}</td>' +
                         '<td class="revision-line-state">' +
@@ -274,12 +274,72 @@
                 props: ['file'],
                 name: 'file-block',
                 //data: function () { return {}; },
-                components : {'code-line' : codeLine },
+                components: { 'code-line': codeLine },
+
+                methods: {
+                    expandFile: function () {
+                        var file = this.file;
+
+                        var mergeFunction = this.merge;
+                        
+                        var uri = 'api/commits/file/' + file.Revision + '?filename=' + encodeURIComponent(file.Name);
+
+                        $.getJSON(uri)
+                            .done(function (data, textStatus, jqXHR) {
+                                // data contains lines of current revision so need to merge;
+                                mergeFunction(file, data);
+                            });
+                    },
+
+                    merge: function (file, content) {
+
+                        var makeFileLine = function (lineNumber, fileName, revision, text) {
+                            return {
+                                AddedLineNumber: lineNumber,
+                                RemovedLineNumber: lineNumber,
+                                Id: lineNumber + "_" + lineNumber,
+                                File: fileName,
+                                Revision: revision,
+                                Comments: [],
+                                Text: text,
+                                ChangeState: 0
+                            };
+                        };
+
+                        var nbAll = content.length;
+                        var currentLineIndex = 0;
+                        var i;
+                        var item;
+                        var currentLines = file.Lines;
+
+                        while (currentLineIndex < currentLines.length) {
+
+                            if (currentLines[currentLineIndex].ChangeState === 3) {
+                                // replace break with missing lines
+                                var nextLineIndex = parseInt(currentLines[currentLineIndex].Id.split("_")[1]) - 1;
+                                currentLines.splice(currentLineIndex, 1);
+
+                                for (i = currentLineIndex; i < nextLineIndex; i++) {
+                                    currentLines.splice(i, 0,  makeFileLine(i+1, file.Name, file.Revision, content[i] ));
+                                }
+                            }
+                            else {
+                                currentLineIndex++;
+                            }
+                        }
+                        // add any remaining lines to end
+                        for (i = currentLineIndex; i < nbAll; i++) {
+                            currentLines.splice(i, 0, makeFileLine(i+1, file.Name, file.Revision, content[i] ));
+                        }
+                    },
+
+                },
+                
                 template:
                     '<div>' +
                     '<div class="file-header">' + 
-                        '<button class="button-expand">+</button>' +
-                        '<span class="label-change-type">{{file.ChangeType}}</span>' +
+                        '<button class="button-expand" v-on:click="expandFile">+</button>' +
+                        '<span class="label-change-type">{{file.ModText}}</span>' +
                         '<span>{{file.Name}}</span>' +
                     '</div>' +
                     '<table class="revision-file-table">' + 
@@ -354,10 +414,6 @@
                         this.closeCommentDialog();
                     },
 
-                    //newCommitComment : function() {
-                    //    alert('comment....');
-                    //},
-
                     approveCommit: function (event) {
                         var commit = event;
 
@@ -370,9 +426,6 @@
                             });
                     },
 
-                    //postCommitComment : function(event) {
-                    //    var commit = event
-                    //},
 
                     postCodeComment : function (event) {
                         var line = event.Line;
@@ -415,7 +468,6 @@
                     BUS.$on("new-code-comment", this.postCodeComment);
                     BUS.$on("posted-reply", this.postReply);
                     BUS.$on("approve-commit", this.approveCommit);
-                    //BUS.$on("new-commit-comment", this.postCommitComment);
                 }
 
             });
