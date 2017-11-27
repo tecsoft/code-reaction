@@ -32,6 +32,9 @@ var newComment = {
                 this.Message = null;
             }
         },
+    },
+    updated: function () {
+        this.$el.childNodes[0].focus();
     }
 };
 
