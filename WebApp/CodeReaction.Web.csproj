@@ -151,7 +151,15 @@
     <Content Include="Followups\followups.html" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Release.txt" />
-    <Content Include="review2.html" />
+    <Content Include="Review\code-line.js" />
+    <Content Include="Review\comment-nav.js" />
+    <Content Include="Review\comments.js" />
+    <Content Include="Review\commit-actions.js" />
+    <Content Include="Review\commit-info.js" />
+    <Content Include="Review\file-block.js" />
+    <Content Include="Review\line-actions.js" />
+    <Content Include="Review\review.js" />
+    <Content Include="Review\review.html" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />

@@ -14,22 +14,22 @@
 
     <script src="/Users/users.js"></script>
     <script src="/Tools/Tools.js"></script>
-
-    <nav>
+    <div id="vue" class="wrapper" v-cloak>
         <div class="header">
-            <div class="title">CODE REACTION BY VUE!!!!</div>
+            <div class="title">CODE REACTION</div>
+
+            <nav>
+                <ul class="nav nav-tabs">
+                    <li><a href="/Commits/commits.html">Commits</a></li>
+                    <li class="active"><a href="/Followups/followups.html">My follow-ups</a>
+                </ul>
+            </nav>
         </div>
-        <ul class="nav nav-tabs">
-            <li ><a href="/Commits/commits.html">Commits</a></li>
-            <li class="active"><a href="/Followups/followups.html">My follow-ups</a>
-        </ul>
-    </nav>
-    <div id="vue">
-        <div id="container-commits">
+        <div class="content">
             <div id="detailPanel2">
                 <div id="insertPoint">
                     <div class="commit-item2" v-for="d in Commits" v-if="Commits.length > 0">
-                        <div class="commit-title2" v-on:click="openReview(d.Revision)" >
+                        <div class="commit-title2" v-on:click="openReview(d.Revision)">
                             <span>{{d.Message}}</span>
                             <div class="commit-subtitle">
                                 <span>Revision: {{d.Revision}} {{timeAgo(d.Timestamp)}} by {{d.Author}}</span>

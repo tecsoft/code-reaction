@@ -14,17 +14,17 @@
 
     <script src="/Users/users.js"></script>
     <script src="/Tools/Tools.js"></script>
-
-    <nav>
+    <div id="vue" class="wrapper" v-cloak>
         <div class="header">
-            <div class="title">CODE REACTION BY VUE!!!!</div>
+            <div class="title">CODE REACTION</div>
+
+            <nav>
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="/Commits/commits.html">Commits</a></li>
+                    <li><a href="/Followups/followups.html">My follow-ups</a></li>
+                </ul>
+            </nav>
         </div>
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="/Commits/commits.html">Commits</a></li>
-            <li><a href="/Followups/followups.html">My follow-ups</a></li>
-        </ul>
-    </nav>
-    <div id="vue">
         <div class="well well-sm criteria-panel form-inline">
             <div class="form-group">
                 <div>
@@ -43,33 +43,35 @@
             </div>
         </div>
 
-        <div id="container-commits">
-            <div id="detailPanel2">
-                <div id="insertPoint">
-                    <div class="commit-item2" v-for="d in Commits" v-if="Commits.length > 0" >
-                        <div class="commit-title2" v-on:click="openReview(d.Revision)">
-                            <span>{{d.Message}}</span>
-                            <div class="commit-subtitle">
-                                <span>Revision: {{d.Revision}} {{timeAgo(d.Timestamp)}} by {{d.Author}}</span>
+        <div class="content">
+            <!--<div id="container-commits">-->
+                <div id="detailPanel2">
+                    <div id="insertPoint">
+                        <div class="commit-item2" v-for="d in Commits" v-if="Commits.length > 0">
+                            <div class="commit-title2" v-on:click="openReview(d.Revision)">
+                                <span>{{d.Message}}</span>
+                                <div class="commit-subtitle">
+                                    <span>Revision: {{d.Revision}} {{timeAgo(d.Timestamp)}} by {{d.Author}}</span>
+                                </div>
                             </div>
+                            <div class="commit-annotation-summary">
+                                <span v-if="d.ApprovedBy" class="label label-success"><i class="fa fa-check-circle"></i> {{d.ApprovedBy}}</span>
+                                <span class="label label-primary"><i class="fa fa-eye"></i> {{d.NumberReviewers}}</span>
+                                <span class="label label-danger"><i class="fa fa-comment"></i> {{d.NumberComments   }}</span>
+                                <span class="label label-warning"><i class="fa fa-comments"></i> {{d.NumberReplies}}</span>
+                            </div>
+                            <div class="commit-item-footer"></div>
                         </div>
-                        <div class="commit-annotation-summary">
-                            <span v-if="d.ApprovedBy" class="label label-success"><i class="fa fa-check-circle"></i> {{d.ApprovedBy}}</span>
-                            <span class="label label-primary"><i class="fa fa-eye"></i> {{d.NumberReviewers}}</span>
-                            <span class="label label-danger"><i class="fa fa-comment"></i> {{d.NumberComments   }}</span>
-                            <span class="label label-warning"><i class="fa fa-comments"></i> {{d.NumberReplies}}</span>
+                        <div v-if="Commits.length === 0">
+                            <span>No results found</span>
                         </div>
-                        <div class="commit-item-footer"></div>
-                    </div>
-                    <div v-if="Commits.length === 0">
-                        <span>No results found</span>
                     </div>
                 </div>
-            </div>
-        </div>
+            <!--</div>-->
 
+        </div>
+        
     </div>
-   
     <script>
         var app = new Vue({
             el: "#vue",
@@ -92,13 +94,12 @@
                         });
                 },
                 openReview : function( revision ) {
-                    window.location = "/review2.html?revision=" + revision;
+                    window.location = "/Review/review.html?revision=" + revision;
                 },
                 timeAgo : function( aMoment ) {
                     if (aMoment)
                         return moment(aMoment).fromNow();
                 }
-
             },
 
             mounted: function () {
