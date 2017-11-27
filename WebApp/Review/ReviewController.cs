@@ -6,6 +6,7 @@ using CodeReaction.Domain.Services;
 using CodeReaction.Web.Auth;
 using CodeReaction.Web.Models;
 using CodeReaction.Web.RevisionDetail;
+using CodeReaction.Web.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,74 +16,13 @@ using System.Web.Http;
 namespace CodeReaction.Web.Controllers
 {
     [Authorize]
-    public class RevisionDetailController : ApiController
+    public class ReviewController : ApiController
     {
-        /// <summary>
-        /// Return all commits more recent than 
-        /// </summary>summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [Route("api/commits")]
-        public IHttpActionResult GetCommits()
-        {
-            CommitViewModel vm;
-            UnitOfWork unitOfWork = null;
-
-            System.Diagnostics.Trace.TraceInformation("Get Commits");
-
-            try
-            {
-                unitOfWork = new UnitOfWork();
-
-                var parameters = this.Request.GetQueryNameValuePairs();
-                CommitQuery query = new CommitQuery(unitOfWork.Context.Commits);
-                var keyword = parameters.FirstOrDefault(p => p.Key == "keyword").Value;
-
-                if (string.IsNullOrEmpty(keyword) == false)
-                {
-                    query.Keyword = parameters.FirstOrDefault(p => p.Key == "keyword").Value;
-                }
-
-                query.ExcludeApproved = String.Equals("true", parameters.FirstOrDefault(p => p.Key == "excludeApproved").Value, StringComparison.InvariantCulture);
-                query.Max = ParseNullable<int>(parameters.FirstOrDefault(p => p.Key == "max").Value);
-                query.IncludeAuthor = parameters.FirstOrDefault(p => p.Key == "include").Value;
-                query.ExcludeAuthor = parameters.FirstOrDefault(p => p.Key == "exclude").Value;
-
-                var list = new List<Tuple<Commit, CommitStats>>();
-                foreach (var commit in query.Execute())
-                {
-                    var comments = unitOfWork.Context.Comments.Where(c => c.Revision == commit.Revision);
-
-                    var replies = comments.Where(c => c.User == commit.Author);
-                    var reviews = comments.Where(c => c.User != commit.Author);
-
-                    var stats = new CommitStats(
-                        reviews.Select(c => c.User).Distinct().Count(),
-                        reviews.Count(),
-                        replies.Count());
-
-                    list.Add(new Tuple<Commit, CommitStats>(commit, stats));
-                }
-                vm = new CommitViewModel(list);
-            }
-            catch(Exception ex )
-            {
-                System.Diagnostics.Trace.TraceError("GetRevision: " + ex);
-                return InternalServerError(ex);
-            }
-            finally
-            {
-                if (unitOfWork != null)
-                    unitOfWork.Dispose();
-            }
-
-            return Ok(vm);  // try catch?
-        }
-
-        [Route("api/commits/revision/{revision}")]
+        
+        [Route("api/review/revision/{revision}")]
         public IHttpActionResult GetRevision(long revision)
         {
-            RevisionDetailViewModel viewModel = null;
+            ReviewModel model = null;
 
             UnitOfWork unitOfWork = null;
 
@@ -90,22 +30,14 @@ namespace CodeReaction.Web.Controllers
             {
                 unitOfWork = new UnitOfWork();
 
-                var commitDiff = new SourceControl().GetRevision(revision);
+                var builder = new ModelBuilder(new SourceControl(), unitOfWork.Context);
 
-                var commentQuery = new CommentQuery(unitOfWork.Context.Comments)
-                {
-                    Revision = revision
-                };
+                model = builder.Build(revision);
 
-                var comments = commentQuery.Execute();
+                return Ok(model);
 
-                // merge data to view model efficiently
-
-                Commit commit = unitOfWork.Context.Commits.FirstOrDefault(c => c.Revision == revision);
-
-                viewModel = RevisionDetailViewModel.Create(commit, commitDiff,comments);
             }
-            catch( Exception ex )
+            catch (Exception ex)
             {
                 System.Diagnostics.Trace.TraceError("GetRevision: " + ex);
                 return InternalServerError(ex);
@@ -116,10 +48,10 @@ namespace CodeReaction.Web.Controllers
                     unitOfWork.Dispose();
             }
 
-            return Ok(viewModel);
+            
         }
 
-        [Route("api/commits/comment/{user}/{revision}")]
+        [Route("api/review/comment/{user}/{revision}")]
         public IHttpActionResult ReviewCommit(string user, int revision)
         {
             UnitOfWork unitOfWork = null;
@@ -134,6 +66,8 @@ namespace CodeReaction.Web.Controllers
 
                 unitOfWork.Save();
 
+                return Ok(comment.Id);
+
             }
             catch (Exception ex)
             {
@@ -145,10 +79,10 @@ namespace CodeReaction.Web.Controllers
                 if (unitOfWork != null)
                     unitOfWork.Dispose();
             }
-            return Ok(comment);
+            
         }
 
-        [Route("api/commits/comment/{user}/{revision}/{lineId}")]
+        [Route("api/review/comment/{user}/{revision}/{lineId}")]
         public IHttpActionResult CommentLine(string user, int revision, string lineId)
         {
             UnitOfWork unitOfWork = null;
@@ -165,6 +99,8 @@ namespace CodeReaction.Web.Controllers
 
                 unitOfWork.Save();
 
+                return Ok(comment.Id);
+
             }
             catch (Exception ex)
             {
@@ -176,10 +112,10 @@ namespace CodeReaction.Web.Controllers
                 if (unitOfWork != null)
                     unitOfWork.Dispose();
             }
-            return Ok(comment);
+            
         }
 
-        [Route("api/commits/reply/{idComment}/{author}")]
+        [Route("api/review/reply/{idComment}/{author}")]
         public IHttpActionResult CommentLine(long idComment, string author)
         {
             UnitOfWork unitOfWork = null;
@@ -194,6 +130,8 @@ namespace CodeReaction.Web.Controllers
 
                 unitOfWork.Save();
 
+                return Ok(comment.Id);
+
             }
             catch (Exception ex)
             {
@@ -205,10 +143,10 @@ namespace CodeReaction.Web.Controllers
                 if (unitOfWork != null)
                     unitOfWork.Dispose();
             }
-            return Ok(comment);
+            
         }
 
-        [Route("api/commits/approve/{revision}/{approver}")]
+        [Route("api/review/approve/{revision}/{approver}")]
         public IHttpActionResult ApproveRevision( int revision, string approver )
         {
             UnitOfWork unitOfWork = null;
@@ -233,7 +171,7 @@ namespace CodeReaction.Web.Controllers
             return Ok();
         }
 
-        [Route("api/commits/file/{revision}")]
+        [Route("api/review/file/{revision}")]
         public IHttpActionResult GetCompleteFile(long revision)
         {
             IList<string> viewModel = null;
@@ -254,12 +192,6 @@ namespace CodeReaction.Web.Controllers
             return Ok(viewModel);
         }
 
-        T? ParseNullable<T>(string str) where T : struct
-        {
-            if (string.IsNullOrEmpty(str))
-                return null;
-
-            return (T)Convert.ChangeType(str, typeof(T));
-        }
+        
     }
 }

@@ -149,17 +149,24 @@
     <Content Include="Commits\commits.js" />
     <Content Include="css\font-awesome.min.css" />
     <Content Include="css\styles.css" />
-    <Content Include="Followups\followups.js" />
-    <Content Include="Followups\followups.html" />
+    <Content Include="Commits\followups.html" />
+    <Content Include="Commits\followups.js" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Release.txt" />
+    <Content Include="Review\code-line.js" />
+    <Content Include="Review\comment-nav.js" />
+    <Content Include="Review\comments.js" />
+    <Content Include="Review\commit-actions.js" />
+    <Content Include="Review\commit-info.js" />
+    <Content Include="Review\file-block.js" />
+    <Content Include="Review\line-actions.js" />
+    <Content Include="Review\review.js" />
+    <Content Include="Review\review.html" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Users\login.html" />
-    <Content Include="review.html" />
-    <Content Include="RevisionDetail\RevisionDetail.js" />
     <Content Include="Global.asax" />
     <Content Include="index.html" />
     <Content Include="Tools\Tools.js" />
@@ -176,14 +183,16 @@
     <Compile Include="Auth\ApplicationUserManager.cs" />
     <Compile Include="Auth\AuthenticationFailureResult.cs" />
     <Compile Include="Auth\ApplicationDbContext.cs" />
+    <Compile Include="Commits\CommitsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="RevisionDetail\CommitDetailViewModel.cs" />
-    <Compile Include="RevisionDetail\RevisionDetailController.cs" />
-    <Compile Include="RevisionDetail\RevisionDetailViewModel.cs" />
+    <Compile Include="Review\ReviewController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Review\ReviewModel.cs" />
+    <Compile Include="Commits\CommitsModel.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Tools\Parser.cs" />
     <Compile Include="Users\UserController.cs" />
   </ItemGroup>
   <ItemGroup>

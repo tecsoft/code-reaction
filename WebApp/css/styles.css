@@ -1,14 +1,37 @@
-﻿body,
-html {
+﻿
+html, body {
     margin:0;
-    padding:0;
     font-family:Helvetica Neue, Helvetica, Arial, sans-serif;
     height:100%;
-    overflow:hidden;
+}
+
+#container {
+    position:relative;
+    min-width:92%;
+    height:88%;
+}
+
+.wrapper {
+    height:100%;
+    display:flex;
+    flex-direction:column;
+}
+
+.header {
+}
+
+ .footer {
+    margin-top:.2em;
+    margin-bottom:.2em;
+}
+
+.content {
+    flex:1;
+    overflow:auto;
 }
 
 thead, tbody, tfoot { 
-    vertical-align: top
+    vertical-align: top;
 }
 
 td, th, tr { 
@@ -31,6 +54,8 @@ td, th, tr {
 .header {
     background-color:#313131;
     color:#ffffff;
+    
+    min-height:60px;
 }
 
 .header .title {
@@ -104,17 +129,13 @@ td, th, tr {
   border-top-right-radius: 0;
 }
 
-#container {
-    position:relative;
-    min-width:92%;
-    height:88%;
-    padding-top:2em;
-}
+
 
 #container-commits {
     position:relative;
     min-width:92%;
     height:80%;
+    overflow-y:auto;
 }
 
 #commitPanel {
@@ -148,7 +169,6 @@ td, th, tr {
     overflow-y:auto;
     overflow-x:auto;
     position:relative;
-    height:96%
 }
 
 #footer {
@@ -171,11 +191,12 @@ criteria-panel {
     font-weight:bolder;
     white-space:pre-wrap;
     width:50%;
-    float:left;    
+    float:left;
+    color: black;   
 }
 
 .commit-item2 {
-    padding-top:0.5em;
+    /*padding-top:0.5em;*/
 }
 
 .commit-item2:hover {
@@ -213,6 +234,7 @@ criteria-panel {
 .commit-list {
     list-style-type: none;
 }
+
 .commit {
     border-bottom: 1px solid #888888;
     padding: 0.5em;
@@ -449,3 +471,5 @@ criteria-panel {
 .line-hover-in {
     display:block;
 }
+
+[v-cloak] { display:none; }

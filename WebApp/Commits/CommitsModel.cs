@@ -6,17 +6,17 @@ using System.Web;
 
 namespace CodeReaction.Web.RevisionDetail
 {
-    public class CommitViewModel
+    public class CommitsModel
     {
-        public IEnumerable<CommitDetailViewModel> Commits { get; set; }
+        public IEnumerable<CommitModel> Commits { get; set; }
 
-        public CommitViewModel(IEnumerable<Tuple<Commit, CommitStats>> details)
+        public CommitsModel(IEnumerable<Tuple<Commit, CommitStats>> details)
         {
-            Commits = details.Select( detail => new CommitDetailViewModel( detail.Item1, detail.Item2 ) ).ToList();
+            Commits = details.Select(detail => new CommitModel(detail.Item1, detail.Item2)).ToList();
         }
     }
 
-    public class CommitDetailViewModel
+    public class CommitModel
     {
         public long Revision { get; set; }
         public string Author { get; set; }
@@ -26,9 +26,9 @@ namespace CodeReaction.Web.RevisionDetail
         public int NumberComments { get; set; }
         public int NumberReplies { get; set; }
         public bool CanApprove { get; set; }
-        public string ApprovedBy { get; set; } // TODO not used ????
+        public string ApprovedBy { get; set; }
 
-        public CommitDetailViewModel(Commit commit, CommitStats stats)
+        public CommitModel(Commit commit, CommitStats stats)
         {
             Revision = commit.Revision;
             Author = commit.Author;

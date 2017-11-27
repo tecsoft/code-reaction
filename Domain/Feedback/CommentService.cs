@@ -46,9 +46,9 @@ namespace CodeReaction.Domain.Services
                 Timestamp = DateTime.UtcNow
             };
 
-            unitOfWork.Context.Comments.Add( reply );
+            return unitOfWork.Context.Comments.Add( reply );
 
-            return reply;
+            //return reply;
         }
     }
 }

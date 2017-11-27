@@ -1,23 +1,16 @@
 ﻿/*
-** Page view
+**Page view
 */
 
 var app = new Vue({
     el: "#vue",
     data: {
-        Parameters: { max: 100, keyword: "", excludeApproved: true, excludeMine: true },
+        Parameters: { max: 100, keyword: "", include: getUsername(), excludeApproved: true },
         Commits: {}
     },
 
     methods: {
         refreshPage: function (event) {
-
-            if (this.Parameters.excludeMine) {
-                this.Parameters.exclude = getUsername();
-            }
-            else {
-                this.Parameters.exclude = null;
-            }
 
             $.getJSON("/api/commits", this.Parameters)
                 .done(function (data) {
@@ -31,6 +24,7 @@ var app = new Vue({
             if (aMoment)
                 return moment(aMoment).fromNow();
         }
+
     },
 
     mounted: function () {
