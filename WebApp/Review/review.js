@@ -48,7 +48,7 @@ var review = new Vue({
         },
 
         postedNewComment: function (message) {
-            var comment = { Id: 1, Author: getUsername(), Text: message, Replies: [] };
+            var comment = { Id: 1, Author: getUsername(), Text: message, Replies: [], Timestamp: moment().utc() };
             this.closeCommentDialog();
 
             var commit = this.$data.Commit;
@@ -85,7 +85,7 @@ var review = new Vue({
 
             var uri = '/api/review/comment/' + getUsername() + '/' + line.Revision + '/' + line.Id + "?comment=" + encodeURIComponent(event.Text) + "&file=" + encodeURIComponent(line.File);
 
-            var temp = { Id: 1, Author: getUsername(), Text: event.Text, Replies: [] };
+            var temp = { Id: 1, Author: getUsername(), Text: event.Text, Replies: [], Timestamp: moment().utc() };
 
             this.showEditor = false;
 
@@ -100,7 +100,7 @@ var review = new Vue({
         postReply: function (event) {
 
             var comment = event.Comment;
-            comment.Replies.push({ Id: 1, Text: event.Message, Replies: [], ReplyToId: comment.Id })
+            comment.Replies.push({ Id: 1, Text: event.Message, Replies: [], ReplyToId: comment.Id, Timestamp: moment().utc() })
 
             var uri = '/api/review/reply/' + event.Comment.Id + '/' + getUsername() + '?comment=' + encodeURIComponent(event.Message);
 

@@ -18,46 +18,7 @@ namespace CodeReaction.Web.Controllers
     [Authorize]
     public class ReviewController : ApiController
     {
-        //[Route("api/commits/revision/{revision}")]
-        //public IHttpActionResult GetRevision(long revision)
-        //{
-        //    RevisionDetailViewModel viewModel = null;
-
-        //    UnitOfWork unitOfWork = null;
-
-        //    try
-        //    {
-        //        unitOfWork = new UnitOfWork();
-
-        //        var commitDiff = new SourceControl().GetRevision(revision);
-
-        //        var commentQuery = new CommentQuery(unitOfWork.Context.Comments)
-        //        {
-        //            Revision = revision
-        //        };
-
-        //        var comments = commentQuery.Execute();
-
-        //        // merge data to view model efficiently
-
-        //        Commit commit = unitOfWork.Context.Commits.FirstOrDefault(c => c.Revision == revision);
-
-        //        viewModel = RevisionDetailViewModel.Create(commit, commitDiff,comments);
-        //    }
-        //    catch( Exception ex )
-        //    {
-        //        System.Diagnostics.Trace.TraceError("GetRevision: " + ex);
-        //        return InternalServerError(ex);
-        //    }
-        //    finally
-        //    {
-        //        if (unitOfWork != null)
-        //            unitOfWork.Dispose();
-        //    }
-
-        //    return Ok(viewModel);
-        //}
-
+        
         [Route("api/review/revision/{revision}")]
         public IHttpActionResult GetRevision(long revision)
         {

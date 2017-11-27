@@ -18,6 +18,7 @@ namespace CodeReaction.Web.Models
         public string FileId { get; set; }
         public string LineId { get; set; }
         public IList<CommentModel> Replies { get; set; }
+        public DateTime? Timestamp { get; set; }
     }
 
     public class LineModel
@@ -90,6 +91,7 @@ namespace CodeReaction.Web.Models
                     Text = comment.Text,
                     FileId = comment.File,
                     LineId = comment.LineId,
+                    Timestamp = comment.Timestamp,
                     Replies = new List<CommentModel>()
                 };
 

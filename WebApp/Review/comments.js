@@ -34,7 +34,10 @@ var newComment = {
         },
     },
     updated: function () {
-        this.$el.childNodes[0].focus();
+        if (this.$el && this.$el.childNodes) {
+            this.$el.childNodes[0].focus();
+        }
+        
     }
 };
 
@@ -63,7 +66,13 @@ var comment = {
         cancelReply: function () {
             this.showEditor = false;
             this.Message = null;
-        }
+        },
+
+        timeAgo: function (timestamp) {
+            if (timestamp) {
+                return moment(timestamp).fromNow();
+            }
+        },
     },
     computed : {
         getClassForOuterBlock : function() {
@@ -71,13 +80,14 @@ var comment = {
                 return "comments-block-outer";
             }
         },
+        
     },
     components: { 'new-comment-block': newComment },
     template:
         '<div v-if="Comment.Id >= 0" class="comments-block" v-bind:class="getClassForOuterBlock" >' +
             '<div class="comments-author">' +
                 '<span>{{Comment.Author}}</span><button class="btn btn-link btn-xs" v-on:click="addReply()">Reply</button>' +
-                '<span class="comments-when"></span>' +
+                '<span class="comments-when">{{timeAgo(Comment.Timestamp)}}</span>' +
             '</div>' +
             '<div class="comments-text">{{Comment.Text}}</div>' +
             '<new-comment-block v-bind:show="showEditor" v-on:posted-new-comment="postedReply" v-on:new-comment-cancelled="cancelReply"/>' +
