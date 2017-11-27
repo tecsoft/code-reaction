@@ -25,24 +25,25 @@
                 </ul>
             </nav>
         </div>
-        <div class="well well-sm criteria-panel form-inline">
-            <div class="form-group">
-                <div>
-                    <input type="text" v-model="Parameters.keyword" class="form-control" placeholder="Keyword, Author" style="min-width:400px;" />
-                    <button v-on:click="refreshPage" class="btn btn-primary"><i class="fa fa-search"></i></button>
-                </div>
-                <div>
-                    <label class="form-check-label" for="inputExcludeApproved">
-                        <input type="checkbox" v-model="Parameters.excludeApproved" id="inputExcludeApproved">&nbsp;Exclude approved commits
-                    </label>
-                    <label for="inputExcludeMine" class="form-check-label">
-                        <input type="checkbox" v-model="Parameters.excludeMine" />&nbsp;Exclude mine
-                    </label>
+        <form v-on:submit.prevent="">
+            <div class="well well-sm criteria-panel form-inline">
+                <div class="form-group">
+                    <div>
+                        <input type="text" v-model="Parameters.keyword" class="form-control" placeholder="Keyword, Author" style="min-width:400px;" />
+                        <button v-on:click="refreshPage" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                    </div>
+                    <div>
+                        <label class="form-check-label" for="inputExcludeApproved">
+                            <input type="checkbox" v-model="Parameters.excludeApproved" id="inputExcludeApproved">&nbsp;Exclude approved commits
+                        </label>
+                        <label for="inputExcludeMine" class="form-check-label">
+                            <input type="checkbox" v-model="Parameters.excludeMine" />&nbsp;Exclude mine
+                        </label>
 
+                    </div>
                 </div>
             </div>
-        </div>
-
+        </form>
         <div class="content">
             <div id="detailPanel2">
                 <div id="insertPoint">
