@@ -5,7 +5,6 @@
 var commitActions = {
     name: 'commit-actions',
     props: ['Commit'],
-    //components: { 'comment-nav': commentNav },
     template:
         '<div class="commit-actions2">' +
             '<span v-if="Commit.ApprovedBy" class="label label-success"><i class="fa fa-check-circle"></i> Approved by {{Commit.ApprovedBy}}</span>' +

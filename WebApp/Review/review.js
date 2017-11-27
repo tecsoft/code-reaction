@@ -25,7 +25,7 @@ var review = new Vue({
         refreshPage: function (event) {
 
             var revision = getParameterByName('revision');
-            var uri = '/api/commits/revision2/' + revision;
+            var uri = '/api/review/revision/' + revision;
 
             $.getJSON(uri)
                 .done(function (data) {
@@ -53,7 +53,7 @@ var review = new Vue({
 
             var commit = this.$data.Commit;
             commit.CommitComments.push(comment);
-            uri = '/api/commits/comment/' + comment.Author + '/' + commit.Revision + "?comment=" + encodeURIComponent(comment.Text);
+            uri = '/api/review/comment/' + comment.Author + '/' + commit.Revision + "?comment=" + encodeURIComponent(comment.Text);
             $.post(uri)
                 .done(function (data) {
                     var temp = commit.CommitComments[commit.CommitComments.length - 1];
@@ -71,7 +71,7 @@ var review = new Vue({
 
             var approver = getUsername();
 
-            var uri = '/api/commits/approve/' + commit.Revision + '/' + approver;
+            var uri = '/api/review/approve/' + commit.Revision + '/' + approver;
             $.post(uri)
                 .done(function () {
                     commit.ApprovedBy = approver;
@@ -83,7 +83,7 @@ var review = new Vue({
             var line = event.Line;
             line.Comments.push({ Id: 1, File: line.File, LineId: line.Id, Replies: [], Text: event.Text, Revision: line.Revision });
 
-            var uri = '/api/commits/comment/' + getUsername() + '/' + line.Revision + '/' + line.Id + "?comment=" + encodeURIComponent(event.Text) + "&file=" + encodeURIComponent(line.File);
+            var uri = '/api/review/comment/' + getUsername() + '/' + line.Revision + '/' + line.Id + "?comment=" + encodeURIComponent(event.Text) + "&file=" + encodeURIComponent(line.File);
 
             var temp = { Id: 1, Author: getUsername(), Text: event.Text, Replies: [] };
 
@@ -102,7 +102,7 @@ var review = new Vue({
             var comment = event.Comment;
             comment.Replies.push({ Id: 1, Text: event.Message, Replies: [], ReplyToId: comment.Id })
 
-            var uri = '/api/commits/reply/' + event.Comment.Id + '/' + getUsername() + '?comment=' + encodeURIComponent(event.Message);
+            var uri = '/api/review/reply/' + event.Comment.Id + '/' + getUsername() + '?comment=' + encodeURIComponent(event.Message);
 
             $.post(uri, function (data) {
                 var temp = comment.Replies[comment.Replies.length - 1];

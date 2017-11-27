@@ -146,9 +146,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Commits\commits.html" />
+    <Content Include="Commits\commits.js" />
     <Content Include="css\font-awesome.min.css" />
     <Content Include="css\styles.css" />
-    <Content Include="Followups\followups.html" />
+    <Content Include="Commits\followups.html" />
+    <Content Include="Commits\followups.js" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Release.txt" />
     <Content Include="Review\code-line.js" />
@@ -165,8 +167,6 @@
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Users\login.html" />
-    <Content Include="review.html" />
-    <Content Include="RevisionDetail\RevisionDetail.js" />
     <Content Include="Global.asax" />
     <Content Include="index.html" />
     <Content Include="Tools\Tools.js" />
@@ -183,15 +183,16 @@
     <Compile Include="Auth\ApplicationUserManager.cs" />
     <Compile Include="Auth\AuthenticationFailureResult.cs" />
     <Compile Include="Auth\ApplicationDbContext.cs" />
+    <Compile Include="Commits\CommitsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="RevisionDetail\CommitDetailViewModel.cs" />
-    <Compile Include="RevisionDetail\RevisionDetailController.cs" />
-    <Compile Include="RevisionDetail\RevisionDetailViewModel.cs" />
+    <Compile Include="Review\ReviewController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RevisionDetail\RevisionDetailViewModel2.cs" />
+    <Compile Include="Review\ReviewModel.cs" />
+    <Compile Include="Commits\CommitsModel.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Tools\Parser.cs" />
     <Compile Include="Users\UserController.cs" />
   </ItemGroup>
   <ItemGroup>

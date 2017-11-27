@@ -11,9 +11,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="/Scripts/moment.min.js"></script>
-
     <script src="/Users/users.js"></script>
     <script src="/Tools/Tools.js"></script>
+
     <div id="vue" class="wrapper" v-cloak>
         <div class="header">
             <div class="title">CODE REACTION</div>
@@ -21,7 +21,7 @@
             <nav>
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="/Commits/commits.html">Commits</a></li>
-                    <li><a href="/Followups/followups.html">My follow-ups</a></li>
+                    <li><a href="/Commits/followups.html">My follow-ups</a></li>
                 </ul>
             </nav>
         </div>
@@ -44,70 +44,31 @@
         </div>
 
         <div class="content">
-            <!--<div id="container-commits">-->
-                <div id="detailPanel2">
-                    <div id="insertPoint">
-                        <div class="commit-item2" v-for="d in Commits" v-if="Commits.length > 0">
-                            <div class="commit-title2" v-on:click="openReview(d.Revision)">
-                                <span>{{d.Message}}</span>
-                                <div class="commit-subtitle">
-                                    <span>Revision: {{d.Revision}} {{timeAgo(d.Timestamp)}} by {{d.Author}}</span>
-                                </div>
+            <div id="detailPanel2">
+                <div id="insertPoint">
+                    <div class="commit-item2" v-for="d in Commits" v-if="Commits.length > 0">
+                        <div class="commit-title2" v-on:click="openReview(d.Revision)">
+                            <span>{{d.Message}}</span>
+                            <div class="commit-subtitle">
+                                <span>Revision: {{d.Revision}} {{timeAgo(d.Timestamp)}} by {{d.Author}}</span>
                             </div>
-                            <div class="commit-annotation-summary">
-                                <span v-if="d.ApprovedBy" class="label label-success"><i class="fa fa-check-circle"></i> {{d.ApprovedBy}}</span>
-                                <span class="label label-primary"><i class="fa fa-eye"></i> {{d.NumberReviewers}}</span>
-                                <span class="label label-danger"><i class="fa fa-comment"></i> {{d.NumberComments   }}</span>
-                                <span class="label label-warning"><i class="fa fa-comments"></i> {{d.NumberReplies}}</span>
-                            </div>
-                            <div class="commit-item-footer"></div>
                         </div>
-                        <div v-if="Commits.length === 0">
-                            <span>No results found</span>
+                        <div class="commit-annotation-summary">
+                            <span v-if="d.ApprovedBy" class="label label-success"><i class="fa fa-check-circle"></i> {{d.ApprovedBy}}</span>
+                            <span class="label label-primary"><i class="fa fa-eye"></i> {{d.NumberReviewers}}</span>
+                            <span class="label label-danger"><i class="fa fa-comment"></i> {{d.NumberComments}}</span>
+                            <span class="label label-warning"><i class="fa fa-comments"></i> {{d.NumberReplies}}</span>
                         </div>
+                        <div class="commit-item-footer"></div>
+                    </div>
+                    <div v-if="Commits.length === 0">
+                        <span>No results found</span>
                     </div>
                 </div>
-            <!--</div>-->
-
+            </div>
         </div>
-        
     </div>
-    <script>
-        var app = new Vue({
-            el: "#vue",
-            data: {
-                Parameters: { max: 100, keyword: "", excludeApproved: true, excludeMine: true },
-                Commits: {} 
-            },
-
-            methods : {
-                refreshPage: function (event) {
-
-                    if (this.Parameters.excludeMine)
-                        this.Parameters.exclude = getUsername();
-                    else
-                        this.Parameters.exclude = null;
-
-                    $.getJSON("/api/commits", this.Parameters)
-                        .done(function (data) {
-                            app.$data.Commits = data.Commits;
-                        });
-                },
-                openReview : function( revision ) {
-                    window.location = "/Review/review.html?revision=" + revision;
-                },
-                timeAgo : function( aMoment ) {
-                    if (aMoment)
-                        return moment(aMoment).fromNow();
-                }
-            },
-
-            mounted: function () {
-                this.refreshPage();
-            }
-            
-        });
-    </script>
+    <script src="/Commits/commits.js"></script>
 </body>
 </html>
 

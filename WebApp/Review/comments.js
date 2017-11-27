@@ -29,6 +29,7 @@ var newComment = {
         postNewComment: function () {
             if (this.Message) {
                 this.$emit("posted-new-comment", this.Message);
+                this.Message = null;
             }
         },
     }
@@ -52,11 +53,13 @@ var comment = {
 
             BUS.$emit("posted-reply", { Comment: this.Comment, Message: message });
             this.showEditor = false;
+            this.Message = null;
 
         },
 
         cancelReply: function () {
             this.showEditor = false;
+            this.Message = null;
         }
     },
     computed : {

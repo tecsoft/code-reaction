@@ -7,7 +7,7 @@ var commitInfo = {
     props: ['commit'],
     components: { 'commit-actions': commitActions },
     template:
-        '<div class="commit-title2" >{{commit.Message}}' +
+        '<div class="commit-title2 ">{{commit.Message}}' +
             '<div class="commit-subtitle">' +
                 '<span>Revision: {{commit.Revision}} {{timeAgo}} by {{commit.Author}}</span>' +
             '</div>' +

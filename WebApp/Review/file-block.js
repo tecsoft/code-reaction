@@ -13,7 +13,7 @@ var fileBlock = {
 
             var mergeFunction = this.merge;
 
-            var uri = '/api/commits/file/' + file.Revision + '?filename=' + encodeURIComponent(file.Name);
+            var uri = '/api/review/file/' + file.Revision + '?filename=' + encodeURIComponent(file.Name);
 
             $.getJSON(uri)
                 .done(function (data, textStatus, jqXHR) {

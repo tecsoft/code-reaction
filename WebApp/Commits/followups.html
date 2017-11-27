@@ -21,7 +21,7 @@
             <nav>
                 <ul class="nav nav-tabs">
                     <li><a href="/Commits/commits.html">Commits</a></li>
-                    <li class="active"><a href="/Followups/followups.html">My follow-ups</a>
+                    <li class="active"><a href="/Commits/followups.html">My follow-ups</a>
                 </ul>
             </nav>
         </div>
@@ -52,38 +52,8 @@
 
     </div>
 
-    <script>
-        var app = new Vue({
-            el: "#vue",
-            data: {
-                Parameters: { max: 100, keyword: "", include: getUsername(), excludeApproved: true },
-                Commits: {}
-            },
+    <script src="/Commits/followups.js"></script>
 
-            methods : {
-                refreshPage: function (event) {
-
-                    $.getJSON("/api/commits", this.Parameters)
-                        .done(function (data) {
-                            app.$data.Commits = data.Commits;
-                        });
-                },
-                openReview: function (revision) {
-                    window.location = "/review.html?revision=" + revision;
-                },
-                timeAgo : function( aMoment ) {
-                    if (aMoment)
-                        return moment(aMoment).fromNow();
-                }
-
-            },
-
-            mounted: function () {
-                this.refreshPage();
-            }
-
-        });
-    </script>
 </body>
 </html>
 

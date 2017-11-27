@@ -15,7 +15,6 @@ namespace CodeReaction.Web.Models
         public long Id { get; set; }
         public string Author { get; set; }
         public string Text { get; set; }
-        public bool IsRoot { get; set; }
         public string FileId { get; set; }
         public string LineId { get; set; }
         public IList<CommentModel> Replies { get; set; }
@@ -32,7 +31,6 @@ namespace CodeReaction.Web.Models
         public int AddedLineNumber { get; set; }
         public IList<CommentModel> Comments { get; set; }
     }
-
     public class FileModel
     {
         public string Id { get; set; }
@@ -41,7 +39,6 @@ namespace CodeReaction.Web.Models
         public IList<LineModel> Lines { get; set; }
         public long Revision { get; set; }
     }
-
     public class ReviewModel
     {
         public long Revision { get; set; }
