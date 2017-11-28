@@ -48,7 +48,7 @@ var review = new Vue({
         },
 
         postedNewComment: function (message) {
-            var comment = { Id: 1, Author: getUsername(), Text: message, Replies: [], Timestamp: moment().utc() };
+            var comment = { Id: 1, Author: getUsername(), Text: message, Replies: [], Timestamp: moment().utc(), Author : getUsername() };
             this.closeCommentDialog();
 
             var commit = this.$data.Commit;
@@ -81,7 +81,9 @@ var review = new Vue({
 
         postCodeComment: function (event) {
             var line = event.Line;
-            line.Comments.push({ Id: 1, File: line.File, LineId: line.Id, Replies: [], Text: event.Text, Revision: line.Revision });
+            line.Comments.push(
+                { Id: 1, File: line.File, LineId: line.Id, Replies: [], Text: event.Text, Revision: line.Revision, Author: getUsername(), Timestamp: moment().utc() }
+            );
 
             var uri = '/api/review/comment/' + getUsername() + '/' + line.Revision + '/' + line.Id + "?comment=" + encodeURIComponent(event.Text) + "&file=" + encodeURIComponent(line.File);
 
@@ -100,7 +102,9 @@ var review = new Vue({
         postReply: function (event) {
 
             var comment = event.Comment;
-            comment.Replies.push({ Id: 1, Text: event.Message, Replies: [], ReplyToId: comment.Id, Timestamp: moment().utc() })
+            comment.Replies.push(
+                { Id: 1, Text: event.Message, Replies: [], ReplyToId: comment.Id, Timestamp: moment().utc(), Author : getUsername() }
+            );
 
             var uri = '/api/review/reply/' + event.Comment.Id + '/' + getUsername() + '?comment=' + encodeURIComponent(event.Message);
 
@@ -109,7 +113,23 @@ var review = new Vue({
                 temp.Id = data;
                 comment.Replies[comment.Replies.length - 1] = temp;
             });
-        }
+        },
+
+        postOK:function(event) {
+            var comment = event.Comment;
+            var text = "OK, thanks!";
+            comment.Replies.push(
+                { Id: 1, Text: text, Replies: [], ReplyToId: comment.Id, Timestamp: moment().utc(), Author: getUsername() }
+            );
+
+            var uri = '/api/review/reply/' + event.Comment.Id + '/' + getUsername() + '?comment=' + encodeURIComponent(text);
+
+            $.post(uri, function (data) {
+                var temp = comment.Replies[comment.Replies.length - 1];
+                temp.Id = data;
+                comment.Replies[comment.Replies.length - 1] = temp;
+            });
+        },
     },
 
     mounted: function () {
@@ -120,6 +140,7 @@ var review = new Vue({
         BUS.$on("new-code-comment", this.postCodeComment);
         BUS.$on("posted-reply", this.postReply);
         BUS.$on("approve-commit", this.approveCommit);
+        BUS.$on("posted-ok", this.postOK);
     }
 
 });

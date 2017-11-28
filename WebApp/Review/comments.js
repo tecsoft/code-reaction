@@ -13,7 +13,7 @@ var newComment = {
     },
     template:
         '<div v-if="show" class="comments-block comments-block-new">' +
-            '<textarea class="comments-box "v-model="Message"></textarea>' +
+            '<textarea autofocus class="comments-box "v-model="Message"></textarea>' +
                 '<button class="btn btn-default btn-xs button-cancel" v-on:click="newCommentCancelled">Cancel</button>' +
                 '<button class="btn btn-success btn-xs button-ok" v-on:click="postNewComment">Post</button>' +
                 '<div class="actionBar"></div>' +
@@ -33,12 +33,6 @@ var newComment = {
             }
         },
     },
-    updated: function () {
-        if (this.$el && this.$el.childNodes) {
-            this.$el.childNodes[0].focus();
-        }
-        
-    }
 };
 
 /*
@@ -53,6 +47,10 @@ var comment = {
     methods: {
         addReply: function () {
             this.showEditor = true;
+        },
+
+        addOK : function() {
+            BUS.$emit("posted-ok", { Comment: this.Comment });
         },
 
         postedReply: function (message) {
@@ -80,14 +78,17 @@ var comment = {
                 return "comments-block-outer";
             }
         },
-        
+        canOK: function () {
+            return this.Comment.Author !== getUsername();
+        },
     },
     components: { 'new-comment-block': newComment },
     template:
         '<div v-if="Comment.Id >= 0" class="comments-block" v-bind:class="getClassForOuterBlock" >' +
             '<div class="comments-author">' +
-                '<span>{{Comment.Author}}</span><button class="btn btn-link btn-xs" v-on:click="addReply()">Reply</button>' +
-                '<span class="comments-when">{{timeAgo(Comment.Timestamp)}}</span>' +
+                '<span><strong>{{Comment.Author}}</strong> commented {{timeAgo(Comment.Timestamp)}}</span>' +
+                '<button v-if="canOK" class="btn btn-link btn-xs" v-on:click="addOK"><i class="fa fa-check-circle"></i> </button>' +
+                '<button class="btn btn-link btn-xs" v-on:click="addReply"><strong><i class="fa fa-reply"></i></strong> </button>' +
             '</div>' +
             '<div class="comments-text">{{Comment.Text}}</div>' +
             '<new-comment-block v-bind:show="showEditor" v-on:posted-new-comment="postedReply" v-on:new-comment-cancelled="cancelReply"/>' +
