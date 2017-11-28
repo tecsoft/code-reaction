@@ -1,7 +1,7 @@
 ﻿
 html, body {
     margin:0;
-    font-family:Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-family: "Segoe UI", Helvetica Neue, Helvetica, Arial, sans-serif;
     height:100%;
 }
 
@@ -375,7 +375,7 @@ criteria-panel {
     margin-left:2em;
     background-color: #fff;
     border: none;
-    font-family:Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-family: "Segoe UI", Helvetica Neue, Helvetica, Arial, sans-serif;
     margin-bottom:.5em;
 }
 
@@ -397,7 +397,7 @@ criteria-panel {
 
 .comments-author {
     font-size : .95em;
-    font-weight: bolder;
+    /*font-weight: bolder;*/
     color:#808080;
     background-color: #fff;
     padding: .2em;
@@ -406,7 +406,7 @@ criteria-panel {
     border-right:none;
 }
 
-.comments-when {
+.comments-buttons {
     font-weight: normal;
     float:right;
     padding-right: .2em
@@ -473,3 +473,4 @@ criteria-panel {
 }
 
 [v-cloak] { display:none; }
+
