@@ -69,7 +69,7 @@ var fileBlock = {
     template:
         '<div>' +
         '<div class="file-header">' +
-            '<button class="button-expand" v-on:click="expandFile">+</button>' +
+            '<button class="btn btn-link" v-on:click="expandFile"><i class="fa fa-expand"></i>   </button>' +
             '<span class="label-change-type">{{file.ModText}}</span>' +
             '<span>{{file.Name}}</span>' +
         '</div>' +
