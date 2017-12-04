@@ -31,6 +31,8 @@ namespace CodeReaction.Web.Models
         public int RemovedLineNumber { get; set; }
         public int AddedLineNumber { get; set; }
         public IList<CommentModel> Comments { get; set; }
+        public IList<string> Likes { get; set; }
+        public string Author { get; set; }
     }
     public class FileModel
     {
@@ -78,7 +80,7 @@ namespace CodeReaction.Web.Models
             };
 
            var commitComments = comments
-                .Where( c => c.ReplyTo == null && string.IsNullOrEmpty(c.File))
+                .Where( c => c.ReplyTo == null && string.IsNullOrEmpty(c.File) /*&& !c.IsLike*/)
                 .OrderBy(c => c.Id);
 
             Func<Comment, CommentModel> recursiveConvert = default(Func<Comment, CommentModel>);
@@ -127,16 +129,20 @@ namespace CodeReaction.Web.Models
                         AddedLineNumber = lineDiff.AddedLineNumber,
                         RemovedLineNumber = lineDiff.RemovedLineNumber,
                         ChangeState = lineDiff.Changed,
-                        Comments = new List<CommentModel>()
+                        Comments = new List<CommentModel>(),
+                        Likes = new List<string>(),
+                        Author = model.Author,
                     };
 
                     fileModel.Lines.Add(lineModel);
 
                     var lineComments = comments
-                        .Where(c => c.ReplyTo == null && c.LineId == lineModel.Id && c.File == lineModel.File )
+                        .Where(c => c.ReplyTo == null && c.LineId == lineModel.Id && c.File == lineModel.File)
                         .OrderBy(c => c.Id);
 
-                    lineModel.Comments = lineComments.Select(c => recursiveConvert(c)).ToList();
+                    lineModel.Comments = lineComments/*.Where( c => ! c.IsLike )*/.Select(c => recursiveConvert(c)).ToList();
+
+                    lineModel.Likes = lineComments/*.Where(c => c.IsLike)*/.Select(c => c.User).ToList();
                 }
             }
 

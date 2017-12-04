@@ -61,7 +61,17 @@ namespace CodeReaction.Domain.Database
                 {
                     foreach (var cmd in commands)
                     {
-                        dbContext.Database.ExecuteSqlCommand(cmd);
+                        try
+                        {
+                            dbContext.Database.ExecuteSqlCommand(cmd);
+                        }
+                        catch( Exception ex )
+                        {
+                            System.Diagnostics.Debug.WriteLine(ex.Message);
+#if (DEBUG == false )                      
+                            throw;
+#endif
+                        }
                     }
                 }
             }

@@ -323,7 +323,7 @@ criteria-panel {
 }
 
 .revision-line-state {
-    width:4%;
+    width:7%;
     border-right: 1px solid transparent;
 }
 
@@ -395,7 +395,7 @@ criteria-panel {
     background-color: #fff;
 }
 
-.comments-author {
+.comments-author, .comments-author-like {
     font-size : .95em;
     /*font-weight: bolder;*/
     color:#808080;
@@ -404,6 +404,10 @@ criteria-panel {
     background-color: #eeeeee;
     border:1px solid #CCC8C7;
     border-right:none;
+}
+
+.comments-author-like {
+    font-size:.7em;
 }
 
 .comments-buttons {

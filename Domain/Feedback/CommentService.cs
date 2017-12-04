@@ -31,6 +31,22 @@ namespace CodeReaction.Domain.Services
             return newComment;
         }
 
+        public Comment LikeLine(string user, int revision, string file, string lineId)
+        {
+            Comment newComment = new Comment()
+            {
+                User = user,
+                Revision = revision,
+                File = file,
+                LineId = lineId,
+                Timestamp = DateTime.UtcNow,
+                //IsLike = true
+            };
+
+            unitOfWork.Context.Comments.Add(newComment);
+            return newComment;
+        }
+
         public Comment Reply(long idComment, string author, string text)
         {
             Comment originalComment = unitOfWork.Context.Comments.First(c => c.Id == idComment);

@@ -115,6 +115,38 @@ namespace CodeReaction.Web.Controllers
             
         }
 
+        [Route("api/review/like/{user}/{revision}/{lineId}")]
+        public IHttpActionResult LikeLine(string user, int revision, string lineId)
+        {
+            UnitOfWork unitOfWork = null;
+            Comment comment = null;
+            try
+            {
+                unitOfWork = new UnitOfWork();
+
+                var parameters = this.Request.GetQueryNameValuePairs();
+                var file = parameters.FirstOrDefault(i => i.Key == "file");
+
+                comment = new CommentService(unitOfWork).LikeLine(user, revision, file.Value, lineId);
+
+                unitOfWork.Save();
+
+                return Ok(comment.Id);
+
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError("CommentLine: " + ex);
+                return InternalServerError(ex);
+            }
+            finally
+            {
+                if (unitOfWork != null)
+                    unitOfWork.Dispose();
+            }
+
+        }
+
         [Route("api/review/reply/{idComment}/{author}")]
         public IHttpActionResult CommentLine(long idComment, string author)
         {

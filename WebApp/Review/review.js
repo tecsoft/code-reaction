@@ -48,7 +48,7 @@ var review = new Vue({
         },
 
         postedNewComment: function (message) {
-            var comment = { Id: 1, Author: getUsername(), Text: message, Replies: [], Timestamp: moment().utc(), Author : getUsername() };
+            var comment = { Id: 1, Author: getUsername(), Text: message, Replies: [], Timestamp: moment().utc()};
             this.closeCommentDialog();
 
             var commit = this.$data.Commit;
@@ -130,6 +130,41 @@ var review = new Vue({
                 comment.Replies[comment.Replies.length - 1] = temp;
             });
         },
+
+        likeLine: function (event) {
+            var line = event.Line;
+            line.Likes.push( getUsername() );
+               
+            var uri = '/api/review/like/' + getUsername() + '/' + line.Revision + '/' + line.Id + "?&file=" + encodeURIComponent(line.File);
+
+            $.post(uri)
+                .done(function (data) {
+                    //var temp = line.Comments[line.Comments.length - 1];
+                    //temp.Id = data;
+                    //line.Comments[line.Comments.length - 1] = temp;
+                });
+        },
+        unLikeLine: function (event) {
+            var line = event.Line;
+            var index = -1;
+            for (var i = 0; i < line.length && index === -1; i++) {
+                if (line[i] === getUsername()) {
+                    index = i;
+                }
+            }
+
+            if (index !== -1) {
+                line.Likes.splice(index, 1);
+                var uri = '/api/review/unlike' + getUsername() + '/' + line.Revision + '/' + line.Id + "?&file=" + encodeURIComponent(line.File);
+                $.post(uri)
+                .done(function (data) {
+                    //var temp = line.Comments[line.Comments.length - 1];
+                    //temp.Id = data;
+                    //line.Comments[line.Comments.length - 1] = temp;
+                });
+            }
+
+        }
     },
 
     mounted: function () {
@@ -141,6 +176,8 @@ var review = new Vue({
         BUS.$on("posted-reply", this.postReply);
         BUS.$on("approve-commit", this.approveCommit);
         BUS.$on("posted-ok", this.postOK);
+        BUS.$on("like-line", this.likeLine);
+        BUS.$on("unlike-line", this.unLikeLine);
     }
 
 });
