@@ -48,6 +48,9 @@ var codeLine = {
 
         likeLine: function () {
             BUS.$emit('like-line', { Line: this.line });
+        },
+        unlikeLine: function () {
+            BUS.$emit('unlike-line', { Line: this.line });
         }
     },
 
@@ -61,7 +64,7 @@ var codeLine = {
                 '{{getSymbol}}' +
             '</td>' +
             '<td class="revision-line-text">{{line.Text}}' +
-                '<code-line-like v-if="line.Likes.length > 0" v-bind:Likes="line.Likes"></code-line-like>' +
+                '<code-line-like v-if="line.Likes.length > 0" v-bind:Line="line" v-on:unlike-line="unlikeLine"></code-line-like>' +
                 '<comment-block  v-for="lineComment in line.Comments" v-bind:Comment="lineComment" ></comment-block>' +
                  '<new-comment-block v-bind:show="showEditor" v-on:posted-new-comment="postedNewComment" v-on:new-comment-cancelled="cancelledNewComment" />' +
             '</td>' +

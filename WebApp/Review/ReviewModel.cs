@@ -80,7 +80,7 @@ namespace CodeReaction.Web.Models
             };
 
            var commitComments = comments
-                .Where( c => c.ReplyTo == null && string.IsNullOrEmpty(c.File) /*&& !c.IsLike*/)
+                .Where( c => c.ReplyTo == null && string.IsNullOrEmpty(c.File) && !c.IsLike)
                 .OrderBy(c => c.Id);
 
             Func<Comment, CommentModel> recursiveConvert = default(Func<Comment, CommentModel>);
@@ -140,9 +140,9 @@ namespace CodeReaction.Web.Models
                         .Where(c => c.ReplyTo == null && c.LineId == lineModel.Id && c.File == lineModel.File)
                         .OrderBy(c => c.Id);
 
-                    lineModel.Comments = lineComments/*.Where( c => ! c.IsLike )*/.Select(c => recursiveConvert(c)).ToList();
+                    lineModel.Comments = lineComments.Where( c => ! c.IsLike ).Select(c => recursiveConvert(c)).ToList();
 
-                    lineModel.Likes = lineComments/*.Where(c => c.IsLike)*/.Select(c => c.User).ToList();
+                    lineModel.Likes = lineComments.Where(c => c.IsLike).Select(c => c.User).ToList();
                 }
             }
 

@@ -136,7 +136,39 @@ namespace CodeReaction.Web.Controllers
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.TraceError("CommentLine: " + ex);
+                System.Diagnostics.Trace.TraceError("LikeLine: " + ex);
+                return InternalServerError(ex);
+            }
+            finally
+            {
+                if (unitOfWork != null)
+                    unitOfWork.Dispose();
+            }
+
+        }
+
+        [Route("api/review/unlike/{user}/{revision}/{lineId}")]
+        public IHttpActionResult UnLikeLine(string user, int revision, string lineId)
+        {
+            UnitOfWork unitOfWork = null;
+            Comment comment = null;
+            try
+            {
+                unitOfWork = new UnitOfWork();
+
+                var parameters = this.Request.GetQueryNameValuePairs();
+                var file = parameters.FirstOrDefault(i => i.Key == "file");
+
+                new CommentService(unitOfWork).UnLikeLine(user, revision, file.Value, lineId);
+
+                unitOfWork.Save();
+
+                return Ok(comment.Id);
+
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError("LikeLine: " + ex);
                 return InternalServerError(ex);
             }
             finally

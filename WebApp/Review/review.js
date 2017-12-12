@@ -139,28 +139,22 @@ var review = new Vue({
 
             $.post(uri)
                 .done(function (data) {
-                    //var temp = line.Comments[line.Comments.length - 1];
-                    //temp.Id = data;
-                    //line.Comments[line.Comments.length - 1] = temp;
                 });
         },
         unLikeLine: function (event) {
             var line = event.Line;
             var index = -1;
-            for (var i = 0; i < line.length && index === -1; i++) {
-                if (line[i] === getUsername()) {
+            for (var i = 0; i < line.Likes.length && index === -1; i++) {
+                if (line.Likes[i] === getUsername()) {
                     index = i;
                 }
             }
 
             if (index !== -1) {
                 line.Likes.splice(index, 1);
-                var uri = '/api/review/unlike' + getUsername() + '/' + line.Revision + '/' + line.Id + "?&file=" + encodeURIComponent(line.File);
-                $.post(uri)
+                var uri = '/api/review/unlike/' + getUsername() + '/' + line.Revision + '/' + line.Id + "?&file=" + encodeURIComponent(line.File);
+                $.post(uri) 
                 .done(function (data) {
-                    //var temp = line.Comments[line.Comments.length - 1];
-                    //temp.Id = data;
-                    //line.Comments[line.Comments.length - 1] = temp;
                 });
             }
 

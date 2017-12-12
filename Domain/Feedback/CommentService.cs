@@ -40,11 +40,22 @@ namespace CodeReaction.Domain.Services
                 File = file,
                 LineId = lineId,
                 Timestamp = DateTime.UtcNow,
-                //IsLike = true
+                IsLike = true
             };
 
             unitOfWork.Context.Comments.Add(newComment);
             return newComment;
+        }
+
+        public void UnLikeLine(string username, int revision, string file, string lineId )
+        {
+            var like = unitOfWork.Context.Comments.FirstOrDefault(
+                c => c.IsLike && c.User == username && c.Revision == revision && c.File == file && c.LineId == lineId);
+
+            if (like != null)
+            {
+                unitOfWork.Context.Entry(like).State = System.Data.Entity.EntityState.Deleted;
+            }
         }
 
         public Comment Reply(long idComment, string author, string text)
@@ -63,8 +74,6 @@ namespace CodeReaction.Domain.Services
             };
 
             return unitOfWork.Context.Comments.Add( reply );
-
-            //return reply;
         }
     }
 }

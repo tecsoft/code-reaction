@@ -52,15 +52,17 @@ namespace CodeReaction.Web.Controllers
                 var list = new List<Tuple<Commit, CommitStats>>();
                 foreach (var commit in query.Execute())
                 {
-                    var comments = unitOfWork.Context.Comments.Where(c => c.Revision == commit.Revision);
+                    var comments = unitOfWork.Context.Comments.Where(c => c.Revision == commit.Revision).ToList();
 
-                    var replies = comments.Where(c => c.User == commit.Author);
-                    var reviews = comments.Where(c => c.User != commit.Author);
+                    var replies = comments.Where(c => c.User == commit.Author && c.IsLike == false);
+                    var reviews = comments.Where(c => c.User != commit.Author && c.IsLike == false);
+                    var likes = comments.Where(c => c.IsLike == true);
 
                     var stats = new CommitStats(
                         reviews.Select(c => c.User).Distinct().Count(),
                         reviews.Count(),
-                        replies.Count());
+                        replies.Count(),
+                        likes.Count());
 
                     list.Add(new Tuple<Commit, CommitStats>(commit, stats));
                 }

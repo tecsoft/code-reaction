@@ -24,17 +24,16 @@ namespace CodeReaction.Domain.Entities
 
         public string LineId { get; set; }
 
-        //[Required]
         public string Text { get; set; }
 
-        //public bool IsLike { get; set; }
+        public bool IsLike { get; set; }
 
         public long? ReplyToId { get; set; }
 
         [ForeignKey("ReplyToId")]
         public Comment ReplyTo { get; set; }
 
-        //[InverseProperty("ReplyTo")]
+        [InverseProperty("ReplyTo")]
         public virtual ICollection<Comment> Replies { get; set; }
 
         public DateTime? Timestamp { get; set; }
