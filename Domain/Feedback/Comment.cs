@@ -24,8 +24,9 @@ namespace CodeReaction.Domain.Entities
 
         public string LineId { get; set; }
 
-        [Required]
         public string Text { get; set; }
+
+        public bool IsLike { get; set; }
 
         public long? ReplyToId { get; set; }
 

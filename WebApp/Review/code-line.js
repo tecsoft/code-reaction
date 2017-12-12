@@ -5,7 +5,7 @@ var codeLine = {
     props: ['line'],
     name: 'code-line',
     data: function () { return { showActions: false, showEditor: false }; },
-    components: { 'code-line-actions': lineActions, 'comment-block': comment, 'new-comment-block': newComment },
+    components: { 'code-line-actions': lineActions, 'comment-block': comment, 'new-comment-block': newComment, 'code-line-like' : codeLineLike },
     computed: {
         getSymbol: function () {
             if (this.line.ChangeState === 1) return '+';
@@ -45,6 +45,13 @@ var codeLine = {
         cancelledNewComment: function () {
             this.showEditor = false;
         },
+
+        likeLine: function () {
+            BUS.$emit('like-line', { Line: this.line });
+        },
+        unlikeLine: function () {
+            BUS.$emit('unlike-line', { Line: this.line });
+        }
     },
 
     template:
@@ -53,10 +60,11 @@ var codeLine = {
             '<td class="revision-line-number" v-bind:class="getStateClass">{{line.RemovedLineNumber}}</td>' +
             '<td class="revision-line-number" v-bind:class="getStateClass">{{line.AddedLineNumber}}</td>' +
             '<td class="revision-line-state">' +
-                '<code-line-actions v-if="showActions" v-bind:showActions="showActions" v-on:add-comment="openCommentDialog" ></code-line-actions>' +
+                '<code-line-actions v-if="showActions" v-bind:line="line" v-bind:showActions="showActions" v-on:add-comment="openCommentDialog" v-on:like-line="likeLine" ></code-line-actions>' +
                 '{{getSymbol}}' +
             '</td>' +
             '<td class="revision-line-text">{{line.Text}}' +
+                '<code-line-like v-if="line.Likes.length > 0" v-bind:Line="line" v-on:unlike-line="unlikeLine"></code-line-like>' +
                 '<comment-block  v-for="lineComment in line.Comments" v-bind:Comment="lineComment" ></comment-block>' +
                  '<new-comment-block v-bind:show="showEditor" v-on:posted-new-comment="postedNewComment" v-on:new-comment-cancelled="cancelledNewComment" />' +
             '</td>' +

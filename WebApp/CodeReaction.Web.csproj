@@ -153,6 +153,7 @@
     <Content Include="Commits\followups.js" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Release.txt" />
+    <Content Include="Review\code-line-like.js" />
     <Content Include="Review\code-line.js" />
     <Content Include="Review\comment-nav.js" />
     <Content Include="Review\comments.js" />
