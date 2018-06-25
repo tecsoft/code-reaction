@@ -1,4 +1,5 @@
-﻿
+﻿var previousUrl = "";
+
 function setUsername(username) {
     window.localStorage.setItem('username', username);
 }
@@ -38,7 +39,7 @@ function authenticate() {
 }
 
 function loginReady() {
-
+    previousUrl = document.referrer;
     $('#connectButton').on('click', doLogin);
 }
 
@@ -72,7 +73,11 @@ function doLogin(event) {
                 function (data) {
                     setUsername(username);
                     setToken(data.access_token);
-                    window.location = "/Commits/commits.html";
+                    if (previousUrl && previousUrl.indexOf('login.html') === -1) {
+                        window.location = previousUrl;
+                    } else {
+                        window.location = "/Commits/commits.html";
+                    }
                 })
             .fail(
                 function (xhr, textStatus, error) {
