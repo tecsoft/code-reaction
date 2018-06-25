@@ -25,7 +25,7 @@ var app = new Vue({
                 });
         },
         openReview: function (revision) {
-            window.location = "/Review/review.html?revision=" + revision;
+            return "/Review/review.html?revision=" + revision;
         },
         timeAgo: function (aMoment) {
             if (aMoment)

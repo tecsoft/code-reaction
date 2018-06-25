@@ -48,12 +48,12 @@
             <div id="detailPanel2">
                 <div id="insertPoint">
                     <div class="commit-item2" v-for="d in Commits" v-if="Commits.length > 0">
-                        <div class="commit-title2" v-on:click="openReview(d.Revision)">
+                        <a class="commit-title2" v-bind:href="openReview(d.Revision)">
                             <span>{{d.Message}}</span>
-                            <div class="commit-subtitle">
+                            <p class="commit-subtitle">
                                 <span>Revision: {{d.Revision}} {{timeAgo(d.Timestamp)}} by {{d.Author}}</span>
-                            </div>
-                        </div>
+                            </p>
+                        </a>
                         <div class="commit-annotation-summary">
                             <span v-if="d.ApprovedBy" class="label label-success"><i class="fa fa-check-circle"></i> {{d.ApprovedBy}}</span>
                             <span class="label label-primary"><i class="fa fa-eye"></i> {{d.NumberReviewers}}</span>
