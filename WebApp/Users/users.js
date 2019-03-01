@@ -94,10 +94,10 @@ function doLogout() {
 
 
 function registerReady() {
-    $('#connectButton').on('click', doRegister);
+    $('#registerButton').on('click', doRegister);
 }
 
-function doRegister() {
+function doRegister(event) {
     event.stopPropagation();
 
     var username = $('#newuser-username').val();
@@ -137,7 +137,7 @@ function doRegister() {
     else {
 
         var form = $('#register');
-        $.post('/api/users/register', form.serialize())
+        $.post('/api/users/register/', form.serialize())
             .done(
                 function (data) {
                     setUsername(username);
@@ -158,7 +158,7 @@ function doRegister() {
             .fail(
                 function (xhr, textStatus, error) {
                     $(".alert").removeClass("hidden");
-                    $(".alert-text").html(JSON.parse(xhr.responseText)["error_description"]);
+                    $(".alert-text").html(error);
                 });
     }
 }

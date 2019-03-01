@@ -34,10 +34,10 @@ namespace CodeReaction.Web.Auth
             manager.PasswordValidator = new PasswordValidator
             {
                 RequiredLength = 8,
-                RequireNonLetterOrDigit = true,
+                RequireNonLetterOrDigit = false,
                 RequireDigit = false,
-                RequireLowercase = true,
-                RequireUppercase = true,
+                RequireLowercase = false,
+                RequireUppercase = false,
             };
 
             var dataProtectionProvider = options.DataProtectionProvider;

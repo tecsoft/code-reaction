@@ -1,4 +1,5 @@
-﻿using CodeReaction.Web.Auth;
+﻿using CodeReaction.Domain;
+using CodeReaction.Web.Auth;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -49,6 +50,28 @@ namespace CodeReaction.Web.Users
                 return InternalServerError(ex);
             }
             return Ok();
+        }
+
+        [Route("api/users/reset/{username}")]
+        [Authorize]
+        [HttpGet] // temporary
+        public IHttpActionResult ResetUser(string username)
+        {
+            try
+            {
+                var appUser = ApplicationUserManager.FindByName(username);
+                if (appUser == null)
+                    throw new ArgumentException("Username not known");
+
+                ApplicationUserManager.Delete(appUser);
+
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Tried to reset user: {username}: {ex}");
+                return InternalServerError(ex);
+            }
+            return Ok("User reset");
         }
 
         [Route("api/users/login")]

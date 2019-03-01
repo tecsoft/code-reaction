@@ -21,6 +21,7 @@
     <IISExpressUseClassicPipelineMode />
     <NuGetPackageImportStamp>bcfc6126</NuGetPackageImportStamp>
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
