@@ -98,6 +98,7 @@ function registerReady() {
 }
 
 function doRegister() {
+    event.stopPropagation();
 
     var username = $('#newuser-username').val();
     var password = $('#newuser-password').val();
@@ -149,7 +150,7 @@ function doRegister() {
                                 window.location = "/Commits/commits.html";
                             })
                         .fail(
-                            function (xhr, textStatus, error) {
+                        function (xhr, textStatus, error) {
                                 $(".alert").removeClass("hidden");
                                 $(".alert-text").html(JSON.parse(xhr.responseText)["error_description"]);
                             });
@@ -157,7 +158,7 @@ function doRegister() {
             .fail(
                 function (xhr, textStatus, error) {
                     $(".alert").removeClass("hidden");
-                    $(".alert-text").html(xhr.statusText);
+                    $(".alert-text").html(JSON.parse(xhr.responseText)["error_description"]);
                 });
     }
 }
