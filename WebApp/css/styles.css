@@ -195,12 +195,19 @@ criteria-panel {
     color: black;   
 }
 
+.commit-title2:hover {
+    cursor: pointer;
+    text-decoration: none;
+}
+
 .commit-item2 {
     /*padding-top:0.5em;*/
 }
 
 .commit-item2:hover {
     cursor: pointer;
+    background-color: #f5f5f5;
+    text-decoration: none;
 }
 
 .commit-annotation-summary {
