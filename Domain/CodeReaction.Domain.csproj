@@ -92,6 +92,9 @@
     <Compile Include="Commits\CommitStats.cs" />
     <Compile Include="Commits\FileStateEnum.cs" />
     <Compile Include="Commits\ISourceControl.cs" />
+    <Compile Include="Database\Migrations\AddProjectKeyOnCommits.cs" />
+    <Compile Include="Database\Migrations\AddProjectsTable.cs" />
+    <Compile Include="Database\Migrations\AddIsAdminOnUser.cs" />
     <Compile Include="Database\Migrations\AddIsLikeOnComments.cs" />
     <Compile Include="Database\Migrations\AddTimestampOnComments.cs" />
     <Compile Include="Database\Migrations\InitialiseSchemaInfo.cs" />
@@ -110,6 +113,8 @@
     <Compile Include="Commits\SvnLogReader.cs" />
     <Compile Include="HouseKeeping\HouseKeepingService.cs" />
     <Compile Include="HouseKeeping\TaskScheduler.cs" />
+    <Compile Include="Projects\Project.cs" />
+    <Compile Include="Projects\ProjectService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Database\UnitOfWork.cs" />
   </ItemGroup>

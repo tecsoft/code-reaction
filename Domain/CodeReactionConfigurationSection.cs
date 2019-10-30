@@ -7,6 +7,7 @@ using System.Configuration;
 
 namespace CodeReaction
 {
+    
     public class CodeReactionConfigurationSection : ConfigurationSection
     {
         [ConfigurationProperty("svn")]
@@ -24,6 +25,13 @@ namespace CodeReaction
         {
             get { return this["server"] as string; }
             set { this["server"] = value; }
+        }
+
+        [ConfigurationProperty("path")]
+        public string DefaultProjectPath
+        {
+            get { return this["path"] as string; }
+            set { this["path"] = value; }
         }
 
         [ConfigurationProperty("startRevision", DefaultValue = -1)]

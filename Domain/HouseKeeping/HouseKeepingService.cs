@@ -13,7 +13,7 @@ namespace CodeReaction.Domain.HouseKeeping
         UnitOfWork _uow;
         ISourceControl _sourceControl;
 
-        public HouseKeepingService(UnitOfWork uow, ISourceControl sourceControl)
+           public HouseKeepingService(UnitOfWork uow, ISourceControl sourceControl)
         {
             _uow = uow;
             _sourceControl = sourceControl;

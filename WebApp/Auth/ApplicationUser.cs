@@ -25,5 +25,7 @@ namespace CodeReaction.Web.Auth
             // Add custom user claims here
             return userIdentity;
         }
+
+        public bool IsAdmin { get; set; }
     }
 }

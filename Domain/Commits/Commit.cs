@@ -17,6 +17,7 @@ namespace CodeReaction.Domain.Commits
         public string Message { get; set; }
         public DateTime Timestamp { get; set; } 
         public string ApprovedBy { get; set; }
+        public long? Project { get; set; }
 
         [NotMapped]
         public string[] Files { get; set; }

@@ -1,6 +1,7 @@
 ﻿<codeReaction>
     <svn 
-		server="svn://server/directory/path" 
+		server="svn://server"
+    path="/directory/path"
 		username="your_username" 
 		password="your_password" 
 		startRevision="-1" />

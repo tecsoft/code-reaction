@@ -8,7 +8,11 @@ namespace CodeReaction.Domain.Database.Migrations
         {
             {1, "InitialiseSchemaInfo" },
             {2, "AddTimestampOnComments" },
-            {3, "AddIsLikeOnComments" }
+            {3, "AddIsLikeOnComments" },
+            {4, "AddIsAdminOnUser" },
+            {5, "AddProjectsTable" },
+            {6, "AddProjectKeyOnCommitTable" },
+            // id 7 retired{7, "" }
         };
     }
 }

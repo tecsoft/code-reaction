@@ -1,4 +1,5 @@
 ﻿using CodeReaction.Domain;
+using CodeReaction.Domain.Projects;
 using SharpSvn;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace CodeReaction.Domain.Commits
 {
     public class SvnLogReader
     {
-        Uri RemoteRepro { get; set; }
+        SvnElement _svnConfig;
 
         string RemoteReproAuthority { get; set; }
 
@@ -23,43 +24,58 @@ namespace CodeReaction.Domain.Commits
 
         public SvnLogReader()
         {
+            _svnConfig = (ConfigurationManager.GetSection("codeReaction") as CodeReactionConfigurationSection).Svn;
+            RemoteReproAuthority = new Uri(_svnConfig.Server).GetLeftPart(UriPartial.Authority);
+
+            Username = _svnConfig.Username;
+            Password = _svnConfig.Password;
+        }
+
+        Uri RemoteRepro(Project project)
+        {
             var svnConfig = (ConfigurationManager.GetSection("codeReaction") as CodeReactionConfigurationSection).Svn;
-
-            RemoteRepro = new Uri(svnConfig.Server);
-            RemoteReproAuthority = RemoteRepro.GetLeftPart(UriPartial.Authority);
-
-            Username = svnConfig.Username;
-            Password = svnConfig.Password;
+            string reproName = svnConfig.Server + project.Path;
+            return new Uri(reproName);
         }
 
         public IEnumerable<Commit> GetLatestLogs(long lastRevision, int limit)
         {
-            SvnLogHandler handler = new SvnLogHandler();
+            IList<Commit> commits = new List<Commit>();
+
+            var projects = new ProjectService(new UnitOfWork()).GetAll();
 
             using (SvnClient svnClient = new SvnClient())
             {
                 svnClient.LoadConfiguration(Path.Combine(Path.GetTempPath(), "Svn"), true);
                 svnClient.Authentication.ForceCredentials(Username, Password);
 
-                svnClient.Log( 
-                    RemoteRepro, 
-                    new SvnLogArgs()
-                    {
-                        Range = new SvnRevisionRange(lastRevision + 1, SvnRevision.Head),
-                        Limit = limit
-                    },
-                    handler.Handler);
+                foreach(var project in projects)
+                {
+                    var repository = RemoteRepro(project);
+                    SvnLogHandler handler = new SvnLogHandler(project, commits);
+
+                    svnClient.Log( 
+                        repository, 
+                        new SvnLogArgs()
+                        {
+                            Range = new SvnRevisionRange(lastRevision + 1, SvnRevision.Head),
+                            Limit = limit
+                        },
+                        handler.Handler);
+                }
             }
 
-            return handler.Logs;
+            return commits;
         }
 
         class SvnLogHandler
         {
             IList<Commit> _commits;
-            public SvnLogHandler()
+            Project _project;
+            public SvnLogHandler(Project project, IList<Commit> commits)
             {
-                _commits = new List<Commit>();
+                _commits = commits;
+                _project = project;
             }
 
             public IList<Commit> Logs { get { return _commits; } }
@@ -72,9 +88,9 @@ namespace CodeReaction.Domain.Commits
                     Message = args.LogMessage,
                     Timestamp = args.Time,
                     Revision = args.Revision,
+                    Project = _project.Id
                 };
-
-                Logs.Add(commit);
+                _commits.Add(commit);
 
             }
         }
@@ -145,8 +161,9 @@ namespace CodeReaction.Domain.Commits
                 svnClient.LoadConfiguration(Path.Combine(Path.GetTempPath(), "Svn"), true);
                 svnClient.Authentication.ForceCredentials(Username, Password);
 
+                Uri repository = new Uri(_svnConfig.Server);
                 svnClient.Log(
-                    RemoteRepro,
+                    repository,
                     new SvnLogArgs()
                     {
                         Range = new SvnRevisionRange(revision, revision)
@@ -154,7 +171,7 @@ namespace CodeReaction.Domain.Commits
                     handler.Handler);
 
 
-                SvnTarget target = SvnTarget.FromUri(RemoteRepro);
+                SvnTarget target = SvnTarget.FromUri(repository);
 
                 using (MemoryStream ms = new MemoryStream())
                 {
@@ -169,8 +186,8 @@ namespace CodeReaction.Domain.Commits
         
         public CommitDiff GetRevisionDiffs(long revision, IDictionary<string, FileDiff> fileInfo, StreamReader reader)
         {
-            Uri repro = RemoteRepro;
-            string path = repro.AbsolutePath + '/';
+            Uri repository = new Uri(_svnConfig.Server);
+            string path = repository.AbsolutePath; // + '/';
 
             var results = new CommitDiff(revision);
             FileDiff diff = null;
@@ -285,7 +302,7 @@ namespace CodeReaction.Domain.Commits
             {
                 client.LoadConfiguration(Path.Combine(Path.GetTempPath(), "Svn"), true);
                 client.Authentication.ForceCredentials(Username, Password);
-                SvnTarget target = new SvnUriTarget(new Uri(RemoteReproAuthority + filename), revision );
+                SvnTarget target = new SvnUriTarget(new Uri(_svnConfig.Server + filename), revision );
 
                 using (MemoryStream ms = new MemoryStream())
                 {

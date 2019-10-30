@@ -192,3 +192,4 @@ ModelManifest.xml
 /WebApp/codeReaction.config
 /WebApp/CodeReaction.sqlite
 /WebApp/connectionString.config
+/CodeReaction/dist

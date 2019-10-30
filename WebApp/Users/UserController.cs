@@ -11,7 +11,6 @@ using System.Web.Http;
 
 namespace CodeReaction.Web.Users
 {
-    [AllowAnonymous]
     public class UserController : ApiController
     {
         [Route("api/users/register")]
@@ -53,8 +52,8 @@ namespace CodeReaction.Web.Users
         }
 
         [Route("api/users/reset/{username}")]
-        [Authorize]
-        [HttpGet] // temporary
+        [AuthorizeAdmin]
+        [HttpPost]
         public IHttpActionResult ResetUser(string username)
         {
             try
@@ -74,6 +73,84 @@ namespace CodeReaction.Web.Users
             return Ok("User reset");
         }
 
+        [Route("api/users")]
+        [Authorize]
+        [HttpGet]
+        public IHttpActionResult GetUsers()
+        {
+            try
+            {
+                var users = ApplicationUserManager.Users.Select(u => new { u.UserName, u.IsAdmin }).ToList();
+
+                return Ok(users);
+
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Tried get user list: {ex}");
+                return InternalServerError(ex);
+            }
+        }
+
+        [Route("api/users/admin/{username}/{isAdmin}")]
+        [AuthorizeAdmin]
+        [HttpPost]
+        public IHttpActionResult SetAdmin(string username, bool isAdmin)
+        {
+            UnitOfWork unitOfWork = null;
+            try
+            {
+                var appUser = ApplicationUserManager.FindByName(username);
+           
+                if (appUser == null)
+                    throw new ArgumentException("Username not known");
+
+                unitOfWork = new UnitOfWork();
+
+                appUser.IsAdmin = isAdmin;
+                ApplicationUserManager.Update(appUser);
+
+                unitOfWork.Save();
+
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Tried to set admin for user: {username}: {ex}");
+                return InternalServerError(ex);
+            }
+            finally
+            {
+                if (unitOfWork != null )
+                {
+                    unitOfWork.Dispose();
+                }
+            }
+            return Ok();
+        }
+
+        [Route("api/users/admin/{username}")]
+        [Authorize]
+        [HttpGet]
+        public IHttpActionResult GetAdmin(string username)
+        {
+            
+            try
+            {
+                var appUser = ApplicationUserManager.FindByName(username);
+
+                if (appUser == null)
+                    throw new ArgumentException("Username not known");
+
+                return Ok(appUser.IsAdmin);
+
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Tried to set admin for user: {username}: {ex}");
+                return InternalServerError(ex);
+            }
+        }
+
         [Route("api/users/login")]
         [Authorize]
         public IHttpActionResult Login()
@@ -82,6 +159,7 @@ namespace CodeReaction.Web.Users
         }
 
         [Route("api/users/authorize")]
+        [AllowAnonymous]
         public IHttpActionResult Authorize()
         {
             var claims = new ClaimsPrincipal(User).Claims.ToArray();

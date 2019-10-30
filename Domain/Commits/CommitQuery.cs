@@ -11,6 +11,7 @@ namespace CodeReaction.Domain.Commits
         public string ExcludeAuthor { get; set; }
         public string IncludeAuthor { get; set; }
         public bool ExcludeApproved { get; set; }
+        public int? Project { get; set; }
 
         private IQueryable<Commit> query;
 
@@ -35,14 +36,10 @@ namespace CodeReaction.Domain.Commits
             {
                 char[] space = new char[] { ' ' };
 
-                //var predicate = PredicateBuilder.New<Commit>(true);
-
-                //Func<Commit, bool> predicate = null;
                 foreach( var word in Keyword.Split(space, StringSplitOptions.RemoveEmptyEntries))
                 {
                     query = query.Where(c => c.Message.Contains(word) || c.Author.Contains(word));
                 }
-                //query = query.Where( predicate );
             }
 
             if ( ExcludeApproved )
@@ -52,10 +49,17 @@ namespace CodeReaction.Domain.Commits
 
             query = query.OrderBy(c => c.Timestamp);
 
+            if (Project.HasValue)
+            {
+                query = query.Where(c => c.Project == Project);
+            }
+
             if ( Max.HasValue )
             {
                 query = query.Take(Max.Value);
             }
+
+            
 
             return query.ToList();
         }

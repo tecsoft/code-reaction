@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace CodeReaction.Web.Controllers
 {
@@ -48,6 +49,7 @@ namespace CodeReaction.Web.Controllers
                 query.Max = Parser.ParseNullable<int>(parameters.FirstOrDefault(p => p.Key == "max").Value);
                 query.IncludeAuthor = parameters.FirstOrDefault(p => p.Key == "include").Value;
                 query.ExcludeAuthor = parameters.FirstOrDefault(p => p.Key == "exclude").Value;
+                query.Project = Parser.ParseNullable<int>(parameters.FirstOrDefault(p => p.Key == "project").Value);
 
                 var list = new List<Tuple<Commit, CommitStats>>();
                 foreach (var commit in query.Execute())

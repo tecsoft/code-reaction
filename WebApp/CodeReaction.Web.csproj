@@ -103,11 +103,13 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Web.Cors, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.7\lib\net45\System.Web.Cors.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -117,9 +119,11 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Cors, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Cors.5.2.7\lib\net45\System.Web.Http.Cors.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Http.Owin, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.5.2.3\lib\net45\System.Web.Http.Owin.dll</HintPath>
@@ -146,34 +150,8 @@
       <Link>LICENCE.txt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Commits\commits.html" />
-    <Content Include="Commits\commits.js" />
-    <Content Include="css\font-awesome.min.css" />
-    <Content Include="css\styles.css" />
-    <Content Include="Commits\followups.html" />
-    <Content Include="Commits\followups.js" />
-    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Release.txt" />
-    <Content Include="Review\code-line-like.js" />
-    <Content Include="Review\code-line.js" />
-    <Content Include="Review\comment-nav.js" />
-    <Content Include="Review\comments.js" />
-    <Content Include="Review\commit-actions.js" />
-    <Content Include="Review\commit-info.js" />
-    <Content Include="Review\file-block.js" />
-    <Content Include="Review\line-actions.js" />
-    <Content Include="Review\review.js" />
-    <Content Include="Review\review.html" />
-    <Content Include="Scripts\moment-with-locales.js" />
-    <Content Include="Scripts\moment-with-locales.min.js" />
-    <Content Include="Scripts\moment.js" />
-    <Content Include="Scripts\moment.min.js" />
-    <Content Include="Users\login.html" />
     <Content Include="Global.asax" />
-    <Content Include="index.html" />
-    <Content Include="Tools\Tools.js" />
-    <Content Include="Users\register.html" />
-    <Content Include="Users\users.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -185,10 +163,12 @@
     <Compile Include="Auth\ApplicationUserManager.cs" />
     <Compile Include="Auth\AuthenticationFailureResult.cs" />
     <Compile Include="Auth\ApplicationDbContext.cs" />
+    <Compile Include="Auth\AuthorizeAdmin.cs" />
     <Compile Include="Commits\CommitsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Projects\ProjectsController.cs" />
     <Compile Include="Review\ReviewController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Review\ReviewModel.cs" />
@@ -199,13 +179,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <Content Include="codeReaction.config" />
-    <Content Include="connectionString.config" />
-    <Content Include="fonts\fontawesome-webfont.eot" />
-    <Content Include="fonts\fontawesome-webfont.ttf" />
-    <Content Include="fonts\fontawesome-webfont.woff" />
-    <Content Include="fonts\fontawesome-webfont.woff2" />
-    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="codeReaction.config.sample" />
+    <Content Include="connectionString.config.sample" />
     <None Include="Properties\PublishProfiles\CodeReaction Release.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
