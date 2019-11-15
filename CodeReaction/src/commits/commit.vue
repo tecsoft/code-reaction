@@ -57,8 +57,9 @@
     import * as moment from 'moment';
     import CommitDetails from '../review/commit-details.vue';
     import { Commit } from '../types/types';
+    import { ICommitSearchParameters } from '@/commits/store';
 
-    class ParameterList {
+    class ParameterList implements ICommitSearchParameters {
         max: number = 100;
         keyword: string = "";
         excludeApproved: boolean = true;
@@ -79,11 +80,19 @@
 
     @Component({ components: {CommitDetails}})
     export default class CommitPage extends Vue {
-        private Parameters: ParameterList = new ParameterList();
+        private Parameters: ParameterList = this.initParameters();
         private Commits: Array<Commit> = new Array<Commit>();
         private project: number = 1;
         private projects: Array<IOption> = new Array<IOption>();
         private loading: boolean = true;
+
+        initParameters() : ParameterList {
+            let parameters = this.$store.getters["commitCriteria/searchParameters"];
+            if (parameters == null) {
+                parameters = new ParameterList();
+            }
+            return parameters;
+        }
 
         getProjectList() {
 
@@ -111,7 +120,10 @@
             }
         }
 
+
+
         refreshPage(this: CommitPage): void {
+
             this.Parameters.project = this.project; // todo properly
             if (this.Parameters.excludeMine) {
                 this.Parameters.exclude = this.$store.getters["account/username"];
@@ -119,6 +131,9 @@
             else {
                 this.Parameters.exclude = undefined;
             };
+
+            this.$store.dispatch("commitCriteria/changeSearchParameters", this.Parameters);
+
             $.ajax({
                 context: this,  // don't forget
                 dataType: "json",

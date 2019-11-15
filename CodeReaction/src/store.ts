@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import * as CommitCriteria from '@/commits/store'
+
 Vue.use(Vuex);
 
 interface IToken {
@@ -61,33 +63,6 @@ const account = {
     }
 };
 
-const commitCriteria = {
-    namespaced: true,
-    state: {
-        project: null,
-    },
-    mutations : {
-        setProject(state: any, id : number) {
-            state.project = id;
-        }
-    },
-
-    getters: {
-        project(state: any) {
-            if (state.project == null) {
-                return 1;
-            }
-
-            return state.project;
-        }
-    },
-
-    actions: {
-        changeProject(context: any, id: number) {
-            context.commit("setProject", id);
-        }
-    }
-}
 
 const referenceData = {
     namespaced: true,
@@ -115,7 +90,7 @@ const referenceData = {
 export default new Vuex.Store({
     modules: {
         account: account,
-        commitCriteria: commitCriteria,
+        commitCriteria: CommitCriteria.commitCriteria,
         referenceData: referenceData,
     }
 });
