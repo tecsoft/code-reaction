@@ -7,7 +7,7 @@
                               v-model="Parameters.keyword"
                               placeholder="Keyword, Author"
                               style="max-width:400px;float:left; margin-right:0.5em;" />
-                <b-button variant="primary" v-on:click="refreshPage">
+                <b-button variant="primary" v-on:click="refreshPage" type="submit">
                     <i class="fa fa-search"></i>
                 </b-button>
             </b-form-group>
